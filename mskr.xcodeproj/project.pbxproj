@@ -7,11 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */; };
+		256F4EB8194134AE008E2263 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 256F4EB7194134AE008E2263 /* iPhone.storyboard */; };
 		25ECE280193EFF2700A272CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE27F193EFF2700A272CF /* AppDelegate.swift */; };
 		25ECE282193EFF2700A272CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE281193EFF2700A272CF /* ViewController.swift */; };
-		25ECE285193EFF2700A272CF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE283193EFF2700A272CF /* Main.storyboard */; };
 		25ECE287193EFF2700A272CF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE286193EFF2700A272CF /* Images.xcassets */; };
 		25ECE293193EFF2700A272CF /* mskr_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE292193EFF2700A272CF /* mskr_swiftTests.swift */; };
+		25ECE2A7193EFF7D00A272CF /* mskr_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE29C193EFF7D00A272CF /* mskr_add.png */; };
+		25ECE2A8193EFF7D00A272CF /* crclmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE29E193EFF7D00A272CF /* crclmsk.png */; };
+		25ECE2A9193EFF7D00A272CF /* dmndmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE29F193EFF7D00A272CF /* dmndmsk.png */; };
+		25ECE2AA193EFF7D00A272CF /* eqltymsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A0193EFF7D00A272CF /* eqltymsk.png */; };
+		25ECE2AB193EFF7D00A272CF /* hrtmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A1193EFF7D00A272CF /* hrtmsk.png */; };
+		25ECE2AC193EFF7D00A272CF /* plrdmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A2193EFF7D00A272CF /* plrdmsk.png */; };
+		25ECE2AD193EFF7D00A272CF /* powmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A3193EFF7D00A272CF /* powmsk.png */; };
+		25ECE2AE193EFF7D00A272CF /* sqrmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A4193EFF7D00A272CF /* sqrmsk.png */; };
+		25ECE2AF193EFF7D00A272CF /* trnglmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A5193EFF7D00A272CF /* trnglmsk.png */; };
+		25ECE2B0193EFF7D00A272CF /* xmsk.png in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE2A6193EFF7D00A272CF /* xmsk.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,15 +36,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		25ECE27A193EFF2700A272CF /* mskr-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mskr-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
+		256F4EB7194134AE008E2263 /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
+		25ECE27A193EFF2700A272CF /* mskr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mskr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25ECE27E193EFF2700A272CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25ECE27F193EFF2700A272CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		25ECE281193EFF2700A272CF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		25ECE284193EFF2700A272CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		25ECE286193EFF2700A272CF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		25ECE28C193EFF2700A272CF /* mskr-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mskr-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		25ECE28C193EFF2700A272CF /* mskrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mskrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		25ECE291193EFF2700A272CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25ECE292193EFF2700A272CF /* mskr_swiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mskr_swiftTests.swift; sourceTree = "<group>"; };
+		25ECE29C193EFF7D00A272CF /* mskr_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mskr_add.png; sourceTree = "<group>"; };
+		25ECE29E193EFF7D00A272CF /* crclmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crclmsk.png; sourceTree = "<group>"; };
+		25ECE29F193EFF7D00A272CF /* dmndmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dmndmsk.png; sourceTree = "<group>"; };
+		25ECE2A0193EFF7D00A272CF /* eqltymsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = eqltymsk.png; sourceTree = "<group>"; };
+		25ECE2A1193EFF7D00A272CF /* hrtmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hrtmsk.png; sourceTree = "<group>"; };
+		25ECE2A2193EFF7D00A272CF /* plrdmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plrdmsk.png; sourceTree = "<group>"; };
+		25ECE2A3193EFF7D00A272CF /* powmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = powmsk.png; sourceTree = "<group>"; };
+		25ECE2A4193EFF7D00A272CF /* sqrmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sqrmsk.png; sourceTree = "<group>"; };
+		25ECE2A5193EFF7D00A272CF /* trnglmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trnglmsk.png; sourceTree = "<group>"; };
+		25ECE2A6193EFF7D00A272CF /* xmsk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xmsk.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +88,8 @@
 		25ECE27B193EFF2700A272CF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				25ECE27A193EFF2700A272CF /* mskr-swift.app */,
-				25ECE28C193EFF2700A272CF /* mskr-swiftTests.xctest */,
+				25ECE27A193EFF2700A272CF /* mskr.app */,
+				25ECE28C193EFF2700A272CF /* mskrTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,9 +99,12 @@
 			children = (
 				25ECE27F193EFF2700A272CF /* AppDelegate.swift */,
 				25ECE281193EFF2700A272CF /* ViewController.swift */,
-				25ECE283193EFF2700A272CF /* Main.storyboard */,
+				256F4EB7194134AE008E2263 /* iPhone.storyboard */,
+				25ECE29C193EFF7D00A272CF /* mskr_add.png */,
+				25ECE29D193EFF7D00A272CF /* msks */,
 				25ECE286193EFF2700A272CF /* Images.xcassets */,
 				25ECE27D193EFF2700A272CF /* Supporting Files */,
+				2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */,
 			);
 			path = "mskr-swift";
 			sourceTree = "<group>";
@@ -109,12 +134,28 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		25ECE29D193EFF7D00A272CF /* msks */ = {
+			isa = PBXGroup;
+			children = (
+				25ECE29E193EFF7D00A272CF /* crclmsk.png */,
+				25ECE29F193EFF7D00A272CF /* dmndmsk.png */,
+				25ECE2A0193EFF7D00A272CF /* eqltymsk.png */,
+				25ECE2A1193EFF7D00A272CF /* hrtmsk.png */,
+				25ECE2A2193EFF7D00A272CF /* plrdmsk.png */,
+				25ECE2A3193EFF7D00A272CF /* powmsk.png */,
+				25ECE2A4193EFF7D00A272CF /* sqrmsk.png */,
+				25ECE2A5193EFF7D00A272CF /* trnglmsk.png */,
+				25ECE2A6193EFF7D00A272CF /* xmsk.png */,
+			);
+			path = msks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		25ECE279193EFF2700A272CF /* mskr-swift */ = {
+		25ECE279193EFF2700A272CF /* mskr */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 25ECE296193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr-swift" */;
+			buildConfigurationList = 25ECE296193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr" */;
 			buildPhases = (
 				25ECE276193EFF2700A272CF /* Sources */,
 				25ECE277193EFF2700A272CF /* Frameworks */,
@@ -124,14 +165,14 @@
 			);
 			dependencies = (
 			);
-			name = "mskr-swift";
+			name = mskr;
 			productName = "mskr-swift";
-			productReference = 25ECE27A193EFF2700A272CF /* mskr-swift.app */;
+			productReference = 25ECE27A193EFF2700A272CF /* mskr.app */;
 			productType = "com.apple.product-type.application";
 		};
-		25ECE28B193EFF2700A272CF /* mskr-swiftTests */ = {
+		25ECE28B193EFF2700A272CF /* mskrTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 25ECE299193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr-swiftTests" */;
+			buildConfigurationList = 25ECE299193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskrTests" */;
 			buildPhases = (
 				25ECE288193EFF2700A272CF /* Sources */,
 				25ECE289193EFF2700A272CF /* Frameworks */,
@@ -142,9 +183,9 @@
 			dependencies = (
 				25ECE28E193EFF2700A272CF /* PBXTargetDependency */,
 			);
-			name = "mskr-swiftTests";
+			name = mskrTests;
 			productName = "mskr-swiftTests";
-			productReference = 25ECE28C193EFF2700A272CF /* mskr-swiftTests.xctest */;
+			productReference = 25ECE28C193EFF2700A272CF /* mskrTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -165,7 +206,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 25ECE275193EFF2700A272CF /* Build configuration list for PBXProject "mskr-swift" */;
+			buildConfigurationList = 25ECE275193EFF2700A272CF /* Build configuration list for PBXProject "mskr" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -178,8 +219,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				25ECE279193EFF2700A272CF /* mskr-swift */,
-				25ECE28B193EFF2700A272CF /* mskr-swiftTests */,
+				25ECE279193EFF2700A272CF /* mskr */,
+				25ECE28B193EFF2700A272CF /* mskrTests */,
 			);
 		};
 /* End PBXProject section */
@@ -189,8 +230,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				25ECE285193EFF2700A272CF /* Main.storyboard in Resources */,
+				25ECE2AF193EFF7D00A272CF /* trnglmsk.png in Resources */,
+				256F4EB8194134AE008E2263 /* iPhone.storyboard in Resources */,
+				25ECE2B0193EFF7D00A272CF /* xmsk.png in Resources */,
+				25ECE2AA193EFF7D00A272CF /* eqltymsk.png in Resources */,
+				25ECE2AE193EFF7D00A272CF /* sqrmsk.png in Resources */,
+				25ECE2A8193EFF7D00A272CF /* crclmsk.png in Resources */,
+				25ECE2AC193EFF7D00A272CF /* plrdmsk.png in Resources */,
+				25ECE2AB193EFF7D00A272CF /* hrtmsk.png in Resources */,
+				25ECE2AD193EFF7D00A272CF /* powmsk.png in Resources */,
+				25ECE2A9193EFF7D00A272CF /* dmndmsk.png in Resources */,
 				25ECE287193EFF2700A272CF /* Images.xcassets in Resources */,
+				25ECE2A7193EFF7D00A272CF /* mskr_add.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */,
 				25ECE282193EFF2700A272CF /* ViewController.swift in Sources */,
 				25ECE280193EFF2700A272CF /* AppDelegate.swift in Sources */,
 			);
@@ -226,21 +278,10 @@
 /* Begin PBXTargetDependency section */
 		25ECE28E193EFF2700A272CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 25ECE279193EFF2700A272CF /* mskr-swift */;
+			target = 25ECE279193EFF2700A272CF /* mskr */;
 			targetProxy = 25ECE28D193EFF2700A272CF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		25ECE283193EFF2700A272CF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				25ECE284193EFF2700A272CF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		25ECE294193EFF2700A272CF /* Debug */ = {
@@ -328,8 +369,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = "mskr-swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = mskr;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -339,8 +382,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = "mskr-swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = mskr;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -359,7 +404,7 @@
 				INFOPLIST_FILE = "mskr-swiftTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = mskrTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
@@ -375,7 +420,7 @@
 				INFOPLIST_FILE = "mskr-swiftTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				METAL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = mskrTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
@@ -383,7 +428,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		25ECE275193EFF2700A272CF /* Build configuration list for PBXProject "mskr-swift" */ = {
+		25ECE275193EFF2700A272CF /* Build configuration list for PBXProject "mskr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				25ECE294193EFF2700A272CF /* Debug */,
@@ -392,21 +437,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		25ECE296193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr-swift" */ = {
+		25ECE296193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				25ECE297193EFF2700A272CF /* Debug */,
 				25ECE298193EFF2700A272CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		25ECE299193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskr-swiftTests" */ = {
+		25ECE299193EFF2700A272CF /* Build configuration list for PBXNativeTarget "mskrTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				25ECE29A193EFF2700A272CF /* Debug */,
 				25ECE29B193EFF2700A272CF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
