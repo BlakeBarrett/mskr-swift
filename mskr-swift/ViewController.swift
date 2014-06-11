@@ -20,9 +20,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var imageView: UIImageView;
     @IBOutlet var backgroundImageView: UIImageView;
     
-    var currentImage: UIImage = UIImage();
-    var backgroundImage: UIImage = UIImage();
-    var maskImage: UIImage = UIImage(named: "crclmsk");
+    var currentImage: UIImage! = UIImage();
+    var backgroundImage: UIImage! = UIImage();
+    var maskImage: UIImage! = UIImage(named: "crclmsk");
     
     override func viewDidLoad() {
         imagePicker.delegate = self;
@@ -63,9 +63,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
-        var maskName = availableMasks[row] + "msk";
+        var maskName = availableMasks[row].lowercaseString + "msk";
         
-        var mask: UIImage = UIImage(named: maskName);
+        var mask: UIImage! = UIImage(named: maskName);
         self.maskImage = mask;
         
         var img: UIImage = self.currentImage;
