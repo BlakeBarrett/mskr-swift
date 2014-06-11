@@ -61,13 +61,15 @@
                             <view appearanceType="aqua" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ven-Q1-f2f">
                                 <rect key="frame" x="0.0" y="62" width="320" height="320"/>
                                 <subviews>
-                                    <imageView appearanceType="aqua" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TfU-FU-uGH">
+                                    <imageView appearanceType="aqua" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TfU-FU-uGH" userLabel="Background Image">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="TfU-FU-uGH" secondAttribute="height" multiplier="1:1" id="JDJ-mc-OgR"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="jU6-pU-OcB"/>
+                                            <constraint firstAttribute="width" constant="320" id="o0b-cv-isi"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView appearanceType="aqua" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="q0e-yd-0Nl">
+                                    <imageView appearanceType="aqua" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="q0e-yd-0Nl" userLabel="Foreground Image - mskr_add.png">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="q0e-yd-0Nl" secondAttribute="height" multiplier="1:1" id="URM-ia-xfQ"/>
@@ -79,17 +81,16 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="TfU-FU-uGH" firstAttribute="top" secondItem="q0e-yd-0Nl" secondAttribute="top" id="0qr-oV-GEo"/>
                                     <constraint firstItem="q0e-yd-0Nl" firstAttribute="leading" secondItem="Ven-Q1-f2f" secondAttribute="leading" id="YDk-IA-cec"/>
                                     <constraint firstAttribute="bottom" secondItem="q0e-yd-0Nl" secondAttribute="bottom" id="cMg-36-ADT"/>
-                                    <constraint firstItem="q0e-yd-0Nl" firstAttribute="top" secondItem="TfU-FU-uGH" secondAttribute="top" id="eTJ-ac-2GP"/>
                                     <constraint firstAttribute="trailing" secondItem="q0e-yd-0Nl" secondAttribute="trailing" id="nlm-ZH-hRx"/>
-                                    <constraint firstItem="q0e-yd-0Nl" firstAttribute="bottom" secondItem="TfU-FU-uGH" secondAttribute="bottom" id="oW3-q9-McB"/>
+                                    <constraint firstItem="TfU-FU-uGH" firstAttribute="leading" secondItem="q0e-yd-0Nl" secondAttribute="leading" id="rdG-X6-yxe"/>
                                     <constraint firstItem="q0e-yd-0Nl" firstAttribute="top" secondItem="Ven-Q1-f2f" secondAttribute="top" id="x7e-Ee-5YM"/>
-                                    <constraint firstItem="q0e-yd-0Nl" firstAttribute="leading" secondItem="TfU-FU-uGH" secondAttribute="leading" id="ygB-zn-foW"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="hTS-i9-0hF" firstAttribute="leading" secondItem="XCj-fn-G0M" secondAttribute="leading" id="0o5-V2-ze1"/>
                             <constraint firstItem="XCj-fn-G0M" firstAttribute="bottom" secondItem="hTS-i9-0hF" secondAttribute="bottom" id="4Ze-wv-WYW"/>

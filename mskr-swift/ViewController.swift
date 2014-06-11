@@ -64,8 +64,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
         var maskName = availableMasks[row] + "msk";
-        self.maskImage = UIImage(named: maskName);
-        onImageSelected(image: self.currentImage, mask: self.maskImage);
+        
+        var mask: UIImage = UIImage(named: maskName);
+        self.maskImage = mask;
+        
+        var img: UIImage = self.currentImage;
+        
+        onImageSelected(image: img, mask: mask);
     }
     
     // MARK: UIImagePicker goodies
@@ -93,13 +98,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Mskr goodies
     func onImageSelected(#image: UIImage!, mask: UIImage!) {
-        // foreground
-        self.currentImage = ImageMaskingUtils.maskImage(source: image, maskImage: mask);
-        imageView.image = currentImage;
-        
         // background
         self.backgroundImage = ImageMaskingUtils.image(fromImage: image, withAlpha: 0.5);
         backgroundImageView.image = backgroundImage;
+
+        // foreground
+        self.currentImage = ImageMaskingUtils.maskImage(source: image, maskImage: mask);
+        imageView.image = currentImage;
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
@@ -126,5 +131,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func onShare(sender: AnyObject) {
         
     }
+
 }
 

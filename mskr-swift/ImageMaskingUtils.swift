@@ -14,17 +14,29 @@ class ImageMaskingUtils {
     /**
      * Masks the source image with the second.
      */
-    class func maskImage(#source: UIImage, maskImage: UIImage) -> UIImage {
-        var maskRef: CGImageRef = maskImage.CGImage;
-        var mask: CGImageRef = CGImageMaskCreate(CGImageGetWidth(maskRef),
+    class func maskImage(#source: UIImage!, maskImage: UIImage!) -> UIImage {
+        
+        let maskRef: CGImageRef! = maskImage.CGImage;
+        let mask: CGImageRef! = CGImageMaskCreate(CGImageGetWidth(maskRef),
             CGImageGetHeight(maskRef),
             CGImageGetBitsPerComponent(maskRef),
             CGImageGetBitsPerPixel(maskRef),
             CGImageGetBytesPerRow(maskRef),
             CGImageGetDataProvider(maskRef), nil, true);
         
-        var masked: CGImageRef = CGImageCreateWithMask(source.CGImage, mask);
-        return  UIImage(CGImage: masked);
+        let sourceImage: CGImageRef! = source.CGImage;
+        let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask);
+        
+        let maskedUIImage: UIImage! = UIImage(CGImage: masked);
+        
+        // Because maskedUIIMage is of type UIImage!, there shouldn't be
+        // any way for it to be nil. This is to handle whatever is causing 
+        // this being recycled/garbage-collected prematurely.
+        if (maskedUIImage) {
+            return maskedUIImage;
+        } else {
+            return source;
+        }
     }
     
     /**
