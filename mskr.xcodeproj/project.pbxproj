@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */; };
 		256F4EB8194134AE008E2263 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 256F4EB7194134AE008E2263 /* iPhone.storyboard */; };
+		258638BE1952CA6B00CCA275 /* grey-background-mskr-text.png in Resources */ = {isa = PBXBuildFile; fileRef = 258638BD1952CA6B00CCA275 /* grey-background-mskr-text.png */; };
 		25ECE280193EFF2700A272CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE27F193EFF2700A272CF /* AppDelegate.swift */; };
 		25ECE282193EFF2700A272CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE281193EFF2700A272CF /* ViewController.swift */; };
 		25ECE287193EFF2700A272CF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25ECE286193EFF2700A272CF /* Images.xcassets */; };
@@ -38,6 +39,7 @@
 /* Begin PBXFileReference section */
 		2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
 		256F4EB7194134AE008E2263 /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
+		258638BD1952CA6B00CCA275 /* grey-background-mskr-text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-background-mskr-text.png"; sourceTree = "<group>"; };
 		25ECE27A193EFF2700A272CF /* mskr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mskr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25ECE27E193EFF2700A272CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25ECE27F193EFF2700A272CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				25ECE27F193EFF2700A272CF /* AppDelegate.swift */,
+				258638BD1952CA6B00CCA275 /* grey-background-mskr-text.png */,
 				25ECE281193EFF2700A272CF /* ViewController.swift */,
 				256F4EB7194134AE008E2263 /* iPhone.storyboard */,
 				25ECE29C193EFF7D00A272CF /* mskr_add.png */,
@@ -241,6 +244,7 @@
 				25ECE2AD193EFF7D00A272CF /* powmsk.png in Resources */,
 				25ECE2A9193EFF7D00A272CF /* dmndmsk.png in Resources */,
 				25ECE287193EFF2700A272CF /* Images.xcassets in Resources */,
+				258638BE1952CA6B00CCA275 /* grey-background-mskr-text.png in Resources */,
 				25ECE2A7193EFF7D00A272CF /* mskr_add.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
