@@ -65,12 +65,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
         var maskName = availableMasks[row].lowercaseString + "msk";
         
-        var mask: UIImage! = UIImage(named: maskName);
-        self.maskImage = mask;
+        self.maskImage = onMaskSelected(maskName: maskName);
         
-        var img: UIImage = self.currentImage;
+        var img: UIImage = self.backgroundImage;
         
-        onImageSelected(image: img, mask: mask);
+        onImageSelected(image: img, mask: self.maskImage);
     }
     
     // MARK: UIImagePicker goodies
@@ -84,6 +83,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         selectedImageInfoDict = info;
         
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
+        self.backgroundImage = selectedImage;
         onImageSelected(image: selectedImage, mask: self.maskImage);
         
         picker.dismissViewControllerAnimated(true){}
@@ -97,11 +97,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: Mskr goodies
+    func onMaskSelected(#maskName: String!) -> UIImage! {
+        var mask: UIImage! = UIImage(named: maskName);
+        return mask;
+    }
+    
     func onImageSelected(#image: UIImage!, mask: UIImage!) {
-        // background
-        self.backgroundImage = ImageMaskingUtils.image(fromImage: image, withAlpha: 0.5);
-        backgroundImageView.image = backgroundImage;
-
         // foreground
         self.currentImage = ImageMaskingUtils.maskImage(source: image, maskImage: mask);
         imageView.image = currentImage;
@@ -110,7 +111,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBAction func onAddLayer(sender: AnyObject) {
         currentImage = imageView.image;
         var tempImage: UIImage = ImageMaskingUtils.mergeImages(first: backgroundImage, second: currentImage);
-        // TODO: Set alpha to .5
+        // background
+        backgroundImageView.image = backgroundImage;
         backgroundImage = ImageMaskingUtils.image(fromImage: tempImage, withAlpha: 0.5);
         currentImage = tempImage;
         imageView.image = tempImage;
@@ -121,7 +123,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onSave(sender: AnyObject) {
-        UIImageWriteToSavedPhotosAlbum(imageView.image,  nil, nil, nil);
+        UIImageWriteToSavedPhotosAlbum(currentImage,  nil, nil, nil);
     }
     
     @IBAction func onStartOver(sender: AnyObject) {
