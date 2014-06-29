@@ -104,13 +104,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
-        var temporaryMaskedImage: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
-        imageView.image = temporaryMaskedImage;
-        return temporaryMaskedImage;
+        var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
+        var alphad = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: 0.5);
+        var merged = ImageMaskingUtils.mergeImages(first: masked, second: alphad);
+        imageView.image = merged;
+        return merged;
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
-        self.maskedImage = ImageMaskingUtils.image(fromImage: applyMaskToImage(), withAlpha: 0.5);
+        var masked = applyMaskToImage();
+        self.maskedImage = masked;
         imageView.image = self.maskedImage;
     }
     

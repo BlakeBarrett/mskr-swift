@@ -27,7 +27,9 @@ class ImageMaskingUtils {
         let sourceImage: CGImageRef! = source.CGImage;
         let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask);
         
-        return UIImage(CGImage: masked);
+        var maskedImage = UIImage(CGImage: masked);
+        
+        return maskedImage;
     }
     
     /**
@@ -40,7 +42,7 @@ class ImageMaskingUtils {
             max(first.size.height, second.size.height));
         
         if (UIGraphicsBeginImageContextWithOptions != nil) {
-            UIGraphicsBeginImageContextWithOptions(newImageSize, false, UIScreen().scale);
+            UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
         } else {
             UIGraphicsBeginImageContext(newImageSize);
         }
