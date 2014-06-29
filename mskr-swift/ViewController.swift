@@ -21,6 +21,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var maskedImage: UIImage = UIImage();
     var selectedMask: UIImage! = UIImage(named: "crclmsk");
     
+    let ALPHA_BLEND_VAL: CGFloat! = 0.5;
+    
     override func viewDidLoad() {
         imagePicker.delegate = self;
         imagePicker.allowsEditing = true;
@@ -105,7 +107,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
         var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
-        var alphad = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: 0.5);
+        var alphad = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL);
         var merged = ImageMaskingUtils.mergeImages(first: masked, second: alphad);
         imageView.image = merged;
         return merged;
