@@ -27,16 +27,7 @@ class ImageMaskingUtils {
         let sourceImage: CGImageRef! = source.CGImage;
         let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask);
         
-        let maskedUIImage: UIImage! = UIImage(CGImage: masked);
-        
-        // Because maskedUIIMage is of type UIImage!, there shouldn't be
-        // any way for it to be nil. This is to handle whatever is causing 
-        // this being recycled/garbage-collected prematurely.
-        if (maskedUIImage) {
-            return maskedUIImage;
-        } else {
-            return source;
-        }
+        return UIImage(CGImage: masked);
     }
     
     /**

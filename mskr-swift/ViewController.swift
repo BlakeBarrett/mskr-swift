@@ -13,16 +13,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var imagePicker: UIImagePickerController = UIImagePickerController();
     
     var selectedImageInfoDict: NSDictionary = NSDictionary();
-    var selectedMask: String = "crclmsk";
     let availableMasks = ["sqr", "crcl", "trngl", "POW", "plrd", "x", "eqlty", "hrt", "dmnd"];
     
     @IBOutlet var maskSelector : UIPickerView;
     @IBOutlet var imageView: UIImageView;
-    @IBOutlet var backgroundImageView: UIImageView;
     
-    var currentImage: UIImage! = UIImage();
-    var backgroundImage: UIImage! = UIImage();
-    var maskImage: UIImage! = UIImage(named: "crclmsk");
+    var maskedImage: UIImage = UIImage();
+    var selectedMask: UIImage! = UIImage(named: "crclmsk");
     
     override func viewDidLoad() {
         imagePicker.delegate = self;
@@ -44,7 +41,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         presentViewController(imagePicker, animated: true) {}
     }
 
-    
     // MARK: UIPickerView goodies
     // UIPickerViewDelegate "protocol" implementation
     // returns the number of 'columns' to display.
@@ -63,13 +59,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
-        var maskName = availableMasks[row].lowercaseString + "msk";
-        
-        self.maskImage = onMaskSelected(maskName: maskName);
-        
-        var img: UIImage = self.backgroundImage;
-        
-        onImageSelected(image: img, mask: self.maskImage);
+        onMaskSelected(row: row);
     }
     
     // MARK: UIImagePicker goodies
@@ -79,17 +69,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!)
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
-        println("Selected Image: \(info)");
-        selectedImageInfoDict = info;
-        
-        var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
-        self.backgroundImage = selectedImage;
-        onImageSelected(image: selectedImage, mask: self.maskImage);
-        
         picker.dismissViewControllerAnimated(true){}
-        
         // enable the mask selector
         maskSelector.userInteractionEnabled = true;
+
+        println("Selected Image: \(info)");
+        selectedImageInfoDict = info;
+        var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
+        onImageSelected(image: selectedImage);
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
@@ -97,33 +84,42 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: Mskr goodies
-    func onMaskSelected(#maskName: String!) -> UIImage! {
-        var mask: UIImage! = UIImage(named: maskName);
-        return mask;
+    func onImageSelected(#image: UIImage!) {
+        self.maskedImage = image;
+        applyMaskToImage();
     }
     
-    func onImageSelected(#image: UIImage!, mask: UIImage!) {
-        // foreground
-        self.currentImage = ImageMaskingUtils.maskImage(source: image, maskImage: mask);
-        imageView.image = currentImage;
+    func onMaskSelected(#row: Int) {
+        var maskName: String = getMaskNameForRow(row: row);
+        self.selectedMask = UIImage(named: maskName);
+        applyMaskToImage();
+    }
+    
+    func getMaskNameForRow(#row: Int) -> String {
+        return availableMasks[row].lowercaseString + "msk";
+    }
+    
+    func applyMaskToImage() -> UIImage! {
+        return applyMaskToImage(image: self.maskedImage, mask: self.selectedMask);
+    }
+    
+    func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
+        var temporaryMaskedImage: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
+        imageView.image = temporaryMaskedImage;
+        return temporaryMaskedImage;
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
-        currentImage = imageView.image;
-        var tempImage: UIImage = ImageMaskingUtils.mergeImages(first: backgroundImage, second: currentImage);
-        // background
-        backgroundImageView.image = backgroundImage;
-        backgroundImage = ImageMaskingUtils.image(fromImage: tempImage, withAlpha: 0.5);
-        currentImage = tempImage;
-        imageView.image = tempImage;
+        self.maskedImage = ImageMaskingUtils.image(fromImage: applyMaskToImage(), withAlpha: 0.5);
+        imageView.image = self.maskedImage;
     }
     
     func onAddImage() {
-        
+        // TODO: Implement
     }
     
     @IBAction func onSave(sender: AnyObject) {
-        UIImageWriteToSavedPhotosAlbum(currentImage,  nil, nil, nil);
+        UIImageWriteToSavedPhotosAlbum(applyMaskToImage(),  nil, nil, nil);
     }
     
     @IBAction func onStartOver(sender: AnyObject) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.17" systemVersion="14A261i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="lhS-H8-I3k">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.21" systemVersion="14A261i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="lhS-H8-I3k">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.11"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.13"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -64,14 +64,6 @@
                             <view appearanceType="aqua" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ven-Q1-f2f">
                                 <rect key="frame" x="0.0" y="62" width="320" height="320"/>
                                 <subviews>
-                                    <imageView appearanceType="aqua" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TfU-FU-uGH" userLabel="Background Image">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="TfU-FU-uGH" secondAttribute="height" multiplier="1:1" id="JDJ-mc-OgR"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="320" id="jU6-pU-OcB"/>
-                                            <constraint firstAttribute="width" constant="320" id="o0b-cv-isi"/>
-                                        </constraints>
-                                    </imageView>
                                     <imageView appearanceType="aqua" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="q0e-yd-0Nl" userLabel="Foreground Image - mskr_add.png">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                         <constraints>
@@ -84,11 +76,9 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="TfU-FU-uGH" firstAttribute="top" secondItem="q0e-yd-0Nl" secondAttribute="top" id="0qr-oV-GEo"/>
                                     <constraint firstItem="q0e-yd-0Nl" firstAttribute="leading" secondItem="Ven-Q1-f2f" secondAttribute="leading" id="YDk-IA-cec"/>
                                     <constraint firstAttribute="bottom" secondItem="q0e-yd-0Nl" secondAttribute="bottom" id="cMg-36-ADT"/>
                                     <constraint firstAttribute="trailing" secondItem="q0e-yd-0Nl" secondAttribute="trailing" id="nlm-ZH-hRx"/>
-                                    <constraint firstItem="TfU-FU-uGH" firstAttribute="leading" secondItem="q0e-yd-0Nl" secondAttribute="leading" id="rdG-X6-yxe"/>
                                     <constraint firstItem="q0e-yd-0Nl" firstAttribute="top" secondItem="Ven-Q1-f2f" secondAttribute="top" id="x7e-Ee-5YM"/>
                                 </constraints>
                             </view>
@@ -106,7 +96,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="backgroundImageView" destination="q0e-yd-0Nl" id="hEa-Du-6JG"/>
                         <outlet property="imageView" destination="q0e-yd-0Nl" id="M3t-zu-oRa"/>
                         <outlet property="maskSelector" destination="hTS-i9-0hF" id="x54-Vs-6yM"/>
                     </connections>
