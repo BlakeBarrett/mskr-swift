@@ -19,7 +19,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var imageView: UIImageView;
     
     var maskedImage: UIImage = UIImage();
-    var selectedMask: UIImage! = UIImage(named: "crclmsk");
+    var selectedMask: UIImage! = UIImage(named: "sqrmsk");
     
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
@@ -128,7 +128,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onStartOver(sender: AnyObject) {
-        
+        self.maskedImage = UIImage(named: "mskr_add");
+        imageView.image = self.maskedImage;
+        // TODO: Disable new/save/trash/action buttons
     }
     
     @IBAction func onShare(sender: AnyObject) {
