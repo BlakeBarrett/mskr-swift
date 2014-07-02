@@ -99,6 +99,7 @@
                     <connections>
                         <outlet property="imageView" destination="q0e-yd-0Nl" id="M3t-zu-oRa"/>
                         <outlet property="maskSelector" destination="hTS-i9-0hF" id="x54-Vs-6yM"/>
+                        <outlet property="toolbar" destination="XCj-fn-G0M" id="A3F-tT-fot"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hoj-KM-0lV" userLabel="First Responder" sceneMemberID="firstResponder"/>

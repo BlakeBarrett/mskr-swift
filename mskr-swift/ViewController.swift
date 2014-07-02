@@ -17,10 +17,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBOutlet var maskSelector : UIPickerView;
     @IBOutlet var imageView: UIImageView;
+    @IBOutlet var toolbar: UIToolbar;
     
     var maskedImage: UIImage = UIImage();
     var selectedMask: UIImage! = UIImage(named: "sqrmsk");
     
+    // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
     override func viewDidLoad() {
@@ -91,10 +93,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
         var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage);
         onImageSelected(image: squareImage);
+        
+        enableToolbar();
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
         picker.dismissViewControllerAnimated(true) {}
+    }
+    
+    func enableToolbar() {
+        // TODO: enable (touches on) toolbar
+    }
+    
+    func disableToolbar() {
+        // TODO: disable (touches on) toolbar
     }
     
     // MARK: Mskr goodies
@@ -119,8 +131,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
         var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
-        var alphad = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL);
-        var merged = ImageMaskingUtils.mergeImages(first: masked, second: alphad);
+        // TODO: Make this either be alpha or gaussian blur based on user preference
+        // See: http://stackoverflow.com/questions/19432773/creating-a-blur-effect-in-ios7
+        var background = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL);
+        var merged = ImageMaskingUtils.mergeImages(first: masked, second: background);
         imageView.image = merged;
         return merged;
     }
@@ -131,11 +145,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imageView.image = self.maskedImage;
     }
     
-    func onAddImage() {
+    func onAddImageLayer() {
+        // TODO: Implement
+    }
+    
+    func onAddColorLayer() {
         // TODO: Implement
     }
     
     @IBAction func onSave(sender: AnyObject) {
+        // TODO: Write EXIF metadata.
+        // See: http://stackoverflow.com/questions/5125323/problem-setting-exif-data-for-an-image
         UIImageWriteToSavedPhotosAlbum(applyMaskToImage(),  nil, nil, nil);
     }
     
@@ -143,10 +163,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.maskedImage = UIImage(named: "mskr_add");
         imageView.image = self.maskedImage;
         // TODO: Disable new/save/trash/action buttons
+        disableToolbar();
     }
     
     @IBAction func onShare(sender: AnyObject) {
-        
+        // TODO: Implement
     }
 
 }
