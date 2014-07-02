@@ -39,6 +39,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func onImageGestureRotate(sender: AnyObject) {
+        let recognizer: UIRotationGestureRecognizer = sender as UIRotationGestureRecognizer;
+        let rotation: CGFloat = recognizer.rotation;
+        
+        let transform: CGAffineTransform = CGAffineTransformMakeRotation(rotation);
+        //self.imageView.transform = transform;
+        
+        // TODO: Rotate image based on the gesture
+        println(rotation);
+    }
+    
     @IBAction func onImageTouch(sender: AnyObject) {
         presentViewController(imagePicker, animated: true) {}
     }
