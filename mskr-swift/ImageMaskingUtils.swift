@@ -47,18 +47,17 @@ class ImageMaskingUtils {
             UIGraphicsBeginImageContext(newImageSize);
         }
         
-        let TWO: CGFloat = 2;
         var wid: CGFloat = roundf(
-            (newImageSize.width - first.size.width) / TWO);
+            (newImageSize.width - first.size.width) / 2);
         var hei: CGFloat = roundf(
-            (newImageSize.height-first.size.height) / TWO);
+            (newImageSize.height-first.size.height) / 2);
         let firstPoint = CGPointMake(wid, hei);
         first.drawAtPoint(firstPoint);
         
         wid = roundf(
-            (newImageSize.width - second.size.width) / TWO);
+            (newImageSize.width - second.size.width) / 2);
         hei = roundf(
-            (newImageSize.height-second.size.height) / TWO);
+            (newImageSize.height-second.size.height) / 2);
         let secondPoint = CGPointMake(wid, hei);
         second.drawAtPoint(secondPoint);
         
@@ -72,10 +71,11 @@ class ImageMaskingUtils {
      * Returns a UIImage with the alpha modified
      */
     class func image(#fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
-        
-        var size: CGSize = fromImage.size;
-        
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0);
+        return image(fromImage: fromImage, withSize: fromImage.size, andAlpha: alpha);
+    }
+
+    class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 1);
         
         var ctx: CGContextRef = UIGraphicsGetCurrentContext();
         var area: CGRect = CGRectMake(0, 0, size.width, size.height);
@@ -94,5 +94,23 @@ class ImageMaskingUtils {
         UIGraphicsEndImageContext();
         
         return newImage;
+    }
+    
+    /**
+     * Stretches images that aren't 1:1 to squares based on their longest edge
+     */
+    class func makeItSquare(#image: UIImage) -> UIImage {
+        let longestSide = max(image.size.width, image.size.height);
+        let size: CGSize = CGSize(width: longestSide, height: longestSide);
+        
+        let x: CGFloat = (size.width - image.size.width) / 2;
+        let y: CGFloat = (size.height - image.size.height) / 2;
+        
+        let cropRect: CGRect = CGRectMake(x, y, size.width, size.height);
+        
+        let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
+        let cropped: UIImage = UIImage(CGImage: imageRef);
+        
+        return ImageMaskingUtils.image(fromImage: cropped, withSize: size, andAlpha: 1);
     }
 }

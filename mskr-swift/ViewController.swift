@@ -78,7 +78,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
-        onImageSelected(image: selectedImage);
+        var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage);
+        onImageSelected(image: squareImage);
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
