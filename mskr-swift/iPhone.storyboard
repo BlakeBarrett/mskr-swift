@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.21" systemVersion="14A261i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="lhS-H8-I3k">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.13"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
@@ -17,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="grey-background-mskr-text.png" translatesAutoresizingMaskIntoConstraints="NO" id="QeN-FF-qS7">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grey-background-mskr-text.png" translatesAutoresizingMaskIntoConstraints="NO" id="QeN-FF-qS7">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
                             <pickerView appearanceType="aqua" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="hTS-i9-0hF">
@@ -33,6 +34,18 @@
                                     <outlet property="delegate" destination="lhS-H8-I3k" id="lZr-uy-x1H"/>
                                 </connections>
                             </pickerView>
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="oHh-1c-JFR">
+                                <rect key="frame" x="0.0" y="54" width="320" height="320"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="oHh-1c-JFR" secondAttribute="height" multiplier="1:1" id="ImA-CX-7VF"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="7ch-Wn-IfT" appends="YES" id="jJb-gj-cs5"/>
+                                </connections>
+                            </imageView>
                             <toolbar appearanceType="aqua" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XCj-fn-G0M">
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <items>
@@ -61,43 +74,25 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
-                            <view appearanceType="aqua" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ven-Q1-f2f">
-                                <rect key="frame" x="0.0" y="106" width="320" height="320"/>
-                                <subviews>
-                                    <imageView appearanceType="aqua" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="q0e-yd-0Nl" userLabel="Foreground Image - mskr_add.png">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="q0e-yd-0Nl" secondAttribute="height" multiplier="1:1" id="URM-ia-xfQ"/>
-                                        </constraints>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="7ch-Wn-IfT" appends="YES" id="8Sh-pN-d67"/>
-                                            <outletCollection property="gestureRecognizers" destination="eKo-JR-OrF" appends="YES" id="d9b-gG-Zim"/>
-                                        </connections>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="q0e-yd-0Nl" firstAttribute="leading" secondItem="Ven-Q1-f2f" secondAttribute="leading" id="YDk-IA-cec"/>
-                                    <constraint firstAttribute="bottom" secondItem="q0e-yd-0Nl" secondAttribute="bottom" id="cMg-36-ADT"/>
-                                    <constraint firstAttribute="trailing" secondItem="q0e-yd-0Nl" secondAttribute="trailing" id="nlm-ZH-hRx"/>
-                                    <constraint firstItem="q0e-yd-0Nl" firstAttribute="top" secondItem="Ven-Q1-f2f" secondAttribute="top" id="x7e-Ee-5YM"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="hTS-i9-0hF" firstAttribute="leading" secondItem="XCj-fn-G0M" secondAttribute="leading" id="0o5-V2-ze1"/>
                             <constraint firstItem="XCj-fn-G0M" firstAttribute="bottom" secondItem="hTS-i9-0hF" secondAttribute="bottom" id="4Ze-wv-WYW"/>
+                            <constraint firstItem="oHh-1c-JFR" firstAttribute="top" secondItem="6Jk-k4-jFj" secondAttribute="bottom" constant="34" id="9TG-me-uh9"/>
                             <constraint firstAttribute="bottom" secondItem="XCj-fn-G0M" secondAttribute="bottom" id="Dnd-Qx-NCl"/>
                             <constraint firstItem="hTS-i9-0hF" firstAttribute="trailing" secondItem="XCj-fn-G0M" secondAttribute="trailing" id="Gdu-1l-JAx"/>
+                            <constraint firstAttribute="trailing" secondItem="QeN-FF-qS7" secondAttribute="trailing" id="IxB-H9-iHn"/>
                             <constraint firstItem="XCj-fn-G0M" firstAttribute="leading" secondItem="6O2-Xm-OKG" secondAttribute="leading" id="MOr-0q-x2W"/>
-                            <constraint firstAttribute="centerX" secondItem="Ven-Q1-f2f" secondAttribute="centerX" id="eRN-7p-iUO"/>
-                            <constraint firstAttribute="centerY" secondItem="Ven-Q1-f2f" secondAttribute="centerY" constant="18" id="hW5-Qr-cLJ"/>
-                            <constraint firstAttribute="width" secondItem="Ven-Q1-f2f" secondAttribute="height" multiplier="1:1" id="vHJ-p6-Z7K"/>
+                            <constraint firstItem="QeN-FF-qS7" firstAttribute="leading" secondItem="hTS-i9-0hF" secondAttribute="leading" id="VED-SU-glq"/>
+                            <constraint firstItem="oHh-1c-JFR" firstAttribute="leading" secondItem="hTS-i9-0hF" secondAttribute="leading" id="bRA-ai-J82"/>
+                            <constraint firstItem="QeN-FF-qS7" firstAttribute="top" secondItem="6O2-Xm-OKG" secondAttribute="top" id="c6e-Sa-Jwt"/>
+                            <constraint firstItem="QeN-FF-qS7" firstAttribute="bottom" secondItem="hTS-i9-0hF" secondAttribute="bottom" id="ueB-dZ-rgJ"/>
+                            <constraint firstItem="oHh-1c-JFR" firstAttribute="trailing" secondItem="QeN-FF-qS7" secondAttribute="trailing" id="xbG-SR-k3Z"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="imageView" destination="q0e-yd-0Nl" id="M3t-zu-oRa"/>
+                        <outlet property="imageView" destination="oHh-1c-JFR" id="CmW-9R-qGi"/>
                         <outlet property="maskSelector" destination="hTS-i9-0hF" id="x54-Vs-6yM"/>
                         <outlet property="toolbar" destination="XCj-fn-G0M" id="A3F-tT-fot"/>
                     </connections>
@@ -106,17 +101,16 @@
                 <tapGestureRecognizer id="7ch-Wn-IfT">
                     <connections>
                         <action selector="onImageTouch:" destination="lhS-H8-I3k" id="ZOc-8E-iEh"/>
-                        <outlet property="delegate" destination="q0e-yd-0Nl" id="Cah-43-99y"/>
+                        <outlet property="delegate" destination="oHh-1c-JFR" id="ET9-3F-WmW"/>
                     </connections>
                 </tapGestureRecognizer>
                 <rotationGestureRecognizer rotation="90" id="eKo-JR-OrF">
                     <connections>
                         <action selector="onImageGestureRotate:" destination="lhS-H8-I3k" id="zeZ-uy-mkp"/>
-                        <outlet property="delegate" destination="q0e-yd-0Nl" id="jc4-MO-iZD"/>
                     </connections>
                 </rotationGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="299" y="337"/>
+            <point key="canvasLocation" x="303" y="337"/>
         </scene>
     </scenes>
     <resources>
