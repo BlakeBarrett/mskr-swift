@@ -60,6 +60,12 @@
                                             <action selector="onSave:" destination="lhS-H8-I3k" id="uyQ-DA-5Lq"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="UB7-Bk-7Ob"/>
+                                    <barButtonItem systemItem="reply" id="TcT-SW-t9c">
+                                        <connections>
+                                            <action selector="onRotate:" destination="lhS-H8-I3k" id="HWN-XP-XNh"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="w3S-MG-SqD"/>
                                     <barButtonItem systemItem="trash" id="r9d-g9-Tlu">
                                         <connections>
@@ -69,7 +75,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Bo0-nc-WjY"/>
                                     <barButtonItem systemItem="action" id="GcL-6k-HR7">
                                         <connections>
-                                            <action selector="onShare:" destination="lhS-H8-I3k" id="xuh-fm-xME"/>
+                                            <action selector="onShowActionSheet:" destination="lhS-H8-I3k" id="mbC-1D-7RL"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>

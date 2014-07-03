@@ -50,6 +50,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // TODO: Rotate image based on the gesture
         println(rotation);
+        rotateImage(image: self.maskedImage, rotation: rotation);
     }
     
     @IBAction func onImageTouch(sender: AnyObject) {
@@ -85,6 +86,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
         picker.dismissViewControllerAnimated(true){}
+        
+        // ignore movies (for now).
+        if ("public.movie" == info.valueForKey("UIImagePickerControllerMediaType") as NSString) {
+            return;
+        }
+        
         // enable the mask selector
         maskSelector.userInteractionEnabled = true;
 
@@ -103,10 +110,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func enableToolbar() {
         // TODO: enable (touches on) toolbar
+        toolbar.userInteractionEnabled = true;
     }
     
     func disableToolbar() {
         // TODO: disable (touches on) toolbar
+        toolbar.userInteractionEnabled = false;
     }
     
     // MARK: Mskr goodies
@@ -139,6 +148,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return merged;
     }
     
+    func rotateImage(#image: UIImage, rotation radians: CGFloat) {
+        
+    }
+    
+    func rotateImage(#image: UIImage, rotation degrees: Int) {
+        
+    }
+    
     @IBAction func onAddLayer(sender: AnyObject) {
         var masked = applyMaskToImage();
         self.maskedImage = masked;
@@ -151,6 +168,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func onAddColorLayer() {
         // TODO: Implement
+    }
+    
+    @IBAction func onRotate(sender: AnyObject) {
+        rotateImage(image: self.maskedImage, rotation: 90);
     }
     
     @IBAction func onSave(sender: AnyObject) {
@@ -166,7 +187,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         disableToolbar();
     }
     
-    @IBAction func onShare(sender: AnyObject) {
+    @IBAction func onShowActionSheet(sender: AnyObject) {
         // TODO: Implement
     }
 
