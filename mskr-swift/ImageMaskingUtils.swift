@@ -113,4 +113,33 @@ class ImageMaskingUtils {
         
         return ImageMaskingUtils.image(fromImage: cropped, withSize: size, andAlpha: 1);
     }
+    
+    /**
+     * Takes an image and rotates it.
+     */
+    class func rotate(#image: UIImage, radians: CGFloat) -> UIImage {
+        // calculate the size of the rotated view's containing box for our drawing space
+        var rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
+        var transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
+        rotatedViewBox.transform = transform;
+        var rotatedSize: CGSize = rotatedViewBox.frame.size;
+        
+        // Create the bitmap context
+        UIGraphicsBeginImageContext(rotatedSize);
+        var bitmap: CGContextRef = UIGraphicsGetCurrentContext();
+        
+        // Move the origin to the middle of the image so we will rotate and scale around the center.
+        CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+        
+        // Rotate the image context
+        CGContextRotateCTM(bitmap, radians);
+        
+        // Now, draw the rotated/scaled image into the context
+        CGContextScaleCTM(bitmap, 1.0, -1.0);
+        CGContextDrawImage(bitmap, CGRectMake(-image.size.width / 2, -image.size.height / 2, image.size.width, image.size.height), image.CGImage);
+        
+        var rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return rotated;
+    }
 }

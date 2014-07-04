@@ -149,11 +149,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
-        
-    }
-    
-    func rotateImage(#image: UIImage, rotation degrees: Int) {
-        
+        self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians);
+        applyMaskToImage();
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
@@ -171,7 +168,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onRotate(sender: AnyObject) {
-        rotateImage(image: self.maskedImage, rotation: 90);
+        var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
+        rotateImage(image: self.maskedImage, rotation: rotationInRatians);
     }
     
     @IBAction func onSave(sender: AnyObject) {
