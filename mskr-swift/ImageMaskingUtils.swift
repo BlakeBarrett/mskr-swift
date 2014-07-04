@@ -47,17 +47,17 @@ class ImageMaskingUtils {
             UIGraphicsBeginImageContext(newImageSize);
         }
         
-        var wid: CGFloat = roundf(
-            (newImageSize.width - first.size.width) / 2);
-        var hei: CGFloat = roundf(
-            (newImageSize.height-first.size.height) / 2);
+        var wid: CGFloat = CGFloat(roundf(
+            CFloat(newImageSize.width - first.size.width) / 2.0));
+        var hei: CGFloat = CGFloat(roundf(
+            CFloat(newImageSize.height-first.size.height) / 2.0));
         let firstPoint = CGPointMake(wid, hei);
         first.drawAtPoint(firstPoint);
         
-        wid = roundf(
-            (newImageSize.width - second.size.width) / 2);
-        hei = roundf(
-            (newImageSize.height-second.size.height) / 2);
+        wid = CGFloat(roundf(
+            CFloat(newImageSize.width - second.size.width) / 2.0));
+        hei = CGFloat(roundf(
+            CFloat(newImageSize.height-second.size.height) / 2.0));
         let secondPoint = CGPointMake(wid, hei);
         second.drawAtPoint(secondPoint);
         
