@@ -112,6 +112,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // UIActionSheetDelegate interface/"protocol" implementation
     func showActionSheet() {
         var actionSheet = UIActionSheet();
+        // TODO: i18n
         actionSheet.addButtonWithTitle("Add layer");
         actionSheet.addButtonWithTitle("Rotate");
         actionSheet.addButtonWithTitle("Save");
@@ -148,15 +149,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    
     func enableToolbar() {
-        // TODO: enable (touches on) toolbar
         toolbar.userInteractionEnabled = true;
+        maskSelector.userInteractionEnabled = true;
     }
     
     func disableToolbar() {
-        // TODO: disable (touches on) toolbar
         toolbar.userInteractionEnabled = false;
+        maskSelector.userInteractionEnabled = false;
+        maskSelector.selectRow(0, inComponent: 0, animated: true);
     }
     
     // MARK: Mskr goodies
