@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate {
     
     var imagePicker: UIImagePickerController = UIImagePickerController();
     
@@ -108,6 +108,47 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.dismissViewControllerAnimated(true) {}
     }
     
+    // MARK: ActionSheet goodies
+    // UIActionSheetDelegate interface/"protocol" implementation
+    func showActionSheet() {
+        var actionSheet = UIActionSheet();
+        actionSheet.addButtonWithTitle("Add layer");
+        actionSheet.addButtonWithTitle("Rotate");
+        actionSheet.addButtonWithTitle("Save");
+        actionSheet.addButtonWithTitle("Share");
+        actionSheet.addButtonWithTitle("Delete");
+        actionSheet.addButtonWithTitle("About");
+        actionSheet.addButtonWithTitle("Cancel");
+        actionSheet.cancelButtonIndex = 6;
+        actionSheet.showInView(self.view);
+        actionSheet.delegate = self;
+    }
+    
+    func actionSheet(actionSheet: UIActionSheet!, clickedButtonAtIndex buttonIndex: Int){
+        switch (buttonIndex) {
+            case 0:
+                onAddLayer(actionSheet);
+                break;
+            case 1:
+                onRotate(actionSheet);
+                break;
+            case 2:
+                onSave(actionSheet);
+                break;
+            case 3:
+                onShare();
+                break;
+            case 4:
+                onStartOver(actionSheet);
+                break;
+            case 5:
+                onAbout();
+                break;
+            default:break;
+        }
+    }
+    
+    
     func enableToolbar() {
         // TODO: enable (touches on) toolbar
         toolbar.userInteractionEnabled = true;
@@ -178,6 +219,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         UIImageWriteToSavedPhotosAlbum(applyMaskToImage(),  nil, nil, nil);
     }
     
+    func onShare() {
+        // TODO: Implement
+    }
+    
     @IBAction func onStartOver(sender: AnyObject) {
         self.maskedImage = UIImage(named: "mskr_add");
         imageView.image = self.maskedImage;
@@ -185,8 +230,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         disableToolbar();
     }
     
-    @IBAction func onShowActionSheet(sender: AnyObject) {
+    func onAbout() {
         // TODO: Implement
+    }
+    
+    @IBAction func onShowActionSheet(sender: AnyObject) {
+        showActionSheet();
     }
 
 }
