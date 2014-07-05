@@ -77,8 +77,8 @@ class ImageMaskingUtils {
     class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1);
         
-        var ctx: CGContextRef = UIGraphicsGetCurrentContext();
-        var area: CGRect = CGRectMake(0, 0, size.width, size.height);
+        let ctx: CGContextRef = UIGraphicsGetCurrentContext();
+        let area: CGRect = CGRectMake(0, 0, size.width, size.height);
         
         CGContextScaleCTM(ctx, 1, -1);
         CGContextTranslateCTM(ctx, 0, -area.size.height);
@@ -89,7 +89,7 @@ class ImageMaskingUtils {
         
         CGContextDrawImage(ctx, area, fromImage.CGImage);
         
-        var newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext();
         
         UIGraphicsEndImageContext();
         
@@ -119,14 +119,14 @@ class ImageMaskingUtils {
      */
     class func rotate(#image: UIImage, radians: CGFloat) -> UIImage {
         // calculate the size of the rotated view's containing box for our drawing space
-        var rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
-        var transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
+        let rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
+        let transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
         rotatedViewBox.transform = transform;
-        var rotatedSize: CGSize = rotatedViewBox.frame.size;
+        let rotatedSize: CGSize = rotatedViewBox.frame.size;
         
         // Create the bitmap context
         UIGraphicsBeginImageContext(rotatedSize);
-        var bitmap: CGContextRef = UIGraphicsGetCurrentContext();
+        let bitmap: CGContextRef = UIGraphicsGetCurrentContext();
         
         // Move the origin to the middle of the image so we will rotate and scale around the center.
         CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
@@ -138,7 +138,7 @@ class ImageMaskingUtils {
         CGContextScaleCTM(bitmap, 1.0, -1.0);
         CGContextDrawImage(bitmap, CGRectMake(-image.size.width / 2, -image.size.height / 2, image.size.width, image.size.height), image.CGImage);
         
-        var rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         return rotated;
     }
