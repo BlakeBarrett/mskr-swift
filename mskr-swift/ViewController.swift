@@ -117,8 +117,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         actionSheet.addButtonWithTitle("Rotate");
         actionSheet.addButtonWithTitle("Save");
         actionSheet.addButtonWithTitle("Share");
-        actionSheet.addButtonWithTitle("Delete");
         actionSheet.addButtonWithTitle("About");
+        actionSheet.addButtonWithTitle("Delete");
         actionSheet.addButtonWithTitle("Cancel");
         actionSheet.cancelButtonIndex = 6;
         actionSheet.showInView(self.view);
@@ -140,10 +140,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 onShare();
                 break;
             case 4:
-                onStartOver(actionSheet);
+                onAbout();
                 break;
             case 5:
-                onAbout();
+                onStartOver(actionSheet);
                 break;
             default:break;
         }
