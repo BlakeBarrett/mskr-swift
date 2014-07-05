@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6154.21" systemVersion="14A261i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="lhS-H8-I3k">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.13"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -20,14 +19,11 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grey-background-mskr-text.png" translatesAutoresizingMaskIntoConstraints="NO" id="QeN-FF-qS7">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </imageView>
-                            <pickerView appearanceType="aqua" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="hTS-i9-0hF">
+                            <pickerView appearanceType="aqua" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hTS-i9-0hF">
                                 <rect key="frame" x="0.0" y="382" width="320" height="162"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="162" id="vby-1x-33z"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="lhS-H8-I3k" id="6cG-8F-7Lm"/>
                                     <outlet property="delegate" destination="lhS-H8-I3k" id="lZr-uy-x1H"/>
@@ -57,33 +53,31 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="azv-EU-JEk"/>
                                 </items>
                             </toolbar>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="oHh-1c-JFR">
-                                <rect key="frame" x="0.0" y="72" width="320" height="320"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="oHh-1c-JFR" secondAttribute="height" multiplier="1:1" id="ImA-CX-7VF"/>
-                                </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="7ch-Wn-IfT" appends="YES" id="jJb-gj-cs5"/>
-                                </connections>
-                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OW0-sp-cAZ">
+                                <rect key="frame" x="0.0" y="73" width="320" height="320"/>
+                                <subviews>
+                                    <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="oHh-1c-JFR">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <accessibilityTraits key="traits" none="YES" button="YES" image="YES"/>
+                                        </accessibility>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="7ch-Wn-IfT" appends="YES" id="jJb-gj-cs5"/>
+                                        </connections>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="hTS-i9-0hF" firstAttribute="leading" secondItem="XCj-fn-G0M" secondAttribute="leading" id="0o5-V2-ze1"/>
-                            <constraint firstItem="XCj-fn-G0M" firstAttribute="bottom" secondItem="hTS-i9-0hF" secondAttribute="bottom" constant="24" id="4Ze-wv-WYW"/>
-                            <constraint firstItem="oHh-1c-JFR" firstAttribute="top" secondItem="6Jk-k4-jFj" secondAttribute="bottom" constant="52" id="9TG-me-uh9"/>
-                            <constraint firstAttribute="bottom" secondItem="XCj-fn-G0M" secondAttribute="bottom" id="Dnd-Qx-NCl"/>
-                            <constraint firstItem="hTS-i9-0hF" firstAttribute="trailing" secondItem="XCj-fn-G0M" secondAttribute="trailing" id="Gdu-1l-JAx"/>
-                            <constraint firstAttribute="trailing" secondItem="QeN-FF-qS7" secondAttribute="trailing" id="IxB-H9-iHn"/>
-                            <constraint firstItem="XCj-fn-G0M" firstAttribute="leading" secondItem="6O2-Xm-OKG" secondAttribute="leading" id="MOr-0q-x2W"/>
-                            <constraint firstItem="QeN-FF-qS7" firstAttribute="leading" secondItem="hTS-i9-0hF" secondAttribute="leading" id="VED-SU-glq"/>
-                            <constraint firstItem="oHh-1c-JFR" firstAttribute="leading" secondItem="hTS-i9-0hF" secondAttribute="leading" id="bRA-ai-J82"/>
-                            <constraint firstItem="QeN-FF-qS7" firstAttribute="top" secondItem="6O2-Xm-OKG" secondAttribute="top" id="c6e-Sa-Jwt"/>
-                            <constraint firstItem="QeN-FF-qS7" firstAttribute="bottom" secondItem="hTS-i9-0hF" secondAttribute="bottom" constant="24" id="ueB-dZ-rgJ"/>
-                            <constraint firstItem="oHh-1c-JFR" firstAttribute="trailing" secondItem="QeN-FF-qS7" secondAttribute="trailing" id="xbG-SR-k3Z"/>
+                            <constraint firstAttribute="trailing" secondItem="XCj-fn-G0M" secondAttribute="trailing" id="8Mm-Ip-gl4"/>
+                            <constraint firstItem="1mv-Rg-5JV" firstAttribute="top" secondItem="XCj-fn-G0M" secondAttribute="bottom" id="FQ4-Df-N1q"/>
+                            <constraint firstItem="QeN-FF-qS7" firstAttribute="top" secondItem="6O2-Xm-OKG" secondAttribute="top" id="Klf-YZ-fyQ"/>
+                            <constraint firstAttribute="trailing" secondItem="QeN-FF-qS7" secondAttribute="trailing" id="MAS-TN-CSX"/>
+                            <constraint firstItem="1mv-Rg-5JV" firstAttribute="top" secondItem="QeN-FF-qS7" secondAttribute="bottom" id="SGS-FW-goP"/>
+                            <constraint firstItem="QeN-FF-qS7" firstAttribute="leading" secondItem="6O2-Xm-OKG" secondAttribute="leading" id="t3l-xt-NdU"/>
+                            <constraint firstItem="XCj-fn-G0M" firstAttribute="leading" secondItem="6O2-Xm-OKG" secondAttribute="leading" id="u2x-Ew-rfH"/>
                         </constraints>
                     </view>
                     <connections>
