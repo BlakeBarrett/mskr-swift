@@ -33,6 +33,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)
         //TODO: File a bug that if I put the above line in [ ]  I crash the compiler
         
+        disableToolbar();
+        
         super.viewDidLoad()
     }
     
@@ -117,8 +119,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         actionSheet.addButtonWithTitle("Rotate");
         actionSheet.addButtonWithTitle("Save");
         actionSheet.addButtonWithTitle("Share");
-        actionSheet.addButtonWithTitle("About");
         actionSheet.addButtonWithTitle("Delete");
+        actionSheet.addButtonWithTitle("About");
         actionSheet.addButtonWithTitle("Cancel");
         actionSheet.cancelButtonIndex = 6;
         actionSheet.showInView(self.view);
@@ -140,10 +142,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 onShare();
                 break;
             case 4:
-                onAbout();
+                onStartOver(actionSheet);
                 break;
             case 5:
-                onStartOver(actionSheet);
+                onAbout();
                 break;
             default:break;
         }

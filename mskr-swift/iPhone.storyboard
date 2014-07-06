@@ -13,11 +13,11 @@
                         <viewControllerLayoutGuide type="bottom" id="1mv-Rg-5JV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6O2-Xm-OKG">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="grey-background-mskr-text.png" translatesAutoresizingMaskIntoConstraints="NO" id="QeN-FF-qS7">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                             </imageView>
                             <pickerView appearanceType="aqua" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottom" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hTS-i9-0hF">
                                 <rect key="frame" x="0.0" y="382" width="320" height="162"/>
@@ -30,7 +30,7 @@
                                 </connections>
                             </pickerView>
                             <toolbar appearanceType="aqua" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XCj-fn-G0M">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="436" width="320" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="bgR-9a-wu9"/>
                                     <barButtonItem systemItem="add" id="0Zp-QF-KQV">
@@ -109,6 +109,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>
