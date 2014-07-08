@@ -40,12 +40,8 @@ class ImageMaskingUtils {
         let newImageSize: CGSize = CGSizeMake(
             max(first.size.width, second.size.width),
             max(first.size.height, second.size.height));
-        
-        if (UIGraphicsBeginImageContextWithOptions != nil) {
-            UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
-        } else {
-            UIGraphicsBeginImageContext(newImageSize);
-        }
+
+        UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
         
         var wid: CGFloat = CGFloat(roundf(
             CFloat(newImageSize.width - first.size.width) / 2.0));

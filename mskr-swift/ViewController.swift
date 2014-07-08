@@ -20,10 +20,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var toolbar: UIToolbar;
     
     var maskedImage: UIImage = UIImage();
-    var selectedMask: UIImage! = UIImage(named: "sqrmsk");
+    var selectedMask: UIImage;
     
     // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
+    
+    init(coder aDecoder: NSCoder!)  {
+        self.selectedMask = UIImage(named: "sqrmsk");
+        super.init(coder: aDecoder);
+    }
+    
+    init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        self.selectedMask = UIImage(named: "sqrmsk");
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
+    }
     
     override func viewDidLoad() {
         imagePicker.delegate = self;
