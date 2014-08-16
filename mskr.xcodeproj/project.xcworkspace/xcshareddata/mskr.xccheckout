@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>746D4C92-191A-49EB-85EA-D86C25E2EB61</string>
+	<key>IDESourceControlProjectName</key>
+	<string>mskr</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>701EB5CAEC75CC5A77BC6708D729D516C8D84009</key>
+		<string>github.com:BlakeBarrett/mskr-swift.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>mskr.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>701EB5CAEC75CC5A77BC6708D729D516C8D84009</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:BlakeBarrett/mskr-swift.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>701EB5CAEC75CC5A77BC6708D729D516C8D84009</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>701EB5CAEC75CC5A77BC6708D729D516C8D84009</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mskr-swift</string>
+		</dict>
+	</array>
+</dict>
+</plist>

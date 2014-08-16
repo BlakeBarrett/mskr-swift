@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AssetsLibrary
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate {
     
@@ -15,9 +16,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var selectedImageInfoDict: NSDictionary = NSDictionary();
     let availableMasks = ["sqr", "crcl", "trngl", "POW", "plrd", "x", "eqlty", "hrt", "dmnd"];
     
-    @IBOutlet var maskSelector : UIPickerView;
-    @IBOutlet var imageView: UIImageView;
-    @IBOutlet var toolbar: UIToolbar;
+    @IBOutlet var maskSelector : UIPickerView!;
+    @IBOutlet var imageView: UIImageView!;
+    @IBOutlet var toolbar: UIToolbar!;
     
     var maskedImage: UIImage = UIImage();
     var selectedMask: UIImage;
@@ -25,12 +26,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
-    init(coder aDecoder: NSCoder!)  {
+    required init(coder aDecoder: NSCoder!)  {
         self.selectedMask = UIImage(named: "sqrmsk");
         super.init(coder: aDecoder);
     }
     
-    init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.selectedMask = UIImage(named: "sqrmsk");
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
     }
@@ -65,10 +66,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         rotateImage(image: self.maskedImage, rotation: rotation);
     }
     
-    @IBAction func onImageTouch(sender: AnyObject) {
-        presentViewController(imagePicker, animated: true) {}
-    }
-
     // MARK: UIPickerView goodies
     // UIPickerViewDelegate "protocol" implementation
     // returns the number of 'columns' to display.
@@ -95,6 +92,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // handle camera capture
     //func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!)
+    @IBAction func onImageTouch(sender: AnyObject) {
+        presentViewController(imagePicker, animated: true) {}
+    }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
         picker.dismissViewControllerAnimated(true){}
@@ -106,7 +106,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // enable the mask selector
         maskSelector.userInteractionEnabled = true;
-
+        
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
@@ -118,6 +118,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
         picker.dismissViewControllerAnimated(true) {}
+    }
+    
+    func extractMetadataFromImageInfoDict(info: NSDictionary) {
+        var imageMetadata:NSMutableDictionary;
+        var assetURL = info.valueForKey("UIImagePickerControllerReferenceURL") as NSURL;
+        
+        var library = ALAssetsLibrary();
+//        library.assetForURL(assetURL: NSURL?,
+//            resultBlock: (asset: ALAsset) {
+//            },
+//            failureBlock: (fail:assetURL) {
+//            });
     }
     
     // MARK: ActionSheet goodies
