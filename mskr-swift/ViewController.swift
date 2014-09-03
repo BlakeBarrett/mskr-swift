@@ -42,7 +42,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.sourceType = .PhotoLibrary
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)
-        //TODO: File a bug that if I put the above line in [ ]  I crash the compiler
         
         disableToolbar();
         
@@ -238,7 +237,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onRotate(sender: AnyObject) {
-        var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
+        var rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0;
         rotateImage(image: self.maskedImage, rotation: rotationInRatians);
     }
     
@@ -249,7 +248,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func onShare() {
-        // TODO: Implement
+        var sharingItems = [AnyObject]()
+        
+        let image = applyMaskToImage()
+        sharingItems.append(image)
+        
+        let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
+        self.presentViewController(activityViewController, animated: true, completion: nil)
     }
     
     @IBAction func onStartOver(sender: AnyObject) {
@@ -264,7 +269,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onShowActionSheet(sender: AnyObject) {
-        showActionSheet();
+        //showActionSheet();
+        onShare();
     }
     
     var activityIndicatorView = UIActivityIndicatorView();
