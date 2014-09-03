@@ -26,7 +26,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
-    required init(coder aDecoder: NSCoder!)  {
+    required init(coder aDecoder: NSCoder)  {
         self.selectedMask = UIImage(named: "sqrmsk");
         super.init(coder: aDecoder);
     }
@@ -191,9 +191,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func onMaskSelected(#row: Int) {
+        showPleaseWait();
         var maskName: String = getMaskNameForRow(row: row);
         self.selectedMask = UIImage(named: maskName);
         applyMaskToImage();
+        hidePleaseWait();
     }
     
     func getMaskNameForRow(#row: Int) -> String {
@@ -215,8 +217,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
+        showPleaseWait();
         self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians);
         applyMaskToImage();
+        hidePleaseWait();
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
@@ -261,6 +265,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func onShowActionSheet(sender: AnyObject) {
         showActionSheet();
+    }
+    
+    var activityIndicatorView = UIActivityIndicatorView();
+    
+    func showPleaseWait() {
+        self.view.addSubview(activityIndicatorView);
+    }
+    
+    func hidePleaseWait() {
+        self.activityIndicatorView.removeFromSuperview();
     }
 
 }
