@@ -20,9 +20,6 @@
                         <subviews>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FrM-mA-pGk">
                                 <rect key="frame" x="0.0" y="430" width="600" height="162"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="-100" y="418" width="600" height="162"/>
-                                </variation>
                                 <connections>
                                     <outlet property="dataSource" destination="bV5-Wx-PzA" id="VZl-uP-Sad"/>
                                     <outlet property="delegate" destination="bV5-Wx-PzA" id="ME2-zY-aBJ"/>
@@ -55,9 +52,6 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                </variation>
                             </toolbar>
                             <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="eqv-f5-TdU">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
@@ -69,8 +63,7 @@
                                         <exclude reference="vqA-pZ-A6m"/>
                                     </mask>
                                 </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="-10" y="20" width="420" height="420"/>
+                                <variation key="widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="vqA-pZ-A6m"/>
                                     </mask>
