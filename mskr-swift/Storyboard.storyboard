@@ -18,14 +18,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FrM-mA-pGk">
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FrM-mA-pGk">
                                 <rect key="frame" x="0.0" y="430" width="600" height="162"/>
+                                <variation key="widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="16" y="418" width="320" height="162"/>
+                                </variation>
                                 <connections>
                                     <outlet property="dataSource" destination="bV5-Wx-PzA" id="VZl-uP-Sad"/>
                                     <outlet property="delegate" destination="bV5-Wx-PzA" id="ME2-zY-aBJ"/>
                                 </connections>
                             </pickerView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jcw-Ex-FM7">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jcw-Ex-FM7">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
                                     <barButtonItem systemItem="trash" id="e2U-pD-zla">
@@ -52,20 +55,32 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
+                                <variation key="widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="556" width="800" height="44"/>
+                                </variation>
                             </toolbar>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="eqv-f5-TdU">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="eqv-f5-TdU">
+                                <rect key="frame" x="0.0" y="20" width="600" height="600"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="eqv-f5-TdU" secondAttribute="height" multiplier="1:1" id="JCn-bS-a26"/>
+                                    <constraint firstAttribute="width" secondItem="eqv-f5-TdU" secondAttribute="height" multiplier="1:1" id="tlH-K0-JvF"/>
                                     <constraint firstAttribute="width" secondItem="eqv-f5-TdU" secondAttribute="height" multiplier="1:1" id="vqA-pZ-A6m"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="tlH-K0-JvF"/>
                                         <exclude reference="vqA-pZ-A6m"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="vqA-pZ-A6m"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="16" y="20" width="768" height="768"/>
+                                    <mask key="constraints">
+                                        <include reference="tlH-K0-JvF"/>
                                     </mask>
                                 </variation>
                                 <connections>
@@ -76,46 +91,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="Jcw-Ex-FM7" secondAttribute="trailing" constant="200" id="2sM-DQ-BOT">
-                                <variation key="widthClass=compact" constant="0.0"/>
-                            </constraint>
-                            <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="FrM-mA-pGk" secondAttribute="bottom" constant="20" id="3SW-9v-czF"/>
-                            <constraint firstAttribute="trailing" secondItem="eqv-f5-TdU" secondAttribute="trailing" id="BBU-oD-1Ef"/>
-                            <constraint firstItem="FrM-mA-pGk" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="JQL-EY-PcC"/>
-                            <constraint firstAttribute="bottom" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" constant="-20" id="LYx-vg-Bgm">
-                                <variation key="widthClass=compact" constant="0.0"/>
-                            </constraint>
-                            <constraint firstItem="Jcw-Ex-FM7" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="SZO-eg-kjs"/>
-                            <constraint firstItem="eqv-f5-TdU" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="arR-hE-3Kb"/>
-                            <constraint firstAttribute="trailing" secondItem="FrM-mA-pGk" secondAttribute="trailing" id="ls1-3K-knN"/>
-                            <constraint firstItem="eqv-f5-TdU" firstAttribute="top" secondItem="47c-gM-hFF" secondAttribute="bottom" id="zjo-al-o2q"/>
+                            <constraint firstItem="eqv-f5-TdU" firstAttribute="top" secondItem="47c-gM-hFF" secondAttribute="bottom" id="AAh-MK-9vu"/>
+                            <constraint firstAttribute="trailing" secondItem="FrM-mA-pGk" secondAttribute="trailing" id="CdH-A1-Uej"/>
+                            <constraint firstItem="FrM-mA-pGk" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="JLQ-Hk-DgR"/>
+                            <constraint firstAttribute="trailing" secondItem="Jcw-Ex-FM7" secondAttribute="trailing" id="NKB-ZG-otL"/>
+                            <constraint firstItem="Jcw-Ex-FM7" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="RgI-lu-Oh3"/>
+                            <constraint firstAttribute="trailing" secondItem="eqv-f5-TdU" secondAttribute="trailing" id="bh8-DP-HJy"/>
+                            <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="dFf-HA-qFK"/>
+                            <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="FrM-mA-pGk" secondAttribute="bottom" constant="8" id="exZ-sl-ieg"/>
+                            <constraint firstItem="eqv-f5-TdU" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="j7S-Vi-oYV"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="BBU-oD-1Ef"/>
-                                <exclude reference="arR-hE-3Kb"/>
-                                <exclude reference="zjo-al-o2q"/>
-                                <exclude reference="JQL-EY-PcC"/>
-                                <exclude reference="ls1-3K-knN"/>
-                                <exclude reference="2sM-DQ-BOT"/>
-                                <exclude reference="LYx-vg-Bgm"/>
-                                <exclude reference="SZO-eg-kjs"/>
-                                <exclude reference="3SW-9v-czF"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="constraints">
-                                <include reference="BBU-oD-1Ef"/>
-                                <include reference="arR-hE-3Kb"/>
-                                <include reference="zjo-al-o2q"/>
-                                <include reference="JQL-EY-PcC"/>
-                                <include reference="ls1-3K-knN"/>
-                                <include reference="2sM-DQ-BOT"/>
-                                <include reference="LYx-vg-Bgm"/>
-                                <include reference="SZO-eg-kjs"/>
-                                <include reference="3SW-9v-czF"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="eqv-f5-TdU" id="IQP-3j-sCn"/>
