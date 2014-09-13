@@ -115,11 +115,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var assetURL = info.valueForKey("UIImagePickerControllerReferenceURL") as NSURL;
         
         var library = ALAssetsLibrary();
-//        library.assetForURL(assetURL: NSURL?,
-//            resultBlock: (asset: ALAsset) {
-//            },
-//            failureBlock: (fail:assetURL) {
-//            });
     }
     
     // MARK: ActionSheet goodies

@@ -161,7 +161,7 @@
                             <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="V8g-ri-l8Y">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="eqv-f5-TdU">
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add.png" translatesAutoresizingMaskIntoConstraints="NO" id="eqv-f5-TdU">
                                         <rect key="frame" x="0.0" y="20" width="600" height="600"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="400" id="Q2l-Dd-zyY">
@@ -254,12 +254,6 @@
                                 <exclude reference="V8g-ri-l8Y"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="6ji-5L-l3w"/>
-                                <exclude reference="cwP-EL-toI"/>
-                                <exclude reference="9Fm-PS-Lgl"/>
-                                <exclude reference="OMR-fl-NtS"/>
-                                <exclude reference="cW1-DG-o5I"/>
-                                <exclude reference="mIW-He-iCx"/>
                                 <exclude reference="JlM-KS-cSc"/>
                                 <exclude reference="Rob-Dw-uFF"/>
                                 <exclude reference="jcs-F0-rbA"/>
@@ -267,6 +261,12 @@
                                 <exclude reference="qyu-ms-jNt"/>
                                 <exclude reference="cAu-bq-Ctg"/>
                                 <exclude reference="vwv-Fz-zga"/>
+                                <exclude reference="6ji-5L-l3w"/>
+                                <exclude reference="cwP-EL-toI"/>
+                                <exclude reference="9Fm-PS-Lgl"/>
+                                <exclude reference="OMR-fl-NtS"/>
+                                <exclude reference="cW1-DG-o5I"/>
+                                <exclude reference="mIW-He-iCx"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -282,16 +282,16 @@
                                 <include reference="V8g-ri-l8Y"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="JlM-KS-cSc"/>
+                                <include reference="Rob-Dw-uFF"/>
+                                <include reference="jcs-F0-rbA"/>
+                                <include reference="vwv-Fz-zga"/>
                                 <include reference="6ji-5L-l3w"/>
                                 <include reference="cwP-EL-toI"/>
                                 <include reference="9Fm-PS-Lgl"/>
                                 <include reference="OMR-fl-NtS"/>
                                 <include reference="cW1-DG-o5I"/>
                                 <include reference="mIW-He-iCx"/>
-                                <include reference="JlM-KS-cSc"/>
-                                <include reference="Rob-Dw-uFF"/>
-                                <include reference="jcs-F0-rbA"/>
-                                <include reference="vwv-Fz-zga"/>
                             </mask>
                         </variation>
                     </view>

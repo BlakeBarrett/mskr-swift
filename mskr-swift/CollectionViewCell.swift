@@ -22,7 +22,6 @@ class CollectionViewCell: UICollectionViewCell {
     }
     
     func onImageTouch(sender: AnyObject) {
-//        NSNotificationCenter.defaultCenter().postNotificationName("NotificationIdentifier", object: nil)
     }
     
 }
