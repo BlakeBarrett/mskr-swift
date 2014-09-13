@@ -39,7 +39,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         imagePicker.delegate = self;
         imagePicker.allowsEditing = true;
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .SavedPhotosAlbum
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
         
@@ -70,6 +70,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         cell.imageView.image = maskImage
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView,
+        didSelectItemAtIndexPath indexPath: NSIndexPath) {
+            let indexPathRow: Int! = indexPath.row;
+            let maskName = getMaskNameForRow(row: indexPathRow);
+            self.selectedMask = getMaskForName(name: maskName);
+            applyMaskToImage();
     }
     
     // MARK: UIImagePicker goodies
@@ -181,6 +189,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func getMaskNameForRow(#row: Int) -> String {
         return availableMasks[row].lowercaseString + "msk";
+    }
+    
+    func getMaskForName(#name: String) -> UIImage {
+        return UIImage(named: name);
     }
     
     func applyMaskToImage() -> UIImage! {
