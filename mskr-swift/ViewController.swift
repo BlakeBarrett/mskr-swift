@@ -9,16 +9,16 @@
 import UIKit
 import AssetsLibrary
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UIActionSheetDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UIActionSheetDelegate {
     
     var imagePicker: UIImagePickerController = UIImagePickerController();
     
     var selectedImageInfoDict: NSDictionary = NSDictionary();
-    let availableMasks = ["sqr", "crcl", "trngl", "POW", "plrd", "x", "eqlty", "hrt", "dmnd"];
+    let availableMasks: Array<String>! = ["sqr", "crcl", "trngl", "POW", "plrd", "x", "eqlty", "hrt", "dmnd"];
     
-    @IBOutlet var maskSelector : UIPickerView!;
     @IBOutlet var imageView: UIImageView!;
     @IBOutlet var toolbar: UIToolbar!;
+    @IBOutlet var maskCollectionView: UICollectionView!;
     
     var maskedImage: UIImage = UIImage();
     var selectedMask: UIImage;
@@ -39,9 +39,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         imagePicker.delegate = self;
         imagePicker.allowsEditing = true;
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .SavedPhotosAlbum
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)
+        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
         
         disableToolbar();
         
@@ -53,37 +53,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func onImageGestureRotate(sender: AnyObject) {
-        let recognizer: UIRotationGestureRecognizer = sender as UIRotationGestureRecognizer;
-        let rotation: CGFloat = recognizer.rotation;
+    // MARK:
+    // MARK: CollectionView goodies
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    {
+        return availableMasks.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    {
+        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("mskcell", forIndexPath: indexPath) as CollectionViewCell
         
-        let transform: CGAffineTransform = CGAffineTransformMakeRotation(rotation);
-        //self.imageView.transform = transform;
+        let index = indexPath.row
+        let imageName = getMaskNameForRow(row: index)
+        let maskImage = UIImage(named: imageName)
         
-        // TODO: Rotate image based on the gesture
-        println(rotation);
-        rotateImage(image: self.maskedImage, rotation: rotation);
+        cell.imageView.image = maskImage
+        return cell
     }
     
-    // MARK: UIPickerView goodies
-    // UIPickerViewDelegate "protocol" implementation
-    // returns the number of 'columns' to display.
-    func numberOfComponentsInPickerView(pickerView: UIPickerView!) -> Int {
-        return 1;
-    }
-    
-    // returns the # of rows in each component..
-    func pickerView(pickerView: UIPickerView!, numberOfRowsInComponent component: Int) -> Int {
-        return availableMasks.count;
-    }
-    
-    // UIPickerViewDataSource "protocol" implementation
-    func pickerView(pickerView: UIPickerView!, titleForRow row: Int, forComponent component: Int) -> String! {
-        return availableMasks[row];
-    }
-    
-    func pickerView(pickerView: UIPickerView!, didSelectRow row: Int, inComponent component: Int) {
-        onMaskSelected(row: row);
+    func collectionView(collectionView: UICollectionView,
+        didSelectItemAtIndexPath indexPath: NSIndexPath) {
+            let indexPathRow: Int! = indexPath.row;
+            let maskName = getMaskNameForRow(row: indexPathRow);
+            self.selectedMask = getMaskForName(name: maskName);
+            applyMaskToImage();
     }
     
     // MARK: UIImagePicker goodies
@@ -103,9 +97,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return;
         }
         
-        // enable the mask selector
-        maskSelector.userInteractionEnabled = true;
-        
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
@@ -124,11 +115,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var assetURL = info.valueForKey("UIImagePickerControllerReferenceURL") as NSURL;
         
         var library = ALAssetsLibrary();
-//        library.assetForURL(assetURL: NSURL?,
-//            resultBlock: (asset: ALAsset) {
-//            },
-//            failureBlock: (fail:assetURL) {
-//            });
     }
     
     // MARK: ActionSheet goodies
@@ -174,13 +160,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func enableToolbar() {
         toolbar.userInteractionEnabled = true;
-        maskSelector.userInteractionEnabled = true;
+        maskCollectionView.hidden = false;
     }
     
     func disableToolbar() {
         toolbar.userInteractionEnabled = false;
-        maskSelector.userInteractionEnabled = false;
-        maskSelector.selectRow(0, inComponent: 0, animated: true);
+        maskCollectionView.hidden = true;
     }
     
     // MARK: Mskr goodies
@@ -199,6 +184,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func getMaskNameForRow(#row: Int) -> String {
         return availableMasks[row].lowercaseString + "msk";
+    }
+    
+    func getMaskForName(#name: String) -> UIImage {
+        return UIImage(named: name);
     }
     
     func applyMaskToImage() -> UIImage! {

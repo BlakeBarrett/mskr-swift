@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */; };
+		25C4815C19BD334F00692689 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4815B19BD334F00692689 /* CollectionViewCell.swift */; };
 		25CC3AE619B6F04300E13A06 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25CC3AE519B6F04300E13A06 /* Storyboard.storyboard */; };
 		25ECE280193EFF2700A272CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE27F193EFF2700A272CF /* AppDelegate.swift */; };
 		25ECE282193EFF2700A272CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25ECE281193EFF2700A272CF /* ViewController.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
+		25C4815B19BD334F00692689 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		25CC3AE519B6F04300E13A06 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
 		25ECE27A193EFF2700A272CF /* mskr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mskr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25ECE27E193EFF2700A272CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				25ECE27D193EFF2700A272CF /* Supporting Files */,
 				2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */,
 				25CC3AE519B6F04300E13A06 /* Storyboard.storyboard */,
+				25C4815B19BD334F00692689 /* CollectionViewCell.swift */,
 			);
 			path = "mskr-swift";
 			sourceTree = "<group>";
@@ -261,6 +264,7 @@
 			files = (
 				2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */,
 				25ECE282193EFF2700A272CF /* ViewController.swift in Sources */,
+				25C4815C19BD334F00692689 /* CollectionViewCell.swift in Sources */,
 				25ECE280193EFF2700A272CF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
