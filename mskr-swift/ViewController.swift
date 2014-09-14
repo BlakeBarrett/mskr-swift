@@ -26,17 +26,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
+    var context: CIContext;
+    
     required init(coder aDecoder: NSCoder)  {
         self.selectedMask = UIImage(named: "sqrmsk");
+        self.context = CIContext(options: nil);
         super.init(coder: aDecoder);
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         self.selectedMask = UIImage(named: "sqrmsk");
+        self.context = CIContext(options: nil);
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
     }
     
     override func viewDidLoad() {
+        self.context = CIContext(options: nil);
         imagePicker.delegate = self;
         imagePicker.allowsEditing = true;
         imagePicker.sourceType = .SavedPhotosAlbum
@@ -206,7 +211,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
         showPleaseWait();
-        self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians);
+        self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians, context: context);
         applyMaskToImage();
         hidePleaseWait();
     }
@@ -226,7 +231,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onRotate(sender: AnyObject) {
-        var rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0;
+        var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
         rotateImage(image: self.maskedImage, rotation: rotationInRatians);
     }
     

@@ -113,16 +113,16 @@ class ImageMaskingUtils {
     /**
      * Takes an image and rotates it using CoreImage filters.
      */
-    class func rotate(#image: UIImage, radians: CGFloat) -> UIImage {
+    class func rotate(#image: UIImage, radians: CGFloat, context: CIContext) -> UIImage {
         
-        let context = CIContext();
-        
+        let ciImage = CIImage(image: image)
         let filter: CIFilter = CIFilter(name: "CIStraightenFilter")
-        filter.setValue(image, forKey: kCIInputImageKey)
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
         filter.setValue(radians, forKey: kCIInputAngleKey)
         
-        let outputCIImage: CIImage = filter.outputImage;
-        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
+        let outputCIImage: CIImage = filter.outputImage!
+        let outputRect: CGRect = outputCIImage.extent()
+        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputRect)
         return UIImage(CGImage: outputCGImageRef);
     }
 }
