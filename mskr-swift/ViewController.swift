@@ -238,6 +238,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func onShare() {
         var sharingItems = [AnyObject]()
+        sharingItems.append("Made with #mskr.")
         
         let image = applyMaskToImage()
         sharingItems.append(image)
