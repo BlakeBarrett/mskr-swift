@@ -111,31 +111,18 @@ class ImageMaskingUtils {
     }
     
     /**
-     * Takes an image and rotates it.
+     * Takes an image and rotates it using CoreImage filters.
      */
     class func rotate(#image: UIImage, radians: CGFloat) -> UIImage {
-        // calculate the size of the rotated view's containing box for our drawing space
-        let rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
-        let transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
-        rotatedViewBox.transform = transform;
-        let rotatedSize: CGSize = rotatedViewBox.frame.size;
         
-        // Create the bitmap context
-        UIGraphicsBeginImageContext(rotatedSize);
-        let bitmap: CGContextRef = UIGraphicsGetCurrentContext();
+        let context = CIContext();
         
-        // Move the origin to the middle of the image so we will rotate and scale around the center.
-        CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+        let filter: CIFilter = CIFilter(name: "CIStraightenFilter")
+        filter.setValue(image, forKey: kCIInputImageKey)
+        filter.setValue(radians, forKey: kCIInputAngleKey)
         
-        // Rotate the image context
-        CGContextRotateCTM(bitmap, radians);
-        
-        // Now, draw the rotated/scaled image into the context
-        CGContextScaleCTM(bitmap, 1.0, -1.0);
-        CGContextDrawImage(bitmap, CGRectMake(-image.size.width / 2, -image.size.height / 2, image.size.width, image.size.height), image.CGImage);
-        
-        let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return rotated;
+        let outputCIImage: CIImage = filter.outputImage;
+        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
+        return UIImage(CGImage: outputCGImageRef);
     }
 }
