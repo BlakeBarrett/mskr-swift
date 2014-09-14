@@ -29,13 +29,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var context: CIContext;
     
     required init(coder aDecoder: NSCoder)  {
-        self.selectedMask = UIImage(named: "sqrmsk");
+        self.selectedMask = UIImage(named: "crclmsk");
         self.context = CIContext(options: nil);
         super.init(coder: aDecoder);
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        self.selectedMask = UIImage(named: "sqrmsk");
+        self.selectedMask = UIImage(named: "crclmsk");
         self.context = CIContext(options: nil);
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
     }
@@ -105,7 +105,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
-        var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage);
+        var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage, context: context);
         onImageSelected(image: squareImage);
         
         enableToolbar();
@@ -196,16 +196,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func applyMaskToImage() -> UIImage! {
-        return applyMaskToImage(image: self.maskedImage, mask: self.selectedMask);
+        let maskedImage = applyMaskToImage(image: self.maskedImage, mask: self.selectedMask);
+        imageView.image = maskedImage;
+        return maskedImage;
     }
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
         var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
         // TODO: Make this either be alpha or gaussian blur based on user preference
         // See: http://stackoverflow.com/questions/19432773/creating-a-blur-effect-in-ios7
-        var background = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL);
-        var merged = ImageMaskingUtils.mergeImages(first: masked, second: background);
-        imageView.image = merged;
+        var background = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL, context: context);
+        var merged = ImageMaskingUtils.mergeImages(first: background, second: masked);
         return merged;
     }
     

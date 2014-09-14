@@ -37,6 +37,10 @@ class ImageMaskingUtils {
      */
     class func mergeImages(#first: UIImage, second: UIImage) -> UIImage {
         
+        // TODO: use CIFilter(name: "CIBlendWithAlphaMask") or CIFilter(name: "CIBlendWithMask")
+        // https://developer.apple.com/library/mac/documentation/graphicsimaging/reference/CoreImageFilterReference/Reference/reference.html#//apple_ref/doc/uid/TP30000136-DontLinkElementID_14
+        
+        
         let newImageSize: CGSize = CGSizeMake(
             max(first.size.width, second.size.width),
             max(first.size.height, second.size.height));
@@ -65,37 +69,23 @@ class ImageMaskingUtils {
     
     /**
      * Returns a UIImage with the alpha modified
+     * Uses Core Image Filter
      */
-    class func image(#fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
-        return image(fromImage: fromImage, withSize: fromImage.size, andAlpha: alpha);
-    }
-
-    class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 1);
+    class func image(#fromImage: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
+        let ciImage = CIImage(image: fromImage)
+        let filter: CIFilter = CIFilter(name: "CIColorMatrix")
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        filter.setValue(CIVector(x: 0, y: 0, z: 0, w: alpha), forKey: "inputAVector")
         
-        let ctx: CGContextRef = UIGraphicsGetCurrentContext();
-        let area: CGRect = CGRectMake(0, 0, size.width, size.height);
-        
-        CGContextScaleCTM(ctx, 1, -1);
-        CGContextTranslateCTM(ctx, 0, -area.size.height);
-        
-        CGContextSetBlendMode(ctx, kCGBlendModeMultiply);
-        
-        CGContextSetAlpha(ctx, alpha);
-        
-        CGContextDrawImage(ctx, area, fromImage.CGImage);
-        
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext();
-        
-        UIGraphicsEndImageContext();
-        
-        return newImage;
+        let outputCIImage: CIImage = filter.outputImage!
+        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
+        return UIImage(CGImage: outputCGImageRef);
     }
     
     /**
      * Stretches images that aren't 1:1 to squares based on their longest edge
      */
-    class func makeItSquare(#image: UIImage) -> UIImage {
+    class func makeItSquare(#image: UIImage, context: CIContext) -> UIImage {
         let shortestSide = min(image.size.width, image.size.height);
         let size: CGSize = CGSize(width: shortestSide, height: shortestSide);
         
@@ -106,22 +96,20 @@ class ImageMaskingUtils {
         let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
         let cropped: UIImage = UIImage(CGImage: imageRef);
         
-        return ImageMaskingUtils.image(fromImage: cropped, withSize: size, andAlpha: 1);
+        return ImageMaskingUtils.image(fromImage: cropped, withAlpha: 1, context: context);
     }
     
     /**
      * Takes an image and rotates it using CoreImage filters.
      */
     class func rotate(#image: UIImage, radians: CGFloat, context: CIContext) -> UIImage {
-        
         let ciImage = CIImage(image: image)
         let filter: CIFilter = CIFilter(name: "CIStraightenFilter")
         filter.setValue(ciImage, forKey: kCIInputImageKey)
         filter.setValue(radians, forKey: kCIInputAngleKey)
         
         let outputCIImage: CIImage = filter.outputImage!
-        let outputRect: CGRect = outputCIImage.extent()
-        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputRect)
+        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
         return UIImage(CGImage: outputCGImageRef);
     }
 }
