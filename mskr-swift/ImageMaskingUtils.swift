@@ -96,14 +96,13 @@ class ImageMaskingUtils {
      * Stretches images that aren't 1:1 to squares based on their longest edge
      */
     class func makeItSquare(#image: UIImage) -> UIImage {
-        let longestSide = max(image.size.width, image.size.height);
-        let size: CGSize = CGSize(width: longestSide, height: longestSide);
+        let shortestSide = min(image.size.width, image.size.height);
+        let size: CGSize = CGSize(width: shortestSide, height: shortestSide);
         
-        let x: CGFloat = (size.width - image.size.width) / 2;
-        let y: CGFloat = (size.height - image.size.height) / 2;
+        let x: CGFloat = (image.size.width - size.width) / 2;
+        let y: CGFloat = (image.size.height - size.height) / 2;
         
         let cropRect: CGRect = CGRectMake(x, y, size.width, size.height);
-        
         let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
         let cropped: UIImage = UIImage(CGImage: imageRef);
         
