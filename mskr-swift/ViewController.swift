@@ -27,7 +27,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
     required init(coder aDecoder: NSCoder)  {
-        self.selectedMask = UIImage(named: "sqrmsk");
+        self.selectedMask = UIImage(named: "crclmsk");
         super.init(coder: aDecoder);
     }
     
