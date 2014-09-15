@@ -15,7 +15,7 @@ class ImageMaskingUtils {
      */
     class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
         let foreground = CIImage(image: first)
-
+        
         // create a faded image (for the background)
         let alphaFadeFilter: CIFilter = CIFilter(name: "CIColorMatrix")
         alphaFadeFilter.setValue(foreground, forKey: kCIInputImageKey)
@@ -39,7 +39,7 @@ class ImageMaskingUtils {
         filter.setValue(background, forKey: kCIInputImageKey)
         filter.setValue(foreground, forKey: kCIInputBackgroundImageKey)
         filter.setValue(scaledMask, forKey: kCIInputMaskImageKey)
-
+        
         return ImageMaskingUtils.uiImageFromCIImage(input: filter.outputImage, context: context);
     }
     
@@ -81,8 +81,7 @@ class ImageMaskingUtils {
     }
     
     class func uiImageFromCIImage(#input: CIImage, withSize size: CGRect, context: CIContext) -> UIImage {
-        let outputCIImage: CIImage = input
-        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: size)
+        let outputCGImageRef: CGImageRef =  context.createCGImage(input, fromRect: size)
         return UIImage(CGImage: outputCGImageRef);
     }
     
