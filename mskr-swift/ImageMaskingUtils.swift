@@ -10,80 +10,41 @@ import Foundation
 import UIKit
 
 class ImageMaskingUtils {
-    
     /**
-     * Masks the source image with the second.
+     * Rasterizes two images into one.
      */
-    class func maskImage(#source: UIImage!, maskImage: UIImage!) -> UIImage {
-        
-        let maskRef: CGImageRef! = maskImage.CGImage;
-        let mask: CGImageRef! = CGImageMaskCreate(CGImageGetWidth(maskRef),
-            CGImageGetHeight(maskRef),
-            CGImageGetBitsPerComponent(maskRef),
-            CGImageGetBitsPerPixel(maskRef),
-            CGImageGetBytesPerRow(maskRef),
-            CGImageGetDataProvider(maskRef), nil, true);
-        
-        let sourceImage: CGImageRef! = source.CGImage;
-        let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask);
-        
-        var maskedImage = UIImage(CGImage: masked);
-        
-        return maskedImage;
-    }
-    
-    /**
-     * Flattens or rasterizes two images into one.
-     */
-    class func mergeImages(#first: UIImage, second: UIImage) -> UIImage {
-        
-        // TODO: use CIFilter(name: "CIBlendWithAlphaMask") or CIFilter(name: "CIBlendWithMask")
-        // https://developer.apple.com/library/mac/documentation/graphicsimaging/reference/CoreImageFilterReference/Reference/reference.html#//apple_ref/doc/uid/TP30000136-DontLinkElementID_14
-        
-        
-        let newImageSize: CGSize = CGSizeMake(
-            max(first.size.width, second.size.width),
-            max(first.size.height, second.size.height));
+    class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
+        let foreground = CIImage(image: first)
 
-        UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
+        // create a faded image (for the background)
+        let alphaFadeFilter: CIFilter = CIFilter(name: "CIColorMatrix")
+        alphaFadeFilter.setValue(foreground, forKey: kCIInputImageKey)
+        alphaFadeFilter.setValue(CIVector(x: 0, y: 0, z: 0, w: alpha), forKey: "inputAVector")
+        let background: CIImage = alphaFadeFilter.outputImage
         
-        var wid: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.width - first.size.width) / 2.0));
-        var hei: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.height-first.size.height) / 2.0));
-        let firstPoint = CGPointMake(wid, hei);
-        first.drawAtPoint(firstPoint);
+        // convert the mask image into alpha mask
+        let alphaMaskFilter: CIFilter = CIFilter(name: "CIMaskToAlpha")
+        alphaMaskFilter.setValue(CIImage(image: second), forKey: kCIInputImageKey)
+        let alphaMask = alphaMaskFilter.outputImage;
         
-        wid = CGFloat(roundf(
-            CFloat(newImageSize.width - second.size.width) / 2.0));
-        hei = CGFloat(roundf(
-            CFloat(newImageSize.height-second.size.height) / 2.0));
-        let secondPoint = CGPointMake(wid, hei);
-        second.drawAtPoint(secondPoint);
+        // scale the mask to the appropriate size
+        let scale = foreground.extent().width / alphaMask.extent().width;
+        let maskScaleFilter: CIFilter = CIFilter(name: "CILanczosScaleTransform")
+        maskScaleFilter.setValue(alphaMask, forKey: kCIInputImageKey)
+        maskScaleFilter.setValue(scale, forKey: kCIInputScaleKey);
+        let scaledMask = maskScaleFilter.outputImage;
         
-        var image: UIImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        
-        return image;
+        // merge all elements
+        let filter: CIFilter = CIFilter(name: "CIBlendWithAlphaMask")
+        filter.setValue(background, forKey: kCIInputImageKey)
+        filter.setValue(foreground, forKey: kCIInputBackgroundImageKey)
+        filter.setValue(scaledMask, forKey: kCIInputMaskImageKey)
+
+        return ImageMaskingUtils.uiImageFromCIImage(input: filter.outputImage, context: context);
     }
     
     /**
-     * Returns a UIImage with the alpha modified
-     * Uses Core Image Filter
-     */
-    class func image(#fromImage: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
-        let ciImage = CIImage(image: fromImage)
-        let filter: CIFilter = CIFilter(name: "CIColorMatrix")
-        filter.setValue(ciImage, forKey: kCIInputImageKey)
-        filter.setValue(CIVector(x: 0, y: 0, z: 0, w: alpha), forKey: "inputAVector")
-        
-        let outputCIImage: CIImage = filter.outputImage!
-        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
-        return UIImage(CGImage: outputCGImageRef);
-    }
-    
-    /**
-     * Stretches images that aren't 1:1 to squares based on their longest edge
+     * Crops images that aren't 1:1 to squares based on their shortest edge.
      */
     class func makeItSquare(#image: UIImage, context: CIContext) -> UIImage {
         let shortestSide = min(image.size.width, image.size.height);
@@ -93,10 +54,14 @@ class ImageMaskingUtils {
         let y: CGFloat = (image.size.height - size.height) / 2;
         
         let cropRect: CGRect = CGRectMake(x, y, size.width, size.height);
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
-        let cropped: UIImage = UIImage(CGImage: imageRef);
-        
-        return ImageMaskingUtils.image(fromImage: cropped, withAlpha: 1, context: context);
+        return ImageMaskingUtils.uiImageFromCIImage(input: CIImage(image: image), withSize: cropRect, context: context)
+    }
+    
+    /**
+     * Crops an image to the rects specified.
+     */
+    class func cropImageToRects(#image: UIImage, rects: CGRect, context: CIContext) -> UIImage {
+        return ImageMaskingUtils.uiImageFromCIImage(input: CIImage(image: image), withSize: rects, context: context)
     }
     
     /**
@@ -108,8 +73,17 @@ class ImageMaskingUtils {
         filter.setValue(ciImage, forKey: kCIInputImageKey)
         filter.setValue(radians, forKey: kCIInputAngleKey)
         
-        let outputCIImage: CIImage = filter.outputImage!
-        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: outputCIImage.extent())
+        return ImageMaskingUtils.uiImageFromCIImage(input: filter.outputImage, context: context);
+    }
+    
+    class func uiImageFromCIImage(#input: CIImage, context: CIContext) -> UIImage {
+        return uiImageFromCIImage(input: input, withSize: input.extent(), context: context);
+    }
+    
+    class func uiImageFromCIImage(#input: CIImage, withSize size: CGRect, context: CIContext) -> UIImage {
+        let outputCIImage: CIImage = input
+        let outputCGImageRef: CGImageRef =  context.createCGImage(outputCIImage, fromRect: size)
         return UIImage(CGImage: outputCGImageRef);
     }
+    
 }

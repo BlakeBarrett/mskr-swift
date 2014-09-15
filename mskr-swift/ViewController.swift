@@ -104,7 +104,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
+        
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
+        
+        /*
+        // Fullsize image with user selected crop
+        var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerOriginalImage") as UIImage;
+        var rects: CGRect = (info.objectForKey("UIImagePickerControllerCropRect")?.CGRectValue() as CGRect!);
+        selectedImage = ImageMaskingUtils.cropImageToRects(image: selectedImage, rects: rects, context: context)
+        */
         var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage, context: context);
         onImageSelected(image: squareImage);
         
@@ -202,12 +210,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
-        var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
-        // TODO: Make this either be alpha or gaussian blur based on user preference
-        // See: http://stackoverflow.com/questions/19432773/creating-a-blur-effect-in-ios7
-        var background = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL, context: context);
-        var merged = ImageMaskingUtils.mergeImages(first: background, second: masked);
-        return merged;
+        return ImageMaskingUtils.mergeImages(first: image, second: mask, withAlpha: ALPHA_BLEND_VAL, context: context)
     }
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
