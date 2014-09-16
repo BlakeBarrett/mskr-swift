@@ -99,7 +99,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
-        picker.dismissViewControllerAnimated(true){}
+        picker.dismissViewControllerAnimated(false){}
         
         // ignore movies (for now).
         if ("public.movie" == info.valueForKey("UIImagePickerControllerMediaType") as NSString) {
