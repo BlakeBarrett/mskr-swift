@@ -387,12 +387,6 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mskr" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AwX-ys-2eT">
-                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
-                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="36"/>
-                                <color key="textColor" red="1" green="0.0" blue="0.57257227758399409" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -405,9 +399,6 @@
                             </constraint>
                             <constraint firstAttribute="centerX" secondItem="V8g-ri-l8Y" secondAttribute="centerX" id="6ji-5L-l3w"/>
                             <constraint firstItem="V8g-ri-l8Y" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="7Tz-Hh-dQT"/>
-                            <constraint firstAttribute="centerX" secondItem="AwX-ys-2eT" secondAttribute="centerX" constant="-0.5" id="9vJ-lP-FGQ">
-                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                            </constraint>
                             <constraint firstItem="Jcw-Ex-FM7" firstAttribute="bottom" secondItem="cUz-i9-hUr" secondAttribute="top" id="CKh-jf-VRf"/>
                             <constraint firstItem="V8g-ri-l8Y" firstAttribute="centerY" secondItem="pZW-MJ-6Gn" secondAttribute="centerY" id="ChL-K6-PZf"/>
                             <constraint firstAttribute="trailing" secondItem="Jcw-Ex-FM7" secondAttribute="trailing" id="FwZ-pN-LVb"/>
@@ -448,9 +439,6 @@
                             <constraint firstAttribute="bottom" secondItem="V8g-ri-l8Y" secondAttribute="bottom" constant="180" id="mrp-po-JVy"/>
                             <constraint firstAttribute="trailing" secondItem="Jcw-Ex-FM7" secondAttribute="trailing" id="nfY-2z-pBN"/>
                             <constraint firstItem="V8g-ri-l8Y" firstAttribute="trailing" secondItem="47c-gM-hFF" secondAttribute="trailing" id="o2W-ME-kjL"/>
-                            <constraint firstItem="AwX-ys-2eT" firstAttribute="top" secondItem="47c-gM-hFF" secondAttribute="bottom" constant="50" id="o6B-fs-aIK">
-                                <variation key="heightClass=regular-widthClass=compact" constant="20"/>
-                            </constraint>
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="oCf-lO-JoX"/>
                             <constraint firstItem="V8g-ri-l8Y" firstAttribute="leading" secondItem="pZW-MJ-6Gn" secondAttribute="leading" id="oa2-jl-5VR"/>
                             <constraint firstAttribute="trailing" secondItem="V8g-ri-l8Y" secondAttribute="trailing" id="pA7-sE-tCV"/>
@@ -467,12 +455,7 @@
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="vwv-Fz-zga"/>
                         </constraints>
                         <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="AwX-ys-2eT"/>
-                            </mask>
                             <mask key="constraints">
-                                <exclude reference="9vJ-lP-FGQ"/>
-                                <exclude reference="o6B-fs-aIK"/>
                                 <exclude reference="7Tz-Hh-dQT"/>
                                 <exclude reference="ChL-K6-PZf"/>
                                 <exclude reference="MNH-Ix-8XQ"/>
@@ -585,11 +568,8 @@
                             <mask key="subviews">
                                 <include reference="htI-jk-3lu"/>
                                 <include reference="V8g-ri-l8Y"/>
-                                <include reference="AwX-ys-2eT"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="9vJ-lP-FGQ"/>
-                                <include reference="o6B-fs-aIK"/>
                                 <exclude reference="6ji-5L-l3w"/>
                                 <exclude reference="7Tz-Hh-dQT"/>
                                 <include reference="ChL-K6-PZf"/>
