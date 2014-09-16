@@ -21,22 +21,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var maskCollectionView: UICollectionView!;
     
     var maskedImage: UIImage = UIImage();
-    var selectedMask: UIImage;
+    var selectedMaskName: String = "crclmsk"
     
     // TODO: Hook this up to a slider control somewhere.
     let ALPHA_BLEND_VAL: CGFloat! = 0.5;
     
+    var context: CIContext;
+    
     required init(coder aDecoder: NSCoder)  {
-        self.selectedMask = UIImage(named: "crclmsk");
+        self.context = CIContext(options: nil);
         super.init(coder: aDecoder);
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        self.selectedMask = UIImage(named: "sqrmsk");
+        self.context = CIContext(options: nil);
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
     }
     
     override func viewDidLoad() {
+        self.context = CIContext(options: nil);
         imagePicker.delegate = self;
         imagePicker.allowsEditing = true;
         imagePicker.sourceType = .SavedPhotosAlbum
@@ -53,8 +56,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: Getters
+    func getMask() -> UIImage {
+        return UIImage(named: self.selectedMaskName)
+    }
+    
     // MARK:
-    // MARK: CollectionView goodies
+    // MARK: CollectionView goodies (mask selector)
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
         return availableMasks.count
@@ -72,12 +80,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView,
-        didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
             let indexPathRow: Int! = indexPath.row;
             let maskName = getMaskNameForRow(row: indexPathRow);
-            self.selectedMask = getMaskForName(name: maskName);
-            applyMaskToImage();
+        if (maskName != self.selectedMaskName) {
+            self.selectedMaskName = maskName;
+            applyMaskToImage(self.selectedMaskName);
+        }
     }
     
     // MARK: UIImagePicker goodies
@@ -99,8 +108,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         println("Selected Image: \(info)");
         selectedImageInfoDict = info;
+        
         var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerEditedImage") as UIImage;
-        var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage);
+        
+        /*
+        // Fullsize image with user selected crop
+        var selectedImage: UIImage = info.valueForKey("UIImagePickerControllerOriginalImage") as UIImage;
+        var rects: CGRect = (info.objectForKey("UIImagePickerControllerCropRect")?.CGRectValue() as CGRect!);
+        selectedImage = ImageMaskingUtils.cropImageToRects(image: selectedImage, rects: rects, context: context)
+        */
+        var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage, context: context);
         onImageSelected(image: squareImage);
         
         enableToolbar();
@@ -117,7 +134,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var library = ALAssetsLibrary();
     }
     
-    // MARK: ActionSheet goodies
+    // MARK: ActionSheet goodies -- (not used presently)
     // UIActionSheetDelegate interface/"protocol" implementation
     func showActionSheet() {
         var actionSheet = UIActionSheet();
@@ -171,14 +188,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: Mskr goodies
     func onImageSelected(#image: UIImage!) {
         self.maskedImage = image;
-        applyMaskToImage();
+        applyMaskToImage(self.selectedMaskName);
     }
     
     func onMaskSelected(#row: Int) {
         showPleaseWait();
         var maskName: String = getMaskNameForRow(row: row);
-        self.selectedMask = UIImage(named: maskName);
-        applyMaskToImage();
+        self.selectedMaskName = maskName
+        applyMaskToImage(maskName);
         hidePleaseWait();
     }
     
@@ -190,29 +207,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return UIImage(named: name);
     }
     
-    func applyMaskToImage() -> UIImage! {
-        return applyMaskToImage(image: self.maskedImage, mask: self.selectedMask);
+    func applyMaskToImage(maskName: String) -> UIImage! {
+        let mask = getMaskForName(name: maskName)
+        println(NSDate.date());
+        let maskedImage = applyMaskToImage(image: self.maskedImage, mask: mask)
+        println(NSDate.date());
+        imageView.image = maskedImage
+        return maskedImage
     }
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
-        var masked: UIImage! = (ImageMaskingUtils.maskImage(source: image, maskImage: mask).copy() as UIImage);
-        // TODO: Make this either be alpha or gaussian blur based on user preference
-        // See: http://stackoverflow.com/questions/19432773/creating-a-blur-effect-in-ios7
-        var background = ImageMaskingUtils.image(fromImage: self.maskedImage, withAlpha: ALPHA_BLEND_VAL);
-        var merged = ImageMaskingUtils.mergeImages(first: masked, second: background);
-        imageView.image = merged;
-        return merged;
+        return ImageMaskingUtils.mergeImages(first: image, second: mask, withAlpha: ALPHA_BLEND_VAL, context: context)
     }
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
         showPleaseWait();
-        self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians);
-        applyMaskToImage();
+        self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians, context: context);
+        applyMaskToImage(self.selectedMaskName);
         hidePleaseWait();
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
-        var masked = applyMaskToImage();
+        var masked = applyMaskToImage(self.selectedMaskName);
         self.maskedImage = masked;
         imageView.image = self.maskedImage;
     }
@@ -226,21 +242,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onRotate(sender: AnyObject) {
-        var rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0;
+        var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
         rotateImage(image: self.maskedImage, rotation: rotationInRatians);
     }
     
     @IBAction func onSave(sender: AnyObject) {
         // TODO: Write EXIF metadata.
         // See: http://stackoverflow.com/questions/5125323/problem-setting-exif-data-for-an-image
-        UIImageWriteToSavedPhotosAlbum(applyMaskToImage(),  nil, nil, nil);
+        UIImageWriteToSavedPhotosAlbum(applyMaskToImage(self.selectedMaskName),  nil, nil, nil);
     }
     
     func onShare() {
         var sharingItems = [AnyObject]()
         sharingItems.append("Made with #mskr.")
         
-        let image = applyMaskToImage()
+        let image = applyMaskToImage(self.selectedMaskName)
         sharingItems.append(image)
         
         let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)

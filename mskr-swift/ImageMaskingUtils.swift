@@ -10,10 +10,9 @@ import Foundation
 import UIKit
 
 class ImageMaskingUtils {
-    
     /**
-     * Masks the source image with the second.
-     */
+    * Masks the source image with the second.
+    */
     class func maskImage(#source: UIImage!, maskImage: UIImage!) -> UIImage {
         
         let maskRef: CGImageRef! = maskImage.CGImage;
@@ -33,43 +32,44 @@ class ImageMaskingUtils {
     }
     
     /**
-     * Flattens or rasterizes two images into one.
+     * Rasterizes two images into one.
      */
-    class func mergeImages(#first: UIImage, second: UIImage) -> UIImage {
+    class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
+        
+        let background = ImageMaskingUtils.image(fromImage: first, withAlpha: alpha)
+        let foreground = ImageMaskingUtils.maskImage(source: first, maskImage: second)
         
         let newImageSize: CGSize = CGSizeMake(
-            max(first.size.width, second.size.width),
-            max(first.size.height, second.size.height));
-
+            max(foreground.size.width, background.size.width),
+            max(foreground.size.height, background.size.height));
+        
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
         
         var wid: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.width - first.size.width) / 2.0));
+            CFloat(newImageSize.width - foreground.size.width) / 2.0));
         var hei: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.height-first.size.height) / 2.0));
-        let firstPoint = CGPointMake(wid, hei);
-        first.drawAtPoint(firstPoint);
+            CFloat(newImageSize.height-foreground.size.height) / 2.0));
+        let foregroundPoint = CGPointMake(wid, hei);
+        foreground.drawAtPoint(foregroundPoint);
         
         wid = CGFloat(roundf(
-            CFloat(newImageSize.width - second.size.width) / 2.0));
+            CFloat(newImageSize.width - background.size.width) / 2.0));
         hei = CGFloat(roundf(
-            CFloat(newImageSize.height-second.size.height) / 2.0));
-        let secondPoint = CGPointMake(wid, hei);
-        second.drawAtPoint(secondPoint);
-        
+            CFloat(newImageSize.height-background.size.height) / 2.0));
+        let backgroundPoint = CGPointMake(wid, hei);
+        background.drawAtPoint(backgroundPoint);
+       
         var image: UIImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
         return image;
     }
-    
     /**
-     * Returns a UIImage with the alpha modified
-     */
+    * Returns a UIImage with the alpha modified
+    */
     class func image(#fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
         return image(fromImage: fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
-
+    
     class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1);
         
@@ -93,49 +93,45 @@ class ImageMaskingUtils {
     }
     
     /**
-     * Stretches images that aren't 1:1 to squares based on their longest edge
+     * Crops images that aren't 1:1 to squares based on their shortest edge.
      */
-    class func makeItSquare(#image: UIImage) -> UIImage {
-        let longestSide = max(image.size.width, image.size.height);
-        let size: CGSize = CGSize(width: longestSide, height: longestSide);
+    class func makeItSquare(#image: UIImage, context: CIContext) -> UIImage {
+        let shortestSide = min(image.size.width, image.size.height);
+        let size: CGSize = CGSize(width: shortestSide, height: shortestSide);
         
-        let x: CGFloat = (size.width - image.size.width) / 2;
-        let y: CGFloat = (size.height - image.size.height) / 2;
+        let x: CGFloat = (image.size.width - size.width) / 2;
+        let y: CGFloat = (image.size.height - size.height) / 2;
         
         let cropRect: CGRect = CGRectMake(x, y, size.width, size.height);
-        
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage, cropRect);
-        let cropped: UIImage = UIImage(CGImage: imageRef);
-        
-        return ImageMaskingUtils.image(fromImage: cropped, withSize: size, andAlpha: 1);
+        return ImageMaskingUtils.uiImageFromCIImage(input: CIImage(image: image), withSize: cropRect, context: context)
     }
     
     /**
-     * Takes an image and rotates it.
+     * Crops an image to the rects specified.
      */
-    class func rotate(#image: UIImage, radians: CGFloat) -> UIImage {
-        // calculate the size of the rotated view's containing box for our drawing space
-        let rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
-        let transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
-        rotatedViewBox.transform = transform;
-        let rotatedSize: CGSize = rotatedViewBox.frame.size;
-        
-        // Create the bitmap context
-        UIGraphicsBeginImageContext(rotatedSize);
-        let bitmap: CGContextRef = UIGraphicsGetCurrentContext();
-        
-        // Move the origin to the middle of the image so we will rotate and scale around the center.
-        CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
-        
-        // Rotate the image context
-        CGContextRotateCTM(bitmap, radians);
-        
-        // Now, draw the rotated/scaled image into the context
-        CGContextScaleCTM(bitmap, 1.0, -1.0);
-        CGContextDrawImage(bitmap, CGRectMake(-image.size.width / 2, -image.size.height / 2, image.size.width, image.size.height), image.CGImage);
-        
-        let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return rotated;
+    class func cropImageToRects(#image: UIImage, rects: CGRect, context: CIContext) -> UIImage {
+        return ImageMaskingUtils.uiImageFromCIImage(input: CIImage(image: image), withSize: rects, context: context)
     }
+    
+    /**
+     * Takes an image and rotates it using CoreImage filters.
+     */
+    class func rotate(#image: UIImage, radians: CGFloat, context: CIContext) -> UIImage {
+        let ciImage = CIImage(image: image)
+        let filter: CIFilter = CIFilter(name: "CIStraightenFilter")
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        filter.setValue(radians, forKey: kCIInputAngleKey)
+        
+        return ImageMaskingUtils.uiImageFromCIImage(input: filter.outputImage, context: context);
+    }
+    
+    class func uiImageFromCIImage(#input: CIImage, context: CIContext) -> UIImage {
+        return uiImageFromCIImage(input: input, withSize: input.extent(), context: context);
+    }
+    
+    class func uiImageFromCIImage(#input: CIImage, withSize size: CGRect, context: CIContext) -> UIImage {
+        let outputCGImageRef: CGImageRef =  context.createCGImage(input, fromRect: size)
+        return UIImage(CGImage: outputCGImageRef);
+    }
+    
 }
