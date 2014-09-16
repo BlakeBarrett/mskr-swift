@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		253DBCE819C7E6DC00C86FE3 /* mskr.png in Resources */ = {isa = PBXBuildFile; fileRef = 253DBCE719C7E6DC00C86FE3 /* mskr.png */; };
 		2541304619424B8F001EA3A0 /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */; };
 		25C4815C19BD334F00692689 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C4815B19BD334F00692689 /* CollectionViewCell.swift */; };
 		25CC3AE619B6F04300E13A06 /* Storyboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25CC3AE519B6F04300E13A06 /* Storyboard.storyboard */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		253DBCE719C7E6DC00C86FE3 /* mskr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mskr.png; sourceTree = "<group>"; };
 		2541304519424B8F001EA3A0 /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
 		25C4815B19BD334F00692689 /* CollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		25CC3AE519B6F04300E13A06 /* Storyboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Storyboard.storyboard; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		25ECE27C193EFF2700A272CF /* mskr-swift */ = {
 			isa = PBXGroup;
 			children = (
+				253DBCE719C7E6DC00C86FE3 /* mskr.png */,
 				25ECE27F193EFF2700A272CF /* AppDelegate.swift */,
 				25ECE281193EFF2700A272CF /* ViewController.swift */,
 				25ECE29C193EFF7D00A272CF /* mskr_add.png */,
@@ -233,6 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				253DBCE819C7E6DC00C86FE3 /* mskr.png in Resources */,
 				25ECE2AF193EFF7D00A272CF /* trnglmsk.png in Resources */,
 				25ECE2B0193EFF7D00A272CF /* xmsk.png in Resources */,
 				25ECE2AA193EFF7D00A272CF /* eqltymsk.png in Resources */,

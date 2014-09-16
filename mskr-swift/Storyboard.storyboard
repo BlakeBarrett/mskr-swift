@@ -387,9 +387,13 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr.png" translatesAutoresizingMaskIntoConstraints="NO" id="zs9-OC-gGt">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="zs9-OC-gGt" secondAttribute="centerX" constant="-0.5" id="068-9J-2fB"/>
                             <constraint firstItem="Jcw-Ex-FM7" firstAttribute="trailing" secondItem="cUz-i9-hUr" secondAttribute="trailing" id="0DQ-ke-uI0"/>
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="htI-jk-3lu" secondAttribute="bottom" constant="40" id="4xv-fs-Hap">
                                 <variation key="widthClass=compact" constant="35"/>
@@ -427,6 +431,7 @@
                             <constraint firstItem="V8g-ri-l8Y" firstAttribute="top" secondItem="pZW-MJ-6Gn" secondAttribute="top" constant="20" id="cUT-66-Yp6"/>
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="dFf-HA-qFK"/>
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="e0S-Nt-eNA"/>
+                            <constraint firstItem="zs9-OC-gGt" firstAttribute="top" secondItem="pZW-MJ-6Gn" secondAttribute="top" constant="20" id="eo9-b7-en5"/>
                             <constraint firstItem="htI-jk-3lu" firstAttribute="leading" secondItem="cUz-i9-hUr" secondAttribute="leading" id="fpb-6n-l0b"/>
                             <constraint firstItem="Jcw-Ex-FM7" firstAttribute="leading" secondItem="cUz-i9-hUr" secondAttribute="leading" id="gu5-l4-3Od"/>
                             <constraint firstItem="Jcw-Ex-FM7" firstAttribute="trailing" secondItem="cUz-i9-hUr" secondAttribute="trailing" id="hH6-lK-GSF"/>
@@ -455,7 +460,12 @@
                             <constraint firstItem="cUz-i9-hUr" firstAttribute="top" secondItem="Jcw-Ex-FM7" secondAttribute="bottom" id="vwv-Fz-zga"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="zs9-OC-gGt"/>
+                            </mask>
                             <mask key="constraints">
+                                <exclude reference="068-9J-2fB"/>
+                                <exclude reference="eo9-b7-en5"/>
                                 <exclude reference="7Tz-Hh-dQT"/>
                                 <exclude reference="ChL-K6-PZf"/>
                                 <exclude reference="MNH-Ix-8XQ"/>
@@ -568,8 +578,11 @@
                             <mask key="subviews">
                                 <include reference="htI-jk-3lu"/>
                                 <include reference="V8g-ri-l8Y"/>
+                                <include reference="zs9-OC-gGt"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="068-9J-2fB"/>
+                                <include reference="eo9-b7-en5"/>
                                 <exclude reference="6ji-5L-l3w"/>
                                 <exclude reference="7Tz-Hh-dQT"/>
                                 <include reference="ChL-K6-PZf"/>
@@ -631,6 +644,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="mskr.png" width="101" height="25"/>
         <image name="mskr_add.png" width="420" height="420"/>
     </resources>
 </document>
