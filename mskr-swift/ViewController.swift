@@ -81,8 +81,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-            let indexPathRow: Int! = indexPath.row;
-            let maskName = getMaskNameForRow(row: indexPathRow);
+        let indexPathRow: Int! = indexPath.row;
+        let maskName = getMaskNameForRow(row: indexPathRow);
         if (maskName != self.selectedMaskName) {
             self.selectedMaskName = maskName;
             applyMaskToImage(self.selectedMaskName);
@@ -209,9 +209,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func applyMaskToImage(maskName: String) -> UIImage! {
         let mask = getMaskForName(name: maskName)
-        println(NSDate.date());
-        let maskedImage = applyMaskToImage(image: self.maskedImage, mask: mask)
-        println(NSDate.date());
+        let maskedImage = applyMaskToImage(image: self.maskedImage, mask: mask)!
         imageView.image = maskedImage
         return maskedImage
     }
