@@ -13,7 +13,7 @@ class ImageMaskingUtils {
     /**
     * Masks the source image with the second.
     */
-    class func maskImage(#source: UIImage!, maskImage: UIImage!) -> UIImage {
+    class func maskImage(#source: UIImage!, maskImage: UIImage!) -> CIImage {
         
         let maskRef: CGImageRef! = maskImage.CGImage;
         let mask: CGImageRef! = CGImageMaskCreate(CGImageGetWidth(maskRef),
@@ -26,70 +26,146 @@ class ImageMaskingUtils {
         let sourceImage: CGImageRef! = source.CGImage;
         let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask);
         
-        var maskedImage = UIImage(CGImage: masked);
+        return CIImage(CGImage: masked)
+    }
+    
+    class func resizeImage(#source: UIImage, size: CGSize) -> UIImage {
         
-        return maskedImage;
+        let largerWidth = max(size.width, source.size.width)
+        let smallerWidth = min(size.width, source.size.width)
+        
+        let largerHeight = max(size.height, source.size.height)
+        let smallerHeight = min(size.height, source.size.height)
+        
+        let widthScale = (smallerWidth / largerWidth) / 2
+        let heightScale = (smallerHeight / largerHeight) / 2
+        
+        let transformedSize = CGSizeApplyAffineTransform(source.size, CGAffineTransformMakeScale(widthScale, heightScale))
+        let hasAlpha = false
+        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
+        
+        UIGraphicsBeginImageContextWithOptions(transformedSize, !hasAlpha, scale)
+        source.drawInRect(CGRect(origin: CGPointZero, size: transformedSize))
+        
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+        return scaledImage
+    }
+
+    class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+        var merged: UIImage!;
+        
+        var start = NSDate.date().timeIntervalSince1970
+
+        var useExperimental = false
+        if useExperimental {
+            merged = ImageMaskingUtils.mergeImagesFast(first: first, second: second, withAlpha: alpha, context: context)
+        } else {
+            merged = ImageMaskingUtils.mergeImagesSlow(first: first, second: second, withAlpha: alpha, context: context)
+        }
+
+        var now = NSDate.date().timeIntervalSince1970
+        println("merged images \(now - start)")
+        start = now
+        
+        return merged;
     }
     
     /**
      * Rasterizes two images into one.
      */
-    class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage {
+    class func mergeImagesSlow(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
         
-        let background = ImageMaskingUtils.image(fromImage: first, withAlpha: alpha)
-        let foreground = ImageMaskingUtils.maskImage(source: first, maskImage: second)
+        let background = UIImage(CIImage: ImageMaskingUtils.image(fromImage: first, withAlpha: alpha))
+        let foreground = UIImage(CIImage: ImageMaskingUtils.maskImage(source: first, maskImage: second))
         
-        let newImageSize: CGSize = CGSizeMake(
+        let newImageSize = CGSizeMake(
             max(foreground.size.width, background.size.width),
-            max(foreground.size.height, background.size.height));
+            max(foreground.size.height, background.size.height))
         
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
         
-        var wid: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.width - foreground.size.width) / 2.0));
-        var hei: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.height-foreground.size.height) / 2.0));
+        var wid: CGFloat = (newImageSize.width - foreground.size.width) / 2
+        var hei: CGFloat = (newImageSize.height - foreground.size.height) / 2
+        
         let foregroundPoint = CGPointMake(wid, hei);
         foreground.drawAtPoint(foregroundPoint);
         
-        wid = CGFloat(roundf(
-            CFloat(newImageSize.width - background.size.width) / 2.0));
-        hei = CGFloat(roundf(
-            CFloat(newImageSize.height-background.size.height) / 2.0));
+        wid = (newImageSize.width - background.size.width) / 2.0
+        hei = (newImageSize.height-background.size.height) / 2.0
+        
         let backgroundPoint = CGPointMake(wid, hei);
         background.drawAtPoint(backgroundPoint);
        
-        var image: UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        var image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        
         return image;
+    }
+    
+    /**
+     * Rasterizes two images into one.
+     */
+    class func mergeImagesFast(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+        
+        var start = NSDate.date().timeIntervalSince1970
+        var now = NSDate.date().timeIntervalSince1970
+        println("")
+        let background = ImageMaskingUtils.image(fromImage: first, withAlpha: alpha)
+        
+        now = NSDate.date().timeIntervalSince1970
+        println("applied alpha to image \(now - start)")
+        start = now
+        
+        let foreground = ImageMaskingUtils.maskImage(source: first, maskImage: second)
+
+        now = NSDate.date().timeIntervalSince1970
+        println("applied mask to image \(now - start)")
+        start = now
+        
+        let scaledMask = ImageMaskingUtils.resizeImage(source: second, size: first.size)
+        
+        now = NSDate.date().timeIntervalSince1970
+        println("resized mask image \(now - start)")
+        start = now
+        
+        let alphaMaskFilter: CIFilter = CIFilter(name: "CIMaskToAlpha")
+        alphaMaskFilter.setValue(CIImage(image: scaledMask), forKey: kCIInputImageKey)
+        let alphaMask = CIImage(CGImage: context.createCGImage(alphaMaskFilter.outputImage, fromRect: background.extent()))
+        
+        now = NSDate.date().timeIntervalSince1970
+        println("created CIFilter mask \(now - start)")
+        start = now
+        
+        let filter: CIFilter = CIFilter(name: "CIBlendWithAlphaMask")
+        filter.setValue(background, forKey: kCIInputImageKey)
+        filter.setValue(foreground, forKey: kCIInputBackgroundImageKey)
+        filter.setValue(alphaMask, forKey: kCIInputMaskImageKey)
+
+        now = NSDate.date().timeIntervalSince1970
+        println("merged images \(now - start)")
+        start = now
+        
+        let outputImage = filter.outputImage!
+        let merged = UIImage(CIImage: outputImage)
+        
+        println("new image size: \(merged.size)")
+        
+        return merged
     }
     /**
     * Returns a UIImage with the alpha modified
     */
-    class func image(#fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
+    class func image(#fromImage: UIImage, withAlpha alpha: CGFloat) -> CIImage {
         return image(fromImage: fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
     
-    class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 1);
+    class func image(#fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> CIImage {
         
-        let ctx: CGContextRef = UIGraphicsGetCurrentContext();
-        let area: CGRect = CGRectMake(0, 0, size.width, size.height);
-        
-        CGContextScaleCTM(ctx, 1, -1);
-        CGContextTranslateCTM(ctx, 0, -area.size.height);
-        
-        CGContextSetBlendMode(ctx, kCGBlendModeMultiply);
-        
-        CGContextSetAlpha(ctx, alpha);
-        
-        CGContextDrawImage(ctx, area, fromImage.CGImage);
-        
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext();
-        
-        UIGraphicsEndImageContext();
-        
-        return newImage;
+        let alphaFadeFilter: CIFilter = CIFilter(name: "CIColorMatrix")
+        alphaFadeFilter.setValue(CIImage(image: fromImage), forKey: kCIInputImageKey)
+        alphaFadeFilter.setValue(CIVector(x: 0, y: 0, z: 0, w: alpha), forKey: "inputAVector")
+        let background: CIImage = alphaFadeFilter.outputImage
+        return background;
     }
     
     /**
