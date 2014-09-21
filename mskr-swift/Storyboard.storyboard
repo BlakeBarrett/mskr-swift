@@ -116,8 +116,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="PXA-qd-qWL" secondAttribute="height" multiplier="1:1" id="B5D-j0-oXK"/>
                                                     </constraints>
-                                                    <variation key="heightClass=regular" misplaced="YES">
-                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <variation key="heightClass=regular">
                                                         <mask key="constraints">
                                                             <exclude reference="B5D-j0-oXK"/>
                                                         </mask>
