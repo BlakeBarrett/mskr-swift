@@ -45,12 +45,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     override func viewDidLoad() {
-        self.context = CIContext(options: nil);
-        imagePicker.delegate = self;
-        imagePicker.allowsEditing = true;
-        imagePicker.sourceType = .SavedPhotosAlbum
-        // .PhotoLibrary, .Camera, .SavedPhotosAlbum
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
+        
+        self.context = CIContext(options: nil)
+        
+        initImagePickerController()
         
         initAcitvityIndicatiorView()
         
@@ -108,10 +106,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("mskcell", forIndexPath: indexPath) as CollectionViewCell
         
         let index = indexPath.row
-        let imageName = getMaskNameForRow(row: index)
-        let maskImage = UIImage(named: imageName)
-        
-        cell.imageView.image = maskImage
+        dispatch_async(dispatch_get_main_queue()) {
+            let maskName = self.getMaskNameForRow(row: index)
+            let maskImage = self.getMaskForName(name: maskName)
+            
+            cell.imageView.image = maskImage
+        }
         return cell
     }
     
@@ -137,6 +137,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     //func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!)
     @IBAction func onImageTouch(sender: AnyObject) {
         presentViewController(imagePicker, animated: true) {}
+    }
+    
+    func initImagePickerController() {
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = .SavedPhotosAlbum
+        // .PhotoLibrary, .Camera, .SavedPhotosAlbum
+        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
     }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
