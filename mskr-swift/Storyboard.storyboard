@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A343f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bV5-Wx-PzA">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="bV5-Wx-PzA">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
@@ -116,7 +116,8 @@
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="PXA-qd-qWL" secondAttribute="height" multiplier="1:1" id="B5D-j0-oXK"/>
                                                     </constraints>
-                                                    <variation key="heightClass=regular">
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <mask key="constraints">
                                                             <exclude reference="B5D-j0-oXK"/>
                                                         </mask>
@@ -676,6 +677,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="imageView" destination="eqv-f5-TdU" id="IQP-3j-sCn"/>
                         <outlet property="maskCollectionView" destination="htI-jk-3lu" id="NBV-Hd-LWu"/>
