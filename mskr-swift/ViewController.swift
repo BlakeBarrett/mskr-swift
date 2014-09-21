@@ -15,6 +15,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var selectedImageInfoDict: NSDictionary = NSDictionary();
     let availableMasks: Array<String>! = ["sqr", "crcl", "trngl", "POW", "plrd", "x", "eqlty", "hrt", "dmnd"];
+    var maskCache: Array<(name: String, image: UIImage)> = [];
+    
     
     @IBOutlet var imageView: UIImageView!;
     @IBOutlet var toolbar: UIToolbar!;
@@ -30,11 +32,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     required init(coder aDecoder: NSCoder)  {
         self.context = CIContext(options: nil);
+        self.activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+        
         super.init(coder: aDecoder);
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        self.context = CIContext(options: nil);
+        self.context = CIContext(options: nil)
+        self.activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+        
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil);
     }
     
@@ -46,7 +52,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
         
-        disableToolbar();
+        initAcitvityIndicatiorView()
+        
+        disableToolbar()
         
         super.viewDidLoad()
     }
@@ -56,9 +64,36 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    func precacheMasks() {
+        for mskName in availableMasks {
+            let mask = UIImage(named: mskName);
+            self.maskCache.append(name: mskName, image: mask);
+        }
+    }
+    
+    func resizeCachedMasks(size: CGSize) {
+        for var index = 0; index < self.maskCache.count; index++ {
+            let maskKV = self.maskCache[index]
+            self.maskCache[index].image = ImageMaskingUtils.resizeImage(source: maskKV.image, size: size)
+        }
+    }
+    
     // MARK: Getters
     func getMask() -> UIImage {
         return UIImage(named: self.selectedMaskName)
+    }
+    
+    func getMaskNameForRow(#row: Int) -> String {
+        return availableMasks[row].lowercaseString + "msk";
+    }
+    
+    func getMaskForName(#name: String) -> UIImage {
+        for maskKVpair in self.maskCache {
+            if maskKVpair.name == name {
+                return maskKVpair.image;
+            }
+        }
+        return UIImage(named: name);
     }
     
     // MARK:
@@ -81,12 +116,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let indexPathRow: Int! = indexPath.row;
-        let maskName = getMaskNameForRow(row: indexPathRow);
-        if (maskName != self.selectedMaskName) {
-            self.selectedMaskName = maskName;
-            applyMaskToImage(self.selectedMaskName);
+        
+        self.showPleaseWait();
+        dispatch_async(dispatch_get_main_queue()) {
+            let indexPathRow: Int! = indexPath.row;
+            let maskName = self.getMaskNameForRow(row: indexPathRow);
+            if (maskName != self.selectedMaskName) {
+                self.selectedMaskName = maskName;
+                self.applyMaskToImage(self.selectedMaskName);
+            }
+            self.hidePleaseWait();
         }
+
     }
     
     // MARK: UIImagePicker goodies
@@ -99,7 +140,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
-        picker.dismissViewControllerAnimated(false){}
+//        picker.dismissViewControllerAnimated(false){}
         
         // ignore movies (for now).
         if ("public.movie" == info.valueForKey("UIImagePickerControllerMediaType") as NSString) {
@@ -120,7 +161,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var squareImage: UIImage = ImageMaskingUtils.makeItSquare(image: selectedImage, context: context);
         onImageSelected(image: squareImage);
         
-        enableToolbar();
+        enableToolbar()
+        
+        precacheMasks()
+        
+        picker.dismissViewControllerAnimated(false){}
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController!) {
@@ -176,13 +221,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func enableToolbar() {
-        toolbar.userInteractionEnabled = true;
-        maskCollectionView.hidden = false;
+        toolbar.userInteractionEnabled = true
+        toolbar.hidden = false
+        maskCollectionView.hidden = false
     }
     
     func disableToolbar() {
-        toolbar.userInteractionEnabled = false;
-        maskCollectionView.hidden = true;
+        toolbar.userInteractionEnabled = false
+        toolbar.hidden = true
+        maskCollectionView.hidden = true
     }
     
     // MARK: Mskr goodies
@@ -192,26 +239,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func onMaskSelected(#row: Int) {
-        showPleaseWait();
-        var maskName: String = getMaskNameForRow(row: row);
-        self.selectedMaskName = maskName
-        applyMaskToImage(maskName);
-        hidePleaseWait();
-    }
-    
-    func getMaskNameForRow(#row: Int) -> String {
-        return availableMasks[row].lowercaseString + "msk";
-    }
-    
-    func getMaskForName(#name: String) -> UIImage {
-        return UIImage(named: name);
+        self.showPleaseWait();
+        dispatch_async(dispatch_get_main_queue()) {
+            var maskName: String = self.getMaskNameForRow(row: row);
+            self.selectedMaskName = maskName
+            self.applyMaskToImage(maskName);
+            self.hidePleaseWait();
+        }
     }
     
     func applyMaskToImage(maskName: String) -> UIImage! {
         let mask = getMaskForName(name: maskName)
-        let maskedImage = applyMaskToImage(image: self.maskedImage, mask: mask)!
-        imageView.image = maskedImage
-        return maskedImage
+        let masked = applyMaskToImage(image: self.maskedImage, mask: mask)!
+        imageView.image = masked
+        return masked
     }
     
     func applyMaskToImage(#image: UIImage!, mask: UIImage!) -> UIImage! {
@@ -219,16 +260,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func rotateImage(#image: UIImage, rotation radians: CGFloat) {
-        showPleaseWait();
         self.maskedImage = ImageMaskingUtils.rotate(image: self.maskedImage, radians: radians, context: context);
         applyMaskToImage(self.selectedMaskName);
-        hidePleaseWait();
     }
     
     @IBAction func onAddLayer(sender: AnyObject) {
-        var masked = applyMaskToImage(self.selectedMaskName);
-        self.maskedImage = masked;
-        imageView.image = self.maskedImage;
+        dispatch_async(dispatch_get_main_queue()) {
+            var masked = self.applyMaskToImage(self.selectedMaskName);
+            self.maskedImage = masked;
+            self.imageView.image = self.maskedImage;
+        }
     }
     
     func onAddImageLayer() {
@@ -240,8 +281,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onRotate(sender: AnyObject) {
-        var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
-        rotateImage(image: self.maskedImage, rotation: rotationInRatians);
+        self.showPleaseWait();
+        dispatch_async(dispatch_get_main_queue()) {
+            var rotationInRatians: CGFloat = CGFloat(M_PI) * (-90) / 180.0;
+            self.rotateImage(image: self.maskedImage, rotation: rotationInRatians);
+            self.hidePleaseWait();
+        }
     }
     
     @IBAction func onSave(sender: AnyObject) {
@@ -277,15 +322,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         onShare();
     }
     
-    var activityIndicatorView = UIActivityIndicatorView();
+    var activityIndicatorView: UIActivityIndicatorView
+    
+    func initAcitvityIndicatiorView() {
+        activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+        activityIndicatorView.alpha = 1.0
+        activityIndicatorView.center = CGPointMake(self.view.bounds.width / 2, self.view.bounds.height / 2)
+        activityIndicatorView.hidesWhenStopped = true
+    }
     
     func showPleaseWait() {
-        self.view.addSubview(activityIndicatorView);
+        self.view.addSubview(activityIndicatorView)
+        self.activityIndicatorView.startAnimating()
     }
     
     func hidePleaseWait() {
-        self.activityIndicatorView.removeFromSuperview();
+        self.activityIndicatorView.removeFromSuperview()
+        self.activityIndicatorView.stopAnimating()
     }
 
 }
-
