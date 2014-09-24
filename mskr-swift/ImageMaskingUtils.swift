@@ -56,11 +56,11 @@ class ImageMaskingUtils {
         
         var start = NSDate.date().timeIntervalSince1970
 
-        var useExperimental = false
+        var useExperimental = true
         if useExperimental {
-            merged = ImageMaskingUtils.mergeImagesFast(first: first, second: second, withAlpha: alpha, context: context)
+            merged = ImageMaskingUtils.mergeImagesCIFilters(image: first, mask: second, withAlpha: alpha, context: context)
         } else {
-            merged = ImageMaskingUtils.mergeImagesSlow(first: first, second: second, withAlpha: alpha, context: context)
+            merged = ImageMaskingUtils.mergeImagesUIKit(first: first, second: second, withAlpha: alpha, context: context)
         }
 
         var now = NSDate.date().timeIntervalSince1970
@@ -73,7 +73,7 @@ class ImageMaskingUtils {
     /**
      * Rasterizes two images into one.
      */
-    class func mergeImagesSlow(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+    class func mergeImagesUIKit(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
         
         let background = UIImage(CIImage: ImageMaskingUtils.image(fromImage: first, withAlpha: alpha))
         let foreground = UIImage(CIImage: ImageMaskingUtils.maskImage(source: first, maskImage: second))
@@ -105,24 +105,26 @@ class ImageMaskingUtils {
     /**
      * Rasterizes two images into one.
      */
-    class func mergeImagesFast(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+    class func mergeImagesCIFilters(#image: UIImage, mask: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+        
+        let rects: CGRect = CGRectMake(0, 0, image.size.width, image.size.height)
         
         var start = NSDate.date().timeIntervalSince1970
         var now = NSDate.date().timeIntervalSince1970
         println("")
-        let background = ImageMaskingUtils.image(fromImage: first, withAlpha: alpha)
+        let background: CIImage = ImageMaskingUtils.image(fromImage: image, withAlpha: alpha)
         
         now = NSDate.date().timeIntervalSince1970
         println("applied alpha to image \(now - start)")
         start = now
         
-        let foreground = ImageMaskingUtils.maskImage(source: first, maskImage: second)
+        let foreground = ImageMaskingUtils.maskImage(source: image, maskImage: mask)
 
         now = NSDate.date().timeIntervalSince1970
         println("applied mask to image \(now - start)")
         start = now
         
-        let scaledMask = ImageMaskingUtils.resizeImage(source: second, size: first.size)
+        let scaledMask = ImageMaskingUtils.resizeImage(source: mask, size: image.size)
         
         now = NSDate.date().timeIntervalSince1970
         println("resized mask image \(now - start)")
@@ -130,7 +132,9 @@ class ImageMaskingUtils {
         
         let alphaMaskFilter: CIFilter = CIFilter(name: "CIMaskToAlpha")
         alphaMaskFilter.setValue(CIImage(image: scaledMask), forKey: kCIInputImageKey)
-        let alphaMask = CIImage(CGImage: context.createCGImage(alphaMaskFilter.outputImage, fromRect: background.extent()))
+        let alphaMaskFilterOutputImage = alphaMaskFilter.outputImage
+        let alphaMaskCGImage = context.createCGImage(alphaMaskFilterOutputImage, fromRect: rects)
+        let alphaMask = CIImage(CGImage: alphaMaskCGImage)
         
         now = NSDate.date().timeIntervalSince1970
         println("created CIFilter mask \(now - start)")
