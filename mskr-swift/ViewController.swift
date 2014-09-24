@@ -142,7 +142,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func initImagePickerController() {
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
-        imagePicker.sourceType = .SavedPhotosAlbum
+        imagePicker.sourceType = .PhotoLibrary
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
     }
