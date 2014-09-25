@@ -123,7 +123,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let maskName = self.getMaskNameForRow(row: indexPathRow);
             if (maskName != self.selectedMaskName) {
                 self.selectedMaskName = maskName;
-                self.applyMaskToImage(self.selectedMaskName);
+                self.imageView.image = self.applyMaskToImage(self.selectedMaskName);
             }
             self.hidePleaseWait();
         }
@@ -148,8 +148,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!) {
-//        picker.dismissViewControllerAnimated(false){}
-        
         // ignore movies (for now).
         if ("public.movie" == info.valueForKey("UIImagePickerControllerMediaType") as NSString) {
             return;
@@ -307,8 +305,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         var sharingItems = [AnyObject]()
         sharingItems.append("Made with #mskr.")
         
-        let image = applyMaskToImage(self.selectedMaskName)
-        sharingItems.append(image)
+        let ciImage = applyMaskToImage(self.selectedMaskName).CIImage!
+        let image = UIImage(CIImage: ciImage)
+        //sharingItems.append(image)
+        sharingItems.append(self.imageView.image!);
         
         let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
         self.presentViewController(activityViewController, animated: true, completion: nil)

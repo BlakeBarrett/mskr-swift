@@ -52,9 +52,8 @@ class ImageMaskingUtils {
     }
 
     class func mergeImages(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
+
         var merged: UIImage!;
-        
-        var start = NSDate.date().timeIntervalSince1970
 
         var useExperimental = true
         if useExperimental {
@@ -63,10 +62,6 @@ class ImageMaskingUtils {
             merged = ImageMaskingUtils.mergeImagesUIKit(first: first, second: second, withAlpha: alpha, context: context)
         }
 
-        var now = NSDate.date().timeIntervalSince1970
-        println("merged images \(now - start)")
-        start = now
-        
         return merged;
     }
     
@@ -88,15 +83,16 @@ class ImageMaskingUtils {
         var hei: CGFloat = (newImageSize.height - foreground.size.height) / 2
         
         let foregroundPoint = CGPointMake(wid, hei);
-        foreground.drawAtPoint(foregroundPoint);
+            foreground.drawAtPoint(foregroundPoint);
         
         wid = (newImageSize.width - background.size.width) / 2.0
         hei = (newImageSize.height-background.size.height) / 2.0
         
         let backgroundPoint = CGPointMake(wid, hei);
-        background.drawAtPoint(backgroundPoint);
+            background.drawAtPoint(backgroundPoint);
        
         var image = UIGraphicsGetImageFromCurrentImageContext();
+        
         UIGraphicsEndImageContext();
         
         return image;
@@ -109,50 +105,25 @@ class ImageMaskingUtils {
         
         let rects: CGRect = CGRectMake(0, 0, image.size.width, image.size.height)
         
-        var start = NSDate.date().timeIntervalSince1970
-        var now = NSDate.date().timeIntervalSince1970
-        println("")
         let background: CIImage = ImageMaskingUtils.image(fromImage: image, withAlpha: alpha)
-        
-        now = NSDate.date().timeIntervalSince1970
-        println("applied alpha to image \(now - start)")
-        start = now
-        
         let foreground = ImageMaskingUtils.maskImage(source: image, maskImage: mask)
-
-        now = NSDate.date().timeIntervalSince1970
-        println("applied mask to image \(now - start)")
-        start = now
-        
-        let scaledMask = ImageMaskingUtils.resizeImage(source: mask, size: image.size)
-        
-        now = NSDate.date().timeIntervalSince1970
-        println("resized mask image \(now - start)")
-        start = now
+        let scaledMask = CIImage(image: ImageMaskingUtils.resizeImage(source: (mask.copy() as UIImage), size: image.size))
         
         let alphaMaskFilter: CIFilter = CIFilter(name: "CIMaskToAlpha")
-        alphaMaskFilter.setValue(CIImage(image: scaledMask), forKey: kCIInputImageKey)
-        let alphaMaskFilterOutputImage = alphaMaskFilter.outputImage
+            alphaMaskFilter.setValue(scaledMask, forKey: kCIInputImageKey)
+        let alphaMaskFilterOutputImage = alphaMaskFilter.valueForKey(kCIOutputImageKey) as CIImage
         let alphaMaskCGImage = context.createCGImage(alphaMaskFilterOutputImage, fromRect: rects)
         let alphaMask = CIImage(CGImage: alphaMaskCGImage)
         
-        now = NSDate.date().timeIntervalSince1970
-        println("created CIFilter mask \(now - start)")
-        start = now
-        
         let filter: CIFilter = CIFilter(name: "CIBlendWithAlphaMask")
-        filter.setValue(background, forKey: kCIInputImageKey)
-        filter.setValue(foreground, forKey: kCIInputBackgroundImageKey)
-        filter.setValue(alphaMask, forKey: kCIInputMaskImageKey)
-
-        now = NSDate.date().timeIntervalSince1970
-        println("merged images \(now - start)")
-        start = now
+            filter.setValue(background, forKey: kCIInputImageKey)
+            filter.setValue(foreground, forKey: kCIInputBackgroundImageKey)
+            filter.setValue(alphaMask, forKey: kCIInputMaskImageKey)
         
-        let outputImage = filter.outputImage!
+        let outputImage = filter.valueForKey(kCIOutputImageKey) as CIImage
+        
+        //let outputImage = filter.outputImage!
         let merged = UIImage(CIImage: outputImage)
-        
-        println("new image size: \(merged.size)")
         
         return merged
     }
