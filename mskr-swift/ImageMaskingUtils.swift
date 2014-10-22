@@ -55,9 +55,9 @@ class ImageMaskingUtils {
 
         var merged: UIImage!;
 
-        var useExperimental = true
+        var useExperimental = false
         if useExperimental {
-            merged = ImageMaskingUtils.mergeImagesCIFilters(image: first, mask: second, withAlpha: alpha, context: context)
+            //merged = ImageMaskingUtils.mergeImagesCIFilters(image: first, mask: second, withAlpha: alpha, context: context)
         } else {
             merged = ImageMaskingUtils.mergeImagesUIKit(first: first, second: second, withAlpha: alpha, context: context)
         }
@@ -70,32 +70,32 @@ class ImageMaskingUtils {
      */
     class func mergeImagesUIKit(#first: UIImage, second: UIImage, withAlpha alpha: CGFloat, context: CIContext) -> UIImage! {
         
-        let background = UIImage(CIImage: ImageMaskingUtils.image(fromImage: first, withAlpha: alpha))
-        let foreground = UIImage(CIImage: ImageMaskingUtils.maskImage(source: first, maskImage: second))
+        let background = UIImage(CIImage: ImageMaskingUtils.image(fromImage: first, withAlpha: alpha))!
+        let foreground = UIImage(CIImage: ImageMaskingUtils.maskImage(source: first, maskImage: second))!
         
         let newImageSize = CGSizeMake(
             max(foreground.size.width, background.size.width),
             max(foreground.size.height, background.size.height))
         
-        UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1);
+        UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1)
         
         var wid: CGFloat = (newImageSize.width - foreground.size.width) / 2
         var hei: CGFloat = (newImageSize.height - foreground.size.height) / 2
         
-        let foregroundPoint = CGPointMake(wid, hei);
-            foreground.drawAtPoint(foregroundPoint);
+        let foregroundPoint = CGPointMake(wid, hei)
+            foreground.drawAtPoint(foregroundPoint)
         
-        wid = (newImageSize.width - background.size.width) / 2.0
-        hei = (newImageSize.height-background.size.height) / 2.0
+        wid = (newImageSize.width  - background.size.width)  / 2.0
+        hei = (newImageSize.height - background.size.height) / 2.0
         
-        let backgroundPoint = CGPointMake(wid, hei);
-            background.drawAtPoint(backgroundPoint);
+        let backgroundPoint = CGPointMake(wid, hei)
+            background.drawAtPoint(backgroundPoint)
        
-        var image = UIGraphicsGetImageFromCurrentImageContext();
+        var image = UIGraphicsGetImageFromCurrentImageContext()
         
-        UIGraphicsEndImageContext();
+        UIGraphicsEndImageContext()
         
-        return image;
+        return image
     }
     
     /**
@@ -182,7 +182,7 @@ class ImageMaskingUtils {
     
     class func uiImageFromCIImage(#input: CIImage, withSize size: CGRect, context: CIContext) -> UIImage {
         let outputCGImageRef: CGImageRef =  context.createCGImage(input, fromRect: size)
-        return UIImage(CGImage: outputCGImageRef);
+        return UIImage(CGImage: outputCGImageRef)!;
     }
     
 }

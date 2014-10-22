@@ -64,8 +64,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func precacheMasks() {
         for mskName in availableMasks {
-            let mask = UIImage(named: mskName);
-            self.maskCache.append(name: mskName, image: mask);
+            let mask = UIImage(named: mskName + "msk");
+            self.maskCache.append(name: mskName, image: mask!);
         }
     }
     
@@ -78,7 +78,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Getters
     func getMask() -> UIImage {
-        return UIImage(named: self.selectedMaskName)
+        return UIImage(named: self.selectedMaskName)!
     }
     
     func getMaskNameForRow(#row: Int) -> String {
@@ -91,7 +91,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 return maskKVpair.image;
             }
         }
-        return UIImage(named: name);
+        return UIImage(named: name)!;
     }
     
     // MARK:
@@ -315,7 +315,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onStartOver(sender: AnyObject) {
-        self.maskedImage = UIImage(named: "mskr_add");
+        self.maskedImage = UIImage(named: "mskr_add")!;
         imageView.image = self.maskedImage;
         // TODO: Disable new/save/trash/action buttons
         disableToolbar();
