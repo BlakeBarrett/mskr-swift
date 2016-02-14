@@ -38,7 +38,9 @@
                                 <items>
                                     <barButtonItem systemItem="fixedSpace" id="cbb-7U-JWc"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="qC6-nD-Bjv"/>
-                                    <barButtonItem title="mskr" style="plain" id="1cu-yU-0vn"/>
+                                    <barButtonItem title="mskr" style="done" id="1cu-yU-0vn">
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="C3B-0r-ydE"/>
                                     <barButtonItem systemItem="add" id="ODd-zH-6Lc">
                                         <connections>
@@ -59,7 +61,12 @@
                                             <action selector="onTrashClick:" destination="BYZ-38-t0r" id="zbT-S6-J5S"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="GAW-Xk-HjY"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ssr-RP-nGV"/>
+                                    <barButtonItem systemItem="refresh" id="ZBh-YJ-ABi">
+                                        <connections>
+                                            <action selector="onRotateClick:" destination="BYZ-38-t0r" id="upv-lc-RMl"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem systemItem="action" id="AVw-sm-0ez">
                                         <connections>
                                             <action selector="onActionClick:" destination="BYZ-38-t0r" id="UzN-8e-dgT"/>

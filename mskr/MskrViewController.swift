@@ -95,6 +95,10 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         }
     }
     
+    @IBAction func onRotateClick(sender: UIBarButtonItem) {
+        self.rotate()
+    }
+    
     // MARK: MSKR functions
     func startOver() {
         self.image = nil
@@ -137,6 +141,12 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         } else {
             return UIImage()
         }
+    }
+    
+    func rotate() {
+        let rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0
+        self.image = ImageMaskingUtils.rotate(self.image!, radians: rotationInRatians)
+        self.previewImage.image = self.image
     }
     
     // MARK: MaskReceiver Protocol Implementation
