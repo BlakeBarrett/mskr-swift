@@ -18,6 +18,7 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         // Do any additional setup after loading the view, typically from a nib.
@@ -78,11 +79,11 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     // MARK: Collection View DELEGATE
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.selectedMask = self.imageNameForIndexPath(indexPath)
-        self.doneButton.enabled = true
+        delegate?.setSelectedMask(self.selectedMask!)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // MARK: Button Click Handlers
-    @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBAction func onButtonItemClick(sender: UIBarButtonItem) {
         
         switch (sender.tag) {

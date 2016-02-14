@@ -18,7 +18,6 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         // Do any additional setup after loading the view, typically from a nib.
         
         imagePicker.delegate = self
-        imagePicker.allowsEditing = true
         imagePicker.sourceType = .SavedPhotosAlbum
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
@@ -41,14 +40,13 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             return
         }
         
-        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
-//            self.image = editedImage
-            self.image = ImageMaskingUtils.makeItSquare(editedImage)
-        }
+        self.image = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
         
+        self.previewImage.contentMode = .ScaleAspectFit
         self.previewImage.image = self.image
+        
         picker.dismissViewControllerAnimated(true) { () -> Void in
-
+            self.enableBarButtons()
         }
     }
     
@@ -57,6 +55,26 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             
         }
     }
+    
+    // MARK: Bar Button Items
+    func enableBarButtons() {
+        addMaskBarButton.enabled = true
+        resetBarButton.enabled = true
+        rotateBarButton.enabled = true
+        actionBarButton.enabled = true
+    }
+    
+    func disabeBarButtons() {
+        addMaskBarButton.enabled = false
+        resetBarButton.enabled = false
+        rotateBarButton.enabled = false
+        actionBarButton.enabled = false
+    }
+    
+    @IBOutlet weak var addMaskBarButton: UIBarButtonItem!
+    @IBOutlet weak var resetBarButton: UIBarButtonItem!
+    @IBOutlet weak var rotateBarButton: UIBarButtonItem!
+    @IBOutlet weak var actionBarButton: UIBarButtonItem!
     
     // MARK: Button Bar Item click handlers
     @IBAction func onTrashClick(sender: UIBarButtonItem) {
@@ -103,6 +121,7 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     func startOver() {
         self.image = nil
         self.previewImage.image = UIImage(named: "mskr_add")
+        self.disabeBarButtons()
     }
     
     func save() {

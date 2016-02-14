@@ -19,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add" translatesAutoresizingMaskIntoConstraints="NO" id="QmJ-ex-RL1">
+                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mskr_add" translatesAutoresizingMaskIntoConstraints="NO" id="QmJ-ex-RL1">
                                 <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" button="YES" image="YES"/>
@@ -42,7 +42,7 @@
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="C3B-0r-ydE"/>
-                                    <barButtonItem systemItem="add" id="ODd-zH-6Lc">
+                                    <barButtonItem enabled="NO" systemItem="add" id="ODd-zH-6Lc">
                                         <connections>
                                             <segue destination="4K1-aX-dyi" kind="popoverPresentation" identifier="segue" popoverAnchorBarButtonItem="ODd-zH-6Lc" id="AWR-K6-D9c">
                                                 <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -56,18 +56,19 @@
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <items>
-                                    <barButtonItem systemItem="trash" id="Yat-3R-u4o">
+                                    <barButtonItem enabled="NO" systemItem="trash" id="Yat-3R-u4o">
                                         <connections>
                                             <action selector="onTrashClick:" destination="BYZ-38-t0r" id="zbT-S6-J5S"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="ssr-RP-nGV"/>
-                                    <barButtonItem systemItem="refresh" id="ZBh-YJ-ABi">
+                                    <barButtonItem enabled="NO" systemItem="refresh" id="ZBh-YJ-ABi">
                                         <connections>
                                             <action selector="onRotateClick:" destination="BYZ-38-t0r" id="upv-lc-RMl"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="action" id="AVw-sm-0ez">
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="Z7K-ns-jhv"/>
+                                    <barButtonItem enabled="NO" systemItem="action" id="AVw-sm-0ez">
                                         <connections>
                                             <action selector="onActionClick:" destination="BYZ-38-t0r" id="UzN-8e-dgT"/>
                                         </connections>
@@ -91,7 +92,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="bch-z7-qqg"/>
                     <connections>
+                        <outlet property="actionBarButton" destination="AVw-sm-0ez" id="YPb-DZ-YqS"/>
+                        <outlet property="addMaskBarButton" destination="ODd-zH-6Lc" id="XeI-VQ-qVb"/>
                         <outlet property="previewImage" destination="QmJ-ex-RL1" id="Z6v-Gg-WCH"/>
+                        <outlet property="resetBarButton" destination="Yat-3R-u4o" id="ncX-Gw-zRM"/>
+                        <outlet property="rotateBarButton" destination="ZBh-YJ-ABi" id="dy1-Dm-kNl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -161,11 +166,6 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="xhg-cI-mwz"/>
-                                    <barButtonItem tag="1" enabled="NO" systemItem="done" id="HHm-z1-fqd" userLabel="done">
-                                        <connections>
-                                            <action selector="onButtonItemClick:" destination="4K1-aX-dyi" id="QNz-Q1-Cxk"/>
-                                        </connections>
-                                    </barButtonItem>
                                 </items>
                                 <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </toolbar>
@@ -183,7 +183,6 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="qp1-Uv-80P" id="VB2-tm-WnG"/>
-                        <outlet property="doneButton" destination="HHm-z1-fqd" id="vYV-S4-AIJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QVb-S5-tRG" userLabel="First Responder" sceneMemberID="firstResponder"/>
