@@ -15,9 +15,8 @@
 		25CB9DD81C702440007D538A /* mskrTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CB9DD71C702440007D538A /* mskrTests.swift */; };
 		25CB9DE31C702440007D538A /* mskrUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CB9DE21C702440007D538A /* mskrUITests.swift */; };
 		25CB9DF11C702694007D538A /* MaskSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CB9DF01C702694007D538A /* MaskSelectorViewController.swift */; };
-		25CB9DF41C7036DA007D538A /* MaskCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CB9DF31C7036DA007D538A /* MaskCollectionViewCell.swift */; };
-		25CB9DFB1C703D32007D538A /* mskr_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 25CB9DFA1C703D32007D538A /* mskr_add.png */; };
 		25CB9E0F1C703ECB007D538A /* masks.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25CB9E0E1C703ECB007D538A /* masks.xcassets */; };
+		25CB9E111C706DE5007D538A /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CB9E101C706DE5007D538A /* ImageMaskingUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,9 +51,8 @@
 		25CB9DE21C702440007D538A /* mskrUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mskrUITests.swift; sourceTree = "<group>"; };
 		25CB9DE41C702440007D538A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25CB9DF01C702694007D538A /* MaskSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskSelectorViewController.swift; sourceTree = "<group>"; };
-		25CB9DF31C7036DA007D538A /* MaskCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaskCollectionViewCell.swift; sourceTree = "<group>"; };
-		25CB9DFA1C703D32007D538A /* mskr_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mskr_add.png; sourceTree = "<group>"; };
 		25CB9E0E1C703ECB007D538A /* masks.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = masks.xcassets; sourceTree = "<group>"; };
+		25CB9E101C706DE5007D538A /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +133,6 @@
 			children = (
 				25CB9DCB1C702440007D538A /* LaunchScreen.storyboard */,
 				25CB9DC61C702440007D538A /* Main.storyboard */,
-				25CB9DFA1C703D32007D538A /* mskr_add.png */,
 				25CB9DC91C702440007D538A /* Assets.xcassets */,
 				25CB9E0E1C703ECB007D538A /* masks.xcassets */,
 			);
@@ -147,7 +144,7 @@
 			children = (
 				25CB9DC41C702440007D538A /* MskrViewController.swift */,
 				25CB9DF01C702694007D538A /* MaskSelectorViewController.swift */,
-				25CB9DF31C7036DA007D538A /* MaskCollectionViewCell.swift */,
+				25CB9E101C706DE5007D538A /* ImageMaskingUtils.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -229,6 +226,7 @@
 				TargetAttributes = {
 					25CB9DBE1C702440007D538A = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = JJNWD2J7X4;
 					};
 					25CB9DD21C702440007D538A = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -269,7 +267,6 @@
 				25CB9E0F1C703ECB007D538A /* masks.xcassets in Resources */,
 				25CB9DCA1C702440007D538A /* Assets.xcassets in Resources */,
 				25CB9DC81C702440007D538A /* Main.storyboard in Resources */,
-				25CB9DFB1C703D32007D538A /* mskr_add.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,9 +291,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25CB9E111C706DE5007D538A /* ImageMaskingUtils.swift in Sources */,
 				25CB9DC51C702440007D538A /* MskrViewController.swift in Sources */,
 				25CB9DC31C702440007D538A /* AppDelegate.swift in Sources */,
-				25CB9DF41C7036DA007D538A /* MaskCollectionViewCell.swift in Sources */,
 				25CB9DF11C702694007D538A /* MaskSelectorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = mskr/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blakebarrett.mskr;
@@ -450,6 +448,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = mskr/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blakebarrett.mskr;

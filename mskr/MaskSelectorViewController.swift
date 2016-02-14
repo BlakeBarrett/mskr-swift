@@ -8,11 +8,13 @@
 
 import UIKit
 
-class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let masks = ["sqrmsk", "crclmsk", "trnglmsk", "powmsk", "plrdmsk", "xmsk", "eqltymsk", "hrtmsk", "dmndmsk"]
     
+    var image: UIImage?
     var selectedMask: String?
+    var delegate: MaskReceiver?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,17 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         return image
     }
     
+    
+    // MARK: Collection View FLOW LAYOUT
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+            return CGSize(width: 100, height: 100)
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        let edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
+        return edgeInsets
+    }
+    
     // MARK: Collection View DATA_SOURCE
     @IBOutlet weak var collectionView: UICollectionView!
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -48,23 +61,33 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
 
         let mask = imageForIndexPath(indexPath)
-        cell.backgroundColor = UIColor.whiteColor()
+        cell.backgroundColor = UIColor.grayColor()
         cell.imageView.image = mask
- 
+
+//        dispatch_async(dispatch_get_main_queue(), {
+//            let masked: UIImage! = ImageMaskingUtils.maskImage(self.image, maskImage: mask)
+//            let background = ImageMaskingUtils.image(self.image!, withAlpha: 0.5)
+//            let merged = ImageMaskingUtils.mergeImages(masked, second: background)
+//            
+//            cell.imageView.image = merged
+//        })
+
         return cell
     }
     
     // MARK: Collection View DELEGATE
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.selectedMask = self.imageNameForIndexPath(indexPath)
+        self.doneButton.enabled = true
     }
     
     // MARK: Button Click Handlers
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBAction func onButtonItemClick(sender: UIBarButtonItem) {
         
         switch (sender.tag) {
         case 1: // done
-            self.selectedMask = ""
+            delegate?.setSelectedMask(self.selectedMask!)
             break
         case 2: // cancel
             self.selectedMask = nil
@@ -80,9 +103,12 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     // MARK: Prepare For Segue
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let mask = self.selectedMask {
-            let destination = segue.destinationViewController as! MaskReceiver
-            destination.setSelectedMask(mask)
+            delegate?.setSelectedMask(mask)
         }
     }
-    
+}
+
+
+class MaskCollectionViewCell : UICollectionViewCell {
+    @IBOutlet weak var imageView: UIImageView!
 }
