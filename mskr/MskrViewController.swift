@@ -18,7 +18,7 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         // Do any additional setup after loading the view, typically from a nib.
         
         imagePicker.delegate = self
-        imagePicker.sourceType = .SavedPhotosAlbum
+        imagePicker.sourceType = .PhotoLibrary
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
         imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
     }
