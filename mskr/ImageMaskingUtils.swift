@@ -12,10 +12,98 @@ import UIKit
 class ImageMaskingUtils {
     
     /**
+     * Modifies the image's Saturation/Brightness/Contrast
+     */
+    class func colorControlImage(image: UIImage) -> UIImage {
+        let context = CIContext()
+        let ciImage = CIImage(image: image)
+        let filter = CIFilter(name: "CIColorControls")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        
+        //ciImage?.imageByApplyingTransform:CGAffineTransformMakeTranslation(100, 100)]
+        
+        //Saturation: NSNumber/CIAttributeTypeScalar
+        //Brightness
+        //Contrast
+        
+        filter?.setValue(2.0, forKey: kCIInputContrastKey)
+        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            return image
+        }
+        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
+        let returnImage = UIImage(CGImage: ciImageRef)
+        return returnImage
+    }
+    
+    /**
+     * Changes the saturation of the image to the provided value
+     */
+    class func noirImage(image: UIImage!) -> UIImage {
+        let context = CIContext()
+        let ciImage = CIImage(image: image)
+        let filter = CIFilter(name: "CIPhotoEffectNoir")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            return image
+        }
+        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
+        let returnImage = UIImage(CGImage: ciImageRef)
+        return returnImage
+    }
+    
+    /**
+     * Changes the saturation of the image to the provided value
+     */
+    class func saturateImage(image: UIImage!, saturation: CGFloat) -> UIImage {
+        let context = CIContext()
+        let ciImage = CIImage(image: image)
+        let filter = CIFilter(name: "CIColorControls")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        filter?.setValue(saturation, forKey: kCIInputSaturationKey)
+        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            return image
+        }
+        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
+        let returnImage = UIImage(CGImage: ciImageRef)
+        return returnImage
+    }
+    
+    /**
+     * Invert colors of image
+     */
+    class func invertImageColors(image: UIImage) -> UIImage {
+        let context = CIContext()
+        let ciImage = CIImage(image: image)
+        let filter = CIFilter(name: "CIColorInvert")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            return image
+        }
+        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
+        let returnImage = UIImage(CGImage: ciImageRef)
+        return returnImage
+    }
+    
+    /**
+     * Takes a greyscale image, darker the color the lower the alpha (0x000000 == 0.0)
+     */
+    class func imageToMask(image: UIImage) -> UIImage {
+        let context = CIContext()
+        let ciImage = CIImage(image: image)
+        let filter = CIFilter(name: "CIMaskToAlpha")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            return image
+        }
+        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
+        let returnImage = UIImage(CGImage: ciImageRef)
+        return returnImage
+    }
+    
+    /**
      * Masks the source image with the second.
      */
     class func maskImage(source: UIImage!, maskImage: UIImage!) -> UIImage {
-        
         let maskRef: CGImageRef! = maskImage.CGImage
         let mask: CGImageRef! = CGImageMaskCreate(CGImageGetWidth(maskRef),
             CGImageGetHeight(maskRef),
@@ -40,7 +128,7 @@ class ImageMaskingUtils {
         let newImageSize: CGSize = CGSizeMake(
             max(first.size.width, second.size.width),
             max(first.size.height, second.size.height))
-
+        
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1)
         
         var wid: CGFloat = CGFloat(roundf(
@@ -69,7 +157,7 @@ class ImageMaskingUtils {
     class func image(fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
         return image(fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
-
+    
     class func image(fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1)
         
