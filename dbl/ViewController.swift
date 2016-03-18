@@ -63,7 +63,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return
         }
         
-        let image = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
+        let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as? UIImage)!)
         
         self.previewImage.contentMode = .ScaleAspectFit
         

@@ -11,11 +11,16 @@ import UIKit
 
 class ImageMaskingUtils {
     
+    /**
+     * Modifies the image's Saturation/Brightness/Contrast
+     */
     class func colorControlImage(image: UIImage) -> UIImage {
         let context = CIContext()
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIColorControls")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        
+        //ciImage?.imageByApplyingTransform:CGAffineTransformMakeTranslation(100, 100)]
         
         //Saturation: NSNumber/CIAttributeTypeScalar
         //Brightness
@@ -126,17 +131,15 @@ class ImageMaskingUtils {
 
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1)
         
-        var wid: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.width - first.size.width) / 2.0))
-        var hei: CGFloat = CGFloat(roundf(
-            CFloat(newImageSize.height-first.size.height) / 2.0))
+        var wid: CGFloat = CGFloat(roundf(CFloat(newImageSize.width - first.size.width) / 2.0))
+        var hei: CGFloat = CGFloat(roundf(CFloat(newImageSize.height-first.size.height) / 2.0))
+        
         let firstPoint = CGPointMake(wid, hei)
         first.drawAtPoint(firstPoint)
         
-        wid = CGFloat(roundf(
-            CFloat(newImageSize.width - second.size.width) / 2.0))
-        hei = CGFloat(roundf(
-            CFloat(newImageSize.height-second.size.height) / 2.0))
+        wid = CGFloat(roundf(CFloat(newImageSize.width - second.size.width) / 2.0))
+        hei = CGFloat(roundf(CFloat(newImageSize.height-second.size.height) / 2.0))
+        
         let secondPoint = CGPointMake(wid, hei);
         second.drawAtPoint(secondPoint)
         
@@ -220,5 +223,51 @@ class ImageMaskingUtils {
         let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         return rotated;
+    }
+    
+    /**
+     * Fix the image orientation issues we've seen.
+     * Translated from Objective-C from here: http://stackoverflow.com/a/1262395
+     **/
+    class func reconcileImageOrientation(image:UIImage) -> UIImage {
+        let targetWidth = Int(image.size.width)
+        let targetHeight = Int(image.size.height)
+        
+        let imageRef = image.CGImage
+        let bitmapInfo = CGImageGetBitmapInfo(imageRef!)
+        let colorSpaceInfo = CGImageGetColorSpace(imageRef!)
+        
+        // Create the bitmap context
+        UIGraphicsBeginImageContext(image.size);
+        var bitmap: CGContextRef = UIGraphicsGetCurrentContext()!
+
+        if (image.imageOrientation == UIImageOrientation.Up || image.imageOrientation == UIImageOrientation.Down) {
+            bitmap = CGBitmapContextCreate(nil, targetWidth, targetHeight, CGImageGetBitsPerComponent(imageRef), CGImageGetBytesPerRow(imageRef), colorSpaceInfo, bitmapInfo.rawValue)!
+        } else {
+            bitmap = CGBitmapContextCreate(nil, targetHeight, targetWidth, CGImageGetBitsPerComponent(imageRef), CGImageGetBytesPerRow(imageRef), colorSpaceInfo, bitmapInfo.rawValue)!
+        }
+        
+        if (image.imageOrientation == UIImageOrientation.Left) {
+            CGContextRotateCTM (bitmap, radians(90))
+            CGContextTranslateCTM (bitmap, 0, CGFloat(-targetHeight))
+        } else if (image.imageOrientation == UIImageOrientation.Right) {
+            CGContextRotateCTM (bitmap, radians(-90))
+            CGContextTranslateCTM (bitmap, CGFloat(-targetWidth), 0)
+        } else if (image.imageOrientation == UIImageOrientation.Up) {
+            // NOTHING
+        } else if (image.imageOrientation == UIImageOrientation.Down) {
+            CGContextTranslateCTM (bitmap, CGFloat(targetWidth), CGFloat(targetHeight))
+            CGContextRotateCTM (bitmap, radians(-180))
+        }
+        
+        CGContextDrawImage(bitmap, CGRectMake(0, 0, CGFloat(targetWidth), CGFloat(targetHeight)), imageRef)
+        let ref = CGBitmapContextCreateImage(bitmap)
+        let newImage = UIImage(CGImage: ref!)
+        
+        return newImage;
+    }
+    
+    static func radians (degrees: Int) -> CGFloat {
+        return CGFloat(Double(degrees) * M_PI / 180.0)
     }
 }
