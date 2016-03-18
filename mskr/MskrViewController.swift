@@ -170,11 +170,21 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     // MARK: MaskReceiver Protocol Implementation
     func setSelectedMask(mask: String) {
-        guard let _ = self.image else { return }
-        
-        let mask = getMaskNamed(mask)
-        self.image = applyMaskToImage(self.image!, mask: mask)
+        // Why not use `guard let _ = self.image else { return }`?
+        // didn't want to waste the memory of an instiantiation.
+        if self.image == nil {
+            return
+        }
+        let mask = self.getMaskNamed(mask)
+        self.image = self.applyMaskToImage(self.image!, mask: mask)
         self.previewImage.image = self.image
+        
+//        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+//            
+//            dispatch_async(dispatch_get_main_queue(), {
+//                
+//            })
+//        }
     }
     
     // MARK: Prepare For Segue
