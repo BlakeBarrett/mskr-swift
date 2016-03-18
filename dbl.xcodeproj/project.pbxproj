@@ -13,6 +13,7 @@
 		2577C3FD1C9B72FF00CD05B7 /* dbl.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2577C3FB1C9B72FF00CD05B7 /* dbl.xcdatamodeld */; };
 		2577C3FF1C9B72FF00CD05B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2577C3FE1C9B72FF00CD05B7 /* Assets.xcassets */; };
 		2577C4021C9B72FF00CD05B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2577C4001C9B72FF00CD05B7 /* LaunchScreen.storyboard */; };
+		2577C40A1C9BD05200CD05B7 /* ImageMaskingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2577C4091C9BD05200CD05B7 /* ImageMaskingUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		2577C3FE1C9B72FF00CD05B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2577C4011C9B72FF00CD05B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2577C4031C9B72FF00CD05B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2577C4091C9BD05200CD05B7 /* ImageMaskingUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageMaskingUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				2577C3F41C9B72FF00CD05B7 /* AppDelegate.swift */,
 				2577C3F61C9B72FF00CD05B7 /* ViewController.swift */,
+				2577C4091C9BD05200CD05B7 /* ImageMaskingUtils.swift */,
 				2577C3F81C9B72FF00CD05B7 /* Main.storyboard */,
 				2577C3FE1C9B72FF00CD05B7 /* Assets.xcassets */,
 				2577C4001C9B72FF00CD05B7 /* LaunchScreen.storyboard */,
@@ -138,6 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2577C40A1C9BD05200CD05B7 /* ImageMaskingUtils.swift in Sources */,
 				2577C3FD1C9B72FF00CD05B7 /* dbl.xcdatamodeld in Sources */,
 				2577C3F71C9B72FF00CD05B7 /* ViewController.swift in Sources */,
 				2577C3F51C9B72FF00CD05B7 /* AppDelegate.swift in Sources */,
@@ -254,6 +258,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dbl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blakebarrett.dbl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -265,6 +270,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = dbl/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.blakebarrett.dbl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
