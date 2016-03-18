@@ -40,7 +40,7 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             return
         }
         
-        self.image = (info[UIImagePickerControllerOriginalImage] as? UIImage)!
+        self.image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as? UIImage)!)
         
         self.previewImage.contentMode = .ScaleAspectFit
         self.previewImage.image = self.image
