@@ -14,8 +14,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     TODO:
         1) Load image √
         2) Desaturate image √
-        3) Apply desaturated image as alpha-mask
-        4) merge with any previous images in stack
+        3) Apply desaturated image as alpha-mask √
+        4) Merge with any previous images in stack √
+        5) Save √
     */
     
     @IBOutlet weak var previewImage: UIImageView!
@@ -47,8 +48,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onActionButtonClicked(sender: UIBarButtonItem) {
-        UIGraphicsBeginImageContext(previewImage.bounds.size)
-        previewImage.image?.drawInRect(CGRect(x: 0, y: 0, width: previewImage.frame.size.width, height: previewImage.frame.size.height))
+
+        UIGraphicsBeginImageContext((previewImage.image?.size)!)
+        
+        previewImage.image?.drawInRect(
+            CGRect(
+                x: 0, y: 0,
+                width: (previewImage.image?.size.width)!,
+                height: (previewImage.image?.size.height)!
+            )
+        )
+        
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
@@ -78,8 +88,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 // we have to do this assign/nil dance to free up as much memory as possible
                 var inverted: UIImage? = self.invertColorsForImage(ImageMaskingUtils.colorControlImage(image))
                 
-                var desaturated: UIImage? = ImageMaskingUtils.noirImage(inverted)
+                let originalImageSize = self.previewImage.image?.size
+                var resized: UIImage? = ImageMaskingUtils.resize(inverted!, size: originalImageSize!)
                 inverted = nil
+                
+                var desaturated: UIImage? = ImageMaskingUtils.noirImage(resized)
+                resized = nil
                 
                 var mask: UIImage? = ImageMaskingUtils.imageToMask(desaturated!)
                 desaturated = nil

@@ -179,6 +179,30 @@ class ImageMaskingUtils {
     }
     
     /**
+     * Resize image: http://stackoverflow.com/a/12140767
+     **/
+    class func resize(image: UIImage, size: CGSize) -> UIImage {
+        let cgImage = image.CGImage
+        let colorspace = CGImageGetColorSpace(cgImage)
+        
+        let context = CGBitmapContextCreate(nil,
+                Int(size.width), Int(size.height),
+                CGImageGetBitsPerComponent(cgImage),
+                CGImageGetBytesPerRow(cgImage),
+                colorspace,
+                CGImageGetAlphaInfo(cgImage).rawValue)
+        
+        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), cgImage)
+        // extract resulting image from context
+        guard let imgRef = CGBitmapContextCreateImage(context) else {
+            return image
+        }
+        
+        let resizedImage = UIImage(CGImage: imgRef)
+        return resizedImage
+    }
+    
+    /**
      * Stretches images that aren't 1:1 to squares based on their longest edge
      */
     class func makeItSquare(image: UIImage) -> UIImage {
