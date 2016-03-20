@@ -78,46 +78,41 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     // MARK: Button Bar Item click handlers
     @IBAction func onTrashClick(sender: UIBarButtonItem) {
-        self.startOver()
-    }
-    
-    @IBAction func onActionClick(sender: UIBarButtonItem) {
-        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-
-//        let aboutAction = UIAlertAction(title: "About", style: .Default) { (action) in
-//            
-//        }
-
-        let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) in
-            self.save()
-        }
-        
-        let shareAction = UIAlertAction(title: "Share", style: .Default) { (action) in
-            self.share(sender)
-        }
         
         let destroyAction = UIAlertAction(title: "Reset", style: .Destructive) { (action) in
             self.startOver()
         }
-
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
             // no-op
         }
         
-//        alertController.addAction(aboutAction)
-        alertController.addAction(saveAction)
-        
-        // Offer a share option
-        alertController.addAction(shareAction)
-        
         alertController.addAction(destroyAction)
         alertController.addAction(cancelAction)
-
+        
         alertController.popoverPresentationController?.barButtonItem = sender
         
         self.presentViewController(alertController, animated: true) {
             // ...
+        }
+    }
+    
+    @IBAction func onActionClick(sender: UIBarButtonItem) {
+        
+        let activityItems = [self.image!, "Made with #mskr"]
+        let activity = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            let nav = UINavigationController(rootViewController: activity)
+            nav.modalPresentationStyle = .Popover
+            
+            let popover = nav.popoverPresentationController as UIPopoverPresentationController!
+            popover.barButtonItem = sender
+            
+            self.presentViewController(nav, animated: true, completion: nil)
+        } else {
+            self.presentViewController(activity, animated: true, completion: nil)
         }
     }
     
@@ -145,25 +140,6 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    func share(sender: UIBarButtonItem) {
-        
-        let activityItems = [self.image!, "Made with #mskr"]
-        let activity = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-        
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            let nav = UINavigationController(rootViewController: activity)
-            nav.modalPresentationStyle = .Popover
-            
-            let popover = nav.popoverPresentationController as UIPopoverPresentationController!
-            popover.barButtonItem = sender
-            
-            self.presentViewController(nav, animated: true, completion: nil)
-        } else {
-            self.presentViewController(activity, animated: true, completion: nil)
-        }
-        
     }
     
     let ALPHA_BLEND_VAL: CGFloat! = 0.5
