@@ -100,6 +100,10 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     @IBAction func onActionClick(sender: UIBarButtonItem) {
         
+        guard let _ = self.image else {
+            return
+        }
+        
         let activityItems = [self.image!, "Made with #mskr"]
         let activity = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
         
