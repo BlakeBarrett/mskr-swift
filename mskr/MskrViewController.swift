@@ -93,6 +93,10 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             self.save()
         }
         
+        let shareAction = UIAlertAction(title: "Share", style: .Default) { (action) in
+            self.share(sender)
+        }
+        
         let destroyAction = UIAlertAction(title: "Reset", style: .Destructive) { (action) in
             self.startOver()
         }
@@ -103,6 +107,10 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         
 //        alertController.addAction(aboutAction)
         alertController.addAction(saveAction)
+        
+        // Offer a share option
+        alertController.addAction(shareAction)
+        
         alertController.addAction(destroyAction)
         alertController.addAction(cancelAction)
 
@@ -137,6 +145,25 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func share(sender: UIBarButtonItem) {
+        
+        let activityItems = [self.image!, "Made with #mskr"]
+        let activity = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            let nav = UINavigationController(rootViewController: activity)
+            nav.modalPresentationStyle = .Popover
+            
+            let popover = nav.popoverPresentationController as UIPopoverPresentationController!
+            popover.barButtonItem = sender
+            
+            self.presentViewController(nav, animated: true, completion: nil)
+        } else {
+            self.presentViewController(activity, animated: true, completion: nil)
+        }
+        
     }
     
     let ALPHA_BLEND_VAL: CGFloat! = 0.5
