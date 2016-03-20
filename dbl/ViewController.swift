@@ -44,7 +44,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     @IBAction func onTrashButtonClicked(sender: UIBarButtonItem) {
-        self.previewImage.image = nil
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        let destroyAction = UIAlertAction(title: "Reset", style: .Destructive) { (action) in
+            self.startOver()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+            // no-op
+        }
+        
+        alertController.addAction(destroyAction)
+        alertController.addAction(cancelAction)
+        
+        alertController.popoverPresentationController?.barButtonItem = sender
+        
+        self.presentViewController(alertController, animated: true) {
+            // ...
+        }
     }
     
     @IBAction func onActionButtonClicked(sender: UIBarButtonItem) {
@@ -82,6 +99,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let rasterized = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return rasterized
+    }
+    
+    func startOver() {
+        self.previewImage.image = nil
     }
     
     // MARK: UIImagePickerControllerDelegate
