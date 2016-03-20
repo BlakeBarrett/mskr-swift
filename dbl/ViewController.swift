@@ -49,21 +49,39 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func onActionButtonClicked(sender: UIBarButtonItem) {
 
-        UIGraphicsBeginImageContext((previewImage.image?.size)!)
+        guard let _ = self.previewImage.image else {
+            return
+        }
         
-        previewImage.image?.drawInRect(
+        let image = rasterizeImage(self.previewImage.image!)
+        let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        
+        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+            let nav = UINavigationController(rootViewController: activity)
+            nav.modalPresentationStyle = .Popover
+            
+            let popover = nav.popoverPresentationController as UIPopoverPresentationController!
+            popover.barButtonItem = sender
+            
+            self.presentViewController(nav, animated: true, completion: nil)
+        } else {
+            presentViewController(activity, animated: true, completion: nil)
+        }
+    }
+    
+    func rasterizeImage(image:UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(image.size)
+        image.drawInRect(
             CGRect(
                 x: 0, y: 0,
-                width: (previewImage.image?.size.width)!,
-                height: (previewImage.image?.size.height)!
+                width: image.size.width,
+                height: image.size.height
             )
         )
         
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        let rasterized = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
-        let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-        presentViewController(activity, animated: true, completion: nil)
+        return rasterized
     }
     
     // MARK: UIImagePickerControllerDelegate
