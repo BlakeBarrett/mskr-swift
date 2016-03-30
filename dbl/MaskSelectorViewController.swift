@@ -39,7 +39,6 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     func resizeImageToFrame(image:UIImage, frame:CGRect) -> UIImage {
-//        return ImageMaskingUtils.image(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1.0)
         return ImageMaskingUtils.imagePreservingAspectRatio(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1)
     }
     

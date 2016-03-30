@@ -167,9 +167,17 @@ class ImageMaskingUtils {
         let naturalAspectRatio = originalSize.width / originalSize.height
         var newSize: CGSize
         if (fromImage.size.width > fromImage.size.height) {
-            newSize = CGSizeMake(size.width * naturalAspectRatio, size.height)
+            if (originalSize.width < originalSize.height) {
+                newSize = CGSizeMake(size.width, size.width * naturalAspectRatio)
+            } else {
+                newSize = CGSizeMake(size.width * naturalAspectRatio, size.width)
+            }
         } else {
-            newSize = CGSizeMake(size.width, size.height * naturalAspectRatio)
+            if (originalSize.width < originalSize.height) {
+                newSize = CGSizeMake(size.height, size.height * naturalAspectRatio)
+            } else {
+                newSize = CGSizeMake(size.height * naturalAspectRatio, size.height)
+            }
         }
         return ImageMaskingUtils.image(fromImage, withSize: newSize, andAlpha: alpha)
     }

@@ -119,7 +119,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             if (self.noImagesHaveBeenSelected) {
                 self.setPreviewImageAsync(image)
             } else {
-                self.setPreviewImageAsync(self.overlayImage(self.previewImage.image, fresh: image))
+                self.setPreviewImageAsync(self.overlayImageMethodTwo(self.previewImage.image, fresh: image))
             }
         }
         
@@ -156,11 +156,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func overlayImageMethodTwo(original: UIImage?, fresh: UIImage?) -> UIImage {
         let originalImageSize = original?.size
-        
         let image: UIImage? = ImageMaskingUtils.resize(fresh!, size: originalImageSize!)
         let mask: UIImage? = produceInvertedAlphaMaskedImage(image)
+        let merged: UIImage? = ImageMaskingUtils.maskImage(image!, maskImage: mask!)
         
-        return ImageMaskingUtils.mergeImages(produceInvertedAlphaMaskedImage(original!), second: ImageMaskingUtils.maskImage(image!, maskImage: mask!))
+        return ImageMaskingUtils.mergeImages(original!, second: merged!)
     }
     
     // MARK: Helper functions
@@ -198,7 +198,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func setSelectedMask(mask: String) {
-        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
+        var masked: UIImage? = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
+        var background: UIImage? = ImageMaskingUtils.image(self.previewImage.image!, withAlpha: 0.5)
+        let merged: UIImage? = ImageMaskingUtils.mergeImages(masked!, second: background!)
+        masked = nil
+        background = nil
+        self.setPreviewImageAsync(merged!)
+//        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
     }
     
     // MARK: Prepare For Segue
