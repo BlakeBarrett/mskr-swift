@@ -8,96 +8,91 @@
 
 import Foundation
 import UIKit
+import MobileCoreServices
 
 class ImageMaskingUtils {
     
     /**
+     * Changes the saturation of the image to the provided value
+     */
+    class func setImageSaturation(image: UIImage!, saturation: NSNumber) -> UIImage {
+        return ImageMaskingUtils.colorControlImage(image, brightness: 1.0, saturation: saturation, contrast: 1.0)
+    }
+    
+    /**
+     * Changes the brightness of the image
+     */
+    class func setImageBrightness(image: UIImage, brightness: NSNumber) -> UIImage {
+        return ImageMaskingUtils.colorControlImage(image, brightness: brightness, saturation: 1.0, contrast: 1.0)
+    }
+    
+    /**
+     * Changes the contrast of the image
+     */
+    class func setImageContrast(image: UIImage, contrast: NSNumber) -> UIImage {
+        return ImageMaskingUtils.colorControlImage(image, brightness: 1.0, saturation: 1.0, contrast: contrast)
+    }
+    
+    /**
      * Modifies the image's Saturation/Brightness/Contrast
      */
-    class func colorControlImage(image: UIImage) -> UIImage {
-        let context = CIContext()
+    class func colorControlImage(image: UIImage, brightness: NSNumber, saturation: NSNumber, contrast: NSNumber) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIColorControls")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         
         //ciImage?.imageByApplyingTransform:CGAffineTransformMakeTranslation(100, 100)]
         
-        //Saturation: NSNumber/CIAttributeTypeScalar
-        //Brightness
-        //Contrast
-        
-        filter?.setValue(2.0, forKey: kCIInputContrastKey)
+        filter?.setValue(brightness, forKey: kCIInputBrightnessKey)
+        filter?.setValue(saturation, forKey: kCIInputSaturationKey)
+        filter?.setValue(contrast, forKey: kCIInputContrastKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
             return image
         }
-        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
-        let returnImage = UIImage(CGImage: ciImageRef)
-        return returnImage
+        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
     }
     
     /**
     * Changes the saturation of the image to the provided value
     */
     class func noirImage(image: UIImage!) -> UIImage {
-        let context = CIContext()
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIPhotoEffectNoir")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
             return image
         }
-        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
-        let returnImage = UIImage(CGImage: ciImageRef)
-        return returnImage
-    }
-    
-    /**
-     * Changes the saturation of the image to the provided value
-     */
-    class func saturateImage(image: UIImage!, saturation: CGFloat) -> UIImage {
-        let context = CIContext()
-        let ciImage = CIImage(image: image)
-        let filter = CIFilter(name: "CIColorControls")
-        filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        filter?.setValue(saturation, forKey: kCIInputSaturationKey)
-        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
-            return image
-        }
-        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
-        let returnImage = UIImage(CGImage: ciImageRef)
-        return returnImage
+        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
     }
     
     /**
      * Invert colors of image
      */
     class func invertImageColors(image: UIImage) -> UIImage {
-        let context = CIContext()
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIColorInvert")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
             return image
         }
-        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
-        let returnImage = UIImage(CGImage: ciImageRef)
-        return returnImage
+        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
     }
     
     /**
      * Takes a greyscale image, darker the color the lower the alpha (0x000000 == 0.0)
      */
     class func imageToMask(image: UIImage) -> UIImage {
-        let context = CIContext()
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIMaskToAlpha")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
             return image
         }
-        let ciImageRef = context.createCGImage(result, fromRect: result.extent)
-        let returnImage = UIImage(CGImage: ciImageRef)
-        return returnImage
+        let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
+        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
     }
     
     /**
@@ -124,7 +119,6 @@ class ImageMaskingUtils {
      * Flattens or rasterizes two images into one.
      */
     class func mergeImages(first: UIImage, second: UIImage) -> UIImage {
-        
         let newImageSize: CGSize = CGSizeMake(
             max(first.size.width, second.size.width),
             max(first.size.height, second.size.height))
@@ -179,18 +173,18 @@ class ImageMaskingUtils {
     }
     
     /**
-     * Resize image: http://stackoverflow.com/a/12140767
+     * Resize image: http://stackoverflow.com/a/12140767 and http://nshipster.com/image-resizing/
      **/
     class func resize(image: UIImage, size: CGSize) -> UIImage {
         let cgImage = image.CGImage
         let colorspace = CGImageGetColorSpace(cgImage)
         
         let context = CGBitmapContextCreate(nil,
-                Int(size.width), Int(size.height),
-                CGImageGetBitsPerComponent(cgImage),
-                CGImageGetBytesPerRow(cgImage),
-                colorspace,
-                CGImageGetAlphaInfo(cgImage).rawValue)
+                                            Int(size.width), Int(size.height),
+                                            CGImageGetBitsPerComponent(cgImage),
+                                            CGImageGetBytesPerRow(cgImage),
+                                            colorspace,
+                                            CGImageGetAlphaInfo(cgImage).rawValue)
         
         CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), cgImage)
         // extract resulting image from context

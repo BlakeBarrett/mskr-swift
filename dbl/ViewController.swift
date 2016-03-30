@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -25,16 +26,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         imagePicker.delegate = self
         imagePicker.sourceType = .PhotoLibrary
-        // .PhotoLibrary, .Camera, .SavedPhotosAlbum
-        if let cameraType = UIImagePickerController.availableMediaTypesForSourceType(.Camera) {
-            imagePicker.mediaTypes = cameraType
-        } else {
-            imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
-        }
+        imagePicker.mediaTypes = [kUTTypeImage as String]
     }
     
     // MARK: Button click handlers
@@ -43,6 +38,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             // no-op
         }
     }
+    
     @IBAction func onTrashButtonClicked(sender: UIBarButtonItem) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
@@ -86,6 +82,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
+    @IBAction func onRotateButtonClicked(sender: UIBarButtonItem) {
+        guard let image = self.previewImage.image else {
+            return
+        }
+        
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            let rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0
+            self.setPreviewImageAsync(ImageMaskingUtils.rotate(image, radians: rotationInRatians))
+        }
+    }
+    
     func rasterizeImage(image:UIImage) -> UIImage {
         UIGraphicsBeginImageContext(image.size)
         image.drawInRect(
@@ -102,17 +109,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func startOver() {
-        self.previewImage.image = nil
+        self.setPreviewImageAsync(nil)
     }
     
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         // ignore movies
-        if ("public.movie" == info[UIImagePickerControllerMediaType] as! NSString) {
+        if ((info[UIImagePickerControllerMediaType] as! String) == kUTTypeMovie as String) {
             return
         }
         
-        let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as? UIImage)!)
+        var image: UIImage? = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as? UIImage)!)
         
         self.previewImage.contentMode = .ScaleAspectFit
         
@@ -122,32 +129,29 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             // process image
             var targetImage: UIImage
             if (self.previewImage.image == nil) {
-                targetImage = image
+                targetImage = image!
             } else {
-                // we have to do this assign/nil dance to free up as much memory as possible
-                var inverted: UIImage? = self.invertColorsForImage(ImageMaskingUtils.colorControlImage(image))
-                
                 let originalImageSize = self.previewImage.image?.size
-                var resized: UIImage? = ImageMaskingUtils.resize(inverted!, size: originalImageSize!)
-                inverted = nil
+                image = ImageMaskingUtils.resize(image!, size: originalImageSize!)
                 
-                var desaturated: UIImage? = ImageMaskingUtils.noirImage(resized)
-                resized = nil
+                // we have to do this assign/nil dance to free up as much memory as possible
+                var inverted: UIImage? = ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0))
+                
+                var desaturated: UIImage? = ImageMaskingUtils.noirImage(inverted)
+                inverted = nil
                 
                 var mask: UIImage? = ImageMaskingUtils.imageToMask(desaturated!)
                 desaturated = nil
                 
-                var merged:UIImage? = self.maskImage(image, maskImage: mask!)
+                var merged:UIImage? = ImageMaskingUtils.maskImage(image!, maskImage: mask!)
                 mask = nil
+                image = nil
                 
-                targetImage = self.mergeImages(self.previewImage.image!, secondImage: merged!)
+                targetImage = ImageMaskingUtils.mergeImages(self.previewImage.image!, second: merged!)
                 merged = nil
             }
             
-            // back to the main thread
-            dispatch_async(dispatch_get_main_queue(), {
-                self.previewImage.image = targetImage
-            })
+            self.setPreviewImageAsync(targetImage)
         }
         
         picker.dismissViewControllerAnimated(true) { () -> Void in
@@ -161,22 +165,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    // MARK: Image manipulations
-    func invertColorsForImage(image: UIImage) -> UIImage {
-        return ImageMaskingUtils.invertImageColors(image)
+    // MARK: Helper functions
+    func setPreviewImageAsync(image:UIImage?) {
+        dispatch_async(dispatch_get_main_queue(), {
+            self.previewImage.image = image
+        })
     }
     
-    func desaturateImage(image: UIImage) -> UIImage {
-        return ImageMaskingUtils.saturateImage(image, saturation: 0.0)
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
-    
-    func maskImage(image: UIImage, maskImage: UIImage) -> UIImage {
-        return ImageMaskingUtils.maskImage(image, maskImage: maskImage)
-    }
-    
-    func mergeImages(firstImage: UIImage, secondImage: UIImage) -> UIImage {
-        return ImageMaskingUtils.mergeImages(firstImage, second: secondImage)
-    }
-
 }
 
