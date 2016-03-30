@@ -18,8 +18,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zjU-5f-Je4">
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dbl mskr" translatesAutoresizingMaskIntoConstraints="NO" id="zjU-5f-Je4">
                                 <rect key="frame" x="0.0" y="44" width="600" height="512"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="gLk-IK-Gvs" appends="YES" id="vwX-eb-yUn"/>
+                                </connections>
                             </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="Oyw-e3-YsQ">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
@@ -88,8 +92,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="gLk-IK-Gvs">
+                    <connections>
+                        <action selector="onImageTap:" destination="BYZ-38-t0r" id="1Ln-sd-cxA"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="301" y="389"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="dbl mskr" width="434" height="472"/>
+    </resources>
 </document>

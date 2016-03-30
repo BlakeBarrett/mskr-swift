@@ -33,11 +33,20 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         imagePicker.mediaTypes = [kUTTypeImage as String]
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
+    // MARK: Gesture recognizer
+    @IBAction func onImageTap(sender: UITapGestureRecognizer) {
+        if (self.noImagesHaveBeenSelected) {
+            self.openImagePicker()
+        }
+    }
+    
     // MARK: Button click handlers
     @IBAction func onAddButtonClick(sender: UIBarButtonItem) {
-        presentViewController(imagePicker, animated: true) { () -> Void in
-            // no-op
-        }
+        self.openImagePicker()
     }
     
     @IBAction func onTrashButtonClicked(sender: UIBarButtonItem) {
@@ -94,26 +103,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func rasterizeImage(image:UIImage) -> UIImage {
-        UIGraphicsBeginImageContext(image.size)
-        image.drawInRect(
-            CGRect(
-                x: 0, y: 0,
-                width: image.size.width,
-                height: image.size.height
-            )
-        )
-        
-        let rasterized = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return rasterized
-    }
-    
-    func startOver() {
-        self.setPreviewImageAsync(nil)
-        self.noImagesHaveBeenSelected = true
-    }
-    
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         // ignore movies
@@ -138,7 +127,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 // we have to do this assign/nil dance to free up as much memory as possible
                 var inverted: UIImage? = ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0))
                 
-                var desaturated: UIImage? = ImageMaskingUtils.noirImage(inverted)
+                var desaturated: UIImage? = ImageMaskingUtils.noirImage(inverted!)
                 inverted = nil
                 
                 var mask: UIImage? = ImageMaskingUtils.imageToMask(desaturated!)
@@ -165,6 +154,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: Helper functions
+    func openImagePicker() {
+        presentViewController(imagePicker, animated: true) { () -> Void in
+            // no-op
+        }
+    }
+    
     func setPreviewImageAsync(image:UIImage?) {
         self.noImagesHaveBeenSelected = false
         dispatch_async(dispatch_get_main_queue(), {
@@ -172,7 +167,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
+    func rasterizeImage(image:UIImage) -> UIImage {
+        UIGraphicsBeginImageContext(image.size)
+        image.drawInRect(
+            CGRect(
+                x: 0, y: 0,
+                width: image.size.width,
+                height: image.size.height
+            )
+        )
+        
+        let rasterized = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return rasterized
+    }
+    
+    func startOver() {
+        self.setPreviewImageAsync(UIImage(named: "dbl mskr"))
+        self.noImagesHaveBeenSelected = true
     }
 }

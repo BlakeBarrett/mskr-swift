@@ -56,7 +56,7 @@ class ImageMaskingUtils {
     /**
     * Changes the saturation of the image to the provided value
     */
-    class func noirImage(image: UIImage!) -> UIImage {
+    class func noirImage(image: UIImage) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIPhotoEffectNoir")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
