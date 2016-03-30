@@ -37,7 +37,7 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     func resizeImageToFrame(image:UIImage, frame:CGRect) -> UIImage {
-        return ImageMaskingUtils.image(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1)
+        return ImageMaskingUtils.imagePreservingAspectRatio(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1)
     }
     
     // MARK: Collection View FLOW LAYOUT
@@ -46,7 +46,7 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        let edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
+        let edgeInsets = UIEdgeInsetsMake(1, 1, 1, 1)
         return edgeInsets
     }
     
@@ -65,7 +65,6 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
         
         cell.imageView.contentMode = .ScaleAspectFit
-        cell.backgroundColor = UIColor.grayColor()
         
         // Background thread!
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {

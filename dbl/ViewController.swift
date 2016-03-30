@@ -187,8 +187,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func setSelectedMask(mask: String) {
-        let mask = UIImage(named: mask)
-        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: mask)
+        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
     }
     
     // MARK: Prepare For Segue

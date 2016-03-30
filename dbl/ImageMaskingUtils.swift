@@ -96,23 +96,42 @@ class ImageMaskingUtils {
     }
     
     /**
-     * Masks the source image with the second.
+     * Masks the source image with the mask.
      */
     class func maskImage(source: UIImage!, maskImage: UIImage!) -> UIImage {
-        let maskRef: CGImageRef! = maskImage.CGImage
-        let mask: CGImageRef! = CGImageMaskCreate(CGImageGetWidth(maskRef),
-            CGImageGetHeight(maskRef),
-            CGImageGetBitsPerComponent(maskRef),
-            CGImageGetBitsPerPixel(maskRef),
-            CGImageGetBytesPerRow(maskRef),
-            CGImageGetDataProvider(maskRef), nil, true)
         
-        let sourceImage: CGImageRef! = source.CGImage
-        let masked: CGImageRef! = CGImageCreateWithMask(sourceImage, mask)
+        // try the quick and dirty first
+        if let mskd: CGImageRef = CGImageCreateWithMask(source.CGImage, invertImageColors(maskImage).CGImage) {
+            log("CGImageCreateWithMask returned nil from source: \(source.CGImage) mask: \(maskImage.CGImage)")
+            return UIImage(CGImage: mskd)
+        } // okay then, do it the longer way
         
-        let maskedImage = UIImage(CGImage: masked)
+        guard let _ = maskImage.CGImage else {
+            log("maskRef was nil")
+            return source
+        }
         
-        return maskedImage
+        guard let mask: CGImageRef = CGImageMaskCreate(CGImageGetWidth(maskImage.CGImage),
+            CGImageGetHeight(maskImage.CGImage),
+            CGImageGetBitsPerComponent(maskImage.CGImage),
+            CGImageGetBitsPerPixel(maskImage.CGImage),
+            CGImageGetBytesPerRow(maskImage.CGImage),
+            CGImageGetDataProvider(maskImage.CGImage), nil, true) else {
+                log("CGImageMaskCreate was nil")
+                return source
+        }
+        
+        guard let _ = source.CGImage else {
+            log("source.CGImage was nil")
+            return source
+        }
+        
+        guard let masked: CGImageRef = CGImageCreateWithMask(source.CGImage, mask) else {
+            log("CGImageCreateWithMask returned nil from source: \(source.CGImage) mask: \(mask)")
+            return source
+        }
+        
+        return UIImage(CGImage: masked)
     }
     
     /**
@@ -143,6 +162,17 @@ class ImageMaskingUtils {
         return image
     }
     
+    class func imagePreservingAspectRatio(fromImage: UIImage, withSize size: CGSize, andAlpha alpha: CGFloat) -> UIImage {
+        let naturalAspectRatio = fromImage.size.width / fromImage.size.height
+        var newSize: CGSize
+        if (fromImage.size.width > fromImage.size.height) {
+            newSize = CGSizeMake(size.width, size.height * naturalAspectRatio)
+        } else {
+            newSize = CGSizeMake(size.width * naturalAspectRatio, size.height)
+        }
+        return ImageMaskingUtils.image(fromImage, withSize: newSize, andAlpha: alpha)
+    }
+    
     /**
      * Returns a UIImage with the alpha modified
      */
@@ -150,6 +180,10 @@ class ImageMaskingUtils {
         return image(fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
 
+    /**
+     * Returns a UIImage with size and alpha passed in.
+     * size param overrides image's natural size and aspect ratio.
+     **/
     class func image(fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1)
         
@@ -287,5 +321,9 @@ class ImageMaskingUtils {
     
     static func radians (degrees: Int) -> CGFloat {
         return CGFloat(Double(degrees) * M_PI / 180.0)
+    }
+    
+    static func log(message:String) {
+        print(message)
     }
 }

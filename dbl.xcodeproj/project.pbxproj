@@ -64,8 +64,8 @@
 			children = (
 				2577C3F41C9B72FF00CD05B7 /* AppDelegate.swift */,
 				2577C3F61C9B72FF00CD05B7 /* ViewController.swift */,
-				2577C4091C9BD05200CD05B7 /* ImageMaskingUtils.swift */,
 				25BD95B01CAB6F1200619F03 /* MaskSelectorViewController.swift */,
+				2577C4091C9BD05200CD05B7 /* ImageMaskingUtils.swift */,
 				2577C3F81C9B72FF00CD05B7 /* Main.storyboard */,
 				2577C3FE1C9B72FF00CD05B7 /* Assets.xcassets */,
 				25BD95B21CAB762100619F03 /* masks.xcassets */,
