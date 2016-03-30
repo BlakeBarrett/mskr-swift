@@ -8,13 +8,15 @@
 
 import UIKit
 
-class MaskSelectorViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     let masks = ["sqrmsk", "crclmsk", "trnglmsk", "powmsk", "plrdmsk", "xmsk", "eqltymsk", "hrtmsk", "dmndmsk"]
     
     var image: UIImage?
     var selectedMask: String?
     var delegate: MaskReceiver?
+    
+    @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +27,7 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     func imageNameForIndexPath(index:NSIndexPath) -> String {
-        return masks[index.indexAtPosition(1)]
+        return masks[index.indexAtPosition(1) - 1]
     }
     
     func imageForIndexPath(index: NSIndexPath) -> UIImage {
@@ -37,12 +39,13 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     func resizeImageToFrame(image:UIImage, frame:CGRect) -> UIImage {
+//        return ImageMaskingUtils.image(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1.0)
         return ImageMaskingUtils.imagePreservingAspectRatio(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1)
     }
     
     // MARK: Collection View FLOW LAYOUT
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSize(width: 300, height: 300)
+        return CGSize(width: 175, height: 175)
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,insetForSectionAtIndex section: Int) -> UIEdgeInsets {
@@ -51,24 +54,35 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     // MARK: Collection View DATA_SOURCE
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return masks.count
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return masks.count + 1
     }
     
     static var maskCache = [Int: UIImage]()
     
     let reuseIdentifier = "maskCellIdentifier"
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
+        if indexPath.row == 0 && indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("importCellIdentifier", forIndexPath: indexPath) as! PresentImagePickerCollectionViewCell
+            cell.backgroundColor = UIColor.whiteColor()
+            return cell
+        }
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
         cell.imageView.contentMode = .ScaleAspectFit
+        
+        guard let _ = self.image else { return cell }
+        
+        // just to show _something_ while everything else is going on backstage
+        cell.imageView.image = self.image
         
         // Background thread!
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-            let ordinalIndex = indexPath.indexAtPosition(1)
+            let ordinalIndex = indexPath.indexAtPosition(1) - 1
             
             // Resize the image, but only once.
             let imageSize = self.image?.size
@@ -104,7 +118,7 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
     }
     
     // MARK: Collection View DELEGATE
-    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         self.selectedMask = self.imageNameForIndexPath(indexPath)
         delegate?.setSelectedMask(self.selectedMask!)
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -131,8 +145,17 @@ class MaskSelectorViewController: UICollectionViewController, UICollectionViewDe
             delegate?.setSelectedMask(mask)
         }
     }
+    
+    @IBAction func onBrowseItemClick(sender: UITapGestureRecognizer) {
+        self.dismissViewControllerAnimated(true) { 
+            self.delegate?.openImagePicker()
+        }
+    }
 }
 
+class PresentImagePickerCollectionViewCell : UICollectionViewCell {
+    @IBOutlet weak var imageView: UIImageView!
+}
 
 class MaskCollectionViewCell : UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!

@@ -28,6 +28,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.previewImage.contentMode = .ScaleAspectFit
+        
         imagePicker.delegate = self
         imagePicker.sourceType = .PhotoLibrary
         imagePicker.mediaTypes = [kUTTypeImage as String]
@@ -109,35 +111,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             return
         }
         
-        var image: UIImage? = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as? UIImage)!)
-        
-        self.previewImage.contentMode = .ScaleAspectFit
-        
         // background thread
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
+            let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
             // process image
             if (self.noImagesHaveBeenSelected) {
                 self.setPreviewImageAsync(image)
             } else {
-                let originalImageSize = self.previewImage.image?.size
-                image = ImageMaskingUtils.resize(image!, size: originalImageSize!)
-                
-                // we have to do this assign/nil dance to free up as much memory as possible
-                var inverted: UIImage? = ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0))
-                
-                var desaturated: UIImage? = ImageMaskingUtils.noirImage(inverted!)
-                inverted = nil
-                
-                var mask: UIImage? = ImageMaskingUtils.imageToMask(desaturated!)
-                desaturated = nil
-                
-                var merged:UIImage? = ImageMaskingUtils.maskImage(image!, maskImage: mask!)
-                mask = nil
-                image = nil
-                
-                self.setPreviewImageAsync(ImageMaskingUtils.mergeImages(self.previewImage.image!, second: merged!))
-                merged = nil
+                self.setPreviewImageAsync(self.overlayImage(self.previewImage.image, fresh: image))
             }
         }
         
@@ -150,6 +132,35 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         picker.dismissViewControllerAnimated(true) { () -> Void in
             
         }
+    }
+    
+    // MARK: Merge functions
+    
+    func produceInvertedAlphaMaskedImage(image: UIImage?) -> UIImage {
+        var mask: UIImage? = ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0))
+        mask = ImageMaskingUtils.noirImage(mask!)
+        return ImageMaskingUtils.imageToMask(mask!)
+    }
+    
+    func overlayImage(original: UIImage?, fresh: UIImage?) -> UIImage {
+        let originalImageSize = original?.size
+        let image: UIImage? = ImageMaskingUtils.imagePreservingAspectRatio(fresh!, withSize: originalImageSize!, andAlpha: 1.0)
+        
+        var mask: UIImage? = produceInvertedAlphaMaskedImage(image)
+        
+        let merged:UIImage? = ImageMaskingUtils.maskImage(image!, maskImage: mask!)
+        mask = nil
+        
+        return ImageMaskingUtils.mergeImages(original!, second: merged!)
+    }
+    
+    func overlayImageMethodTwo(original: UIImage?, fresh: UIImage?) -> UIImage {
+        let originalImageSize = original?.size
+        
+        let image: UIImage? = ImageMaskingUtils.resize(fresh!, size: originalImageSize!)
+        let mask: UIImage? = produceInvertedAlphaMaskedImage(image)
+        
+        return ImageMaskingUtils.mergeImages(produceInvertedAlphaMaskedImage(original!), second: ImageMaskingUtils.maskImage(image!, maskImage: mask!))
     }
     
     // MARK: Helper functions
@@ -182,7 +193,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func startOver() {
-        self.setPreviewImageAsync(UIImage(named: "dbl mskr"))
+        self.setPreviewImageAsync(nil)
         self.noImagesHaveBeenSelected = true
     }
     
@@ -200,5 +211,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 }
 
 protocol MaskReceiver {
+    func openImagePicker()
     func setSelectedMask(mask:String)
 }

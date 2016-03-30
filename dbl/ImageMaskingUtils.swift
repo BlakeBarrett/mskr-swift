@@ -163,12 +163,13 @@ class ImageMaskingUtils {
     }
     
     class func imagePreservingAspectRatio(fromImage: UIImage, withSize size: CGSize, andAlpha alpha: CGFloat) -> UIImage {
-        let naturalAspectRatio = fromImage.size.width / fromImage.size.height
+        let originalSize = fromImage.size
+        let naturalAspectRatio = originalSize.width / originalSize.height
         var newSize: CGSize
         if (fromImage.size.width > fromImage.size.height) {
-            newSize = CGSizeMake(size.width, size.height * naturalAspectRatio)
-        } else {
             newSize = CGSizeMake(size.width * naturalAspectRatio, size.height)
+        } else {
+            newSize = CGSizeMake(size.width, size.height * naturalAspectRatio)
         }
         return ImageMaskingUtils.image(fromImage, withSize: newSize, andAlpha: alpha)
     }
