@@ -42,6 +42,13 @@
                                             <action selector="onAddButtonClick:" destination="BYZ-38-t0r" id="gyL-Od-J45"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem systemItem="add" id="BYb-kK-cxW">
+                                        <connections>
+                                            <segue destination="bv5-ut-d0s" kind="popoverPresentation" popoverAnchorBarButtonItem="BYb-kK-cxW" id="o4T-BU-b6S">
+                                                <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                            </segue>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="1Bc-13-Ynb">
@@ -99,6 +106,58 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="301" y="389"/>
+        </scene>
+        <!--Mask Selector View Controller-->
+        <scene sceneID="VeC-lu-fS6">
+            <objects>
+                <collectionViewController id="bv5-ut-d0s" customClass="MaskSelectorViewController" customModule="dbl" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="ErQ-EW-t3w">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="WBD-sy-urM">
+                            <size key="itemSize" width="175" height="175"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" reuseIdentifier="maskCellIdentifier" id="lEo-PD-9Re" customClass="MaskCollectionViewCell" customModule="dbl" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z75-Nw-X4r">
+                                            <rect key="frame" x="8" y="8" width="159" height="159"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="z75-Nw-X4r" firstAttribute="top" secondItem="lEo-PD-9Re" secondAttribute="topMargin" id="0ek-eO-ks0"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="z75-Nw-X4r" secondAttribute="bottom" id="U37-OC-iCj"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="z75-Nw-X4r" secondAttribute="trailing" id="svv-Q4-qwu"/>
+                                    <constraint firstItem="z75-Nw-X4r" firstAttribute="leading" secondItem="lEo-PD-9Re" secondAttribute="leadingMargin" id="tNa-E3-Mxa"/>
+                                </constraints>
+                                <size key="customSize" width="175" height="175"/>
+                                <connections>
+                                    <outlet property="imageView" destination="z75-Nw-X4r" id="GAk-qw-Wk1"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="bv5-ut-d0s" id="MPg-op-fCR"/>
+                            <outlet property="delegate" destination="bv5-ut-d0s" id="cNr-Xw-gXh"/>
+                        </connections>
+                    </collectionView>
+                    <connections>
+                        <outlet property="collectionView" destination="ErQ-EW-t3w" id="VXB-p3-BiQ"/>
+                    </connections>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="otv-bY-euE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1073" y="389"/>
         </scene>
     </scenes>
     <resources>

@@ -9,7 +9,7 @@
 import UIKit
 import MobileCoreServices
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MaskReceiver {
     
     /*
     TODO:
@@ -71,7 +71,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func onActionButtonClicked(sender: UIBarButtonItem) {
-
         guard let _ = self.previewImage.image else {
             return
         }
@@ -186,4 +185,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.setPreviewImageAsync(UIImage(named: "dbl mskr"))
         self.noImagesHaveBeenSelected = true
     }
+    
+    func setSelectedMask(mask: String) {
+        let mask = UIImage(named: mask)
+        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: mask)
+    }
+    
+    // MARK: Prepare For Segue
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let maskSelector = segue.destinationViewController as? MaskSelectorViewController {
+            maskSelector.delegate = self
+            maskSelector.image = self.previewImage.image
+        }
+    }
+}
+
+protocol MaskReceiver {
+    func setSelectedMask(mask:String)
 }
