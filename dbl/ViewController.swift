@@ -23,6 +23,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var previewImage: UIImageView!
     
     let imagePicker = UIImagePickerController()
+    var noImagesHaveBeenSelected = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +111,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func startOver() {
         self.setPreviewImageAsync(nil)
+        self.noImagesHaveBeenSelected = true
     }
     
     // MARK: UIImagePickerControllerDelegate
@@ -127,9 +129,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
             // process image
-            var targetImage: UIImage
-            if (self.previewImage.image == nil) {
-                targetImage = image!
+            if (self.noImagesHaveBeenSelected) {
+                self.setPreviewImageAsync(image)
             } else {
                 let originalImageSize = self.previewImage.image?.size
                 image = ImageMaskingUtils.resize(image!, size: originalImageSize!)
@@ -147,11 +148,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 mask = nil
                 image = nil
                 
-                targetImage = ImageMaskingUtils.mergeImages(self.previewImage.image!, second: merged!)
+                self.setPreviewImageAsync(ImageMaskingUtils.mergeImages(self.previewImage.image!, second: merged!))
                 merged = nil
             }
-            
-            self.setPreviewImageAsync(targetImage)
         }
         
         picker.dismissViewControllerAnimated(true) { () -> Void in
@@ -167,6 +166,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Helper functions
     func setPreviewImageAsync(image:UIImage?) {
+        self.noImagesHaveBeenSelected = false
         dispatch_async(dispatch_get_main_queue(), {
             self.previewImage.image = image
         })
@@ -176,4 +176,3 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return true
     }
 }
-
