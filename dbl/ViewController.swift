@@ -110,21 +110,18 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         if ((info[UIImagePickerControllerMediaType] as! String) == kUTTypeMovie as String) {
             return
         }
-        
-        // background thread
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-            
-            let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
-            // process image
-            if (self.noImagesHaveBeenSelected) {
-                self.setPreviewImageAsync(image)
-            } else {
-                self.setPreviewImageAsync(self.overlayImageMethodTwo(self.previewImage.image, fresh: image))
-            }
-        }
-        
         picker.dismissViewControllerAnimated(true) { () -> Void in
-            
+            // background thread
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+                
+                let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
+                // process image
+                if (self.noImagesHaveBeenSelected) {
+                    self.setPreviewImageAsync(image)
+                } else {
+                    self.setPreviewImageAsync(self.overlayImageMethodTwo(self.previewImage.image, fresh: image))
+                }
+            }
         }
     }
     
@@ -136,10 +133,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Merge functions
     
+    func produceAlphaMaskedImage(image: UIImage?) -> UIImage {
+        return ImageMaskingUtils.imageToMask(ImageMaskingUtils.noirImage(image!))
+    }
+    
     func produceInvertedAlphaMaskedImage(image: UIImage?) -> UIImage {
-        var mask: UIImage? = ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0))
-        mask = ImageMaskingUtils.noirImage(mask!)
-        return ImageMaskingUtils.imageToMask(mask!)
+        return produceAlphaMaskedImage(ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0)))
     }
     
     func overlayImage(original: UIImage?, fresh: UIImage?) -> UIImage {
@@ -157,7 +156,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func overlayImageMethodTwo(original: UIImage?, fresh: UIImage?) -> UIImage {
         let originalImageSize = original?.size
         let image: UIImage? = ImageMaskingUtils.resize(fresh!, size: originalImageSize!)
-        let mask: UIImage? = produceInvertedAlphaMaskedImage(image)
+        let mask: UIImage? = produceAlphaMaskedImage(image)
         let merged: UIImage? = ImageMaskingUtils.maskImage(image!, maskImage: mask!)
         
         return ImageMaskingUtils.mergeImages(original!, second: merged!)
@@ -204,7 +203,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         masked = nil
         background = nil
         self.setPreviewImageAsync(merged!)
-//        self.previewImage.image = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
     }
     
     // MARK: Prepare For Segue

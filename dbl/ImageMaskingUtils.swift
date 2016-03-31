@@ -47,10 +47,13 @@ class ImageMaskingUtils {
         filter?.setValue(saturation, forKey: kCIInputSaturationKey)
         filter?.setValue(contrast, forKey: kCIInputContrastKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        UIGraphicsEndImageContext()
+        return ret
     }
     
     /**
@@ -61,10 +64,13 @@ class ImageMaskingUtils {
         let filter = CIFilter(name: "CIPhotoEffectNoir")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        UIGraphicsEndImageContext()
+        return ret
     }
     
     /**
@@ -75,10 +81,13 @@ class ImageMaskingUtils {
         let filter = CIFilter(name: "CIColorInvert")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+            UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        UIGraphicsEndImageContext()
+        return ret
     }
     
     /**
@@ -232,9 +241,10 @@ class ImageMaskingUtils {
         CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), cgImage)
         // extract resulting image from context
         guard let imgRef = CGBitmapContextCreateImage(context) else {
+            UIGraphicsEndImageContext()
             return image
         }
-        
+        UIGraphicsEndImageContext()
         let resizedImage = UIImage(CGImage: imgRef)
         return resizedImage
     }
@@ -253,7 +263,7 @@ class ImageMaskingUtils {
         
         let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage!, cropRect)!
         let cropped: UIImage = UIImage(CGImage: imageRef)
-        
+        UIGraphicsEndImageContext()
         return ImageMaskingUtils.image(cropped, withSize: size, andAlpha: 1)
     }
     
@@ -324,6 +334,8 @@ class ImageMaskingUtils {
         CGContextDrawImage(bitmap, CGRectMake(0, 0, CGFloat(targetWidth), CGFloat(targetHeight)), imageRef)
         let ref = CGBitmapContextCreateImage(bitmap)
         let newImage = UIImage(CGImage: ref!)
+        
+        UIGraphicsEndImageContext()
         
         return newImage;
     }

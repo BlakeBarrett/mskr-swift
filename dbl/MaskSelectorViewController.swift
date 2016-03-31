@@ -10,7 +10,9 @@ import UIKit
 
 class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    let masks = ["sqrmsk", "crclmsk", "trnglmsk", "powmsk", "plrdmsk", "xmsk", "eqltymsk", "hrtmsk", "dmndmsk"]
+    static let masks = ["sqrmsk", "crclmsk", "trnglmsk", "powmsk", "plrdmsk", "xmsk", "eqltymsk", "hrtmsk", "dmndmsk"]
+    
+    static var size: CGSize = CGSize(width: 0, height: 0)
     
     var image: UIImage?
     var selectedMask: String?
@@ -23,11 +25,12 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        MaskSelectorViewController.precacheMasks()
     }
     
     func imageNameForIndexPath(index:NSIndexPath) -> String {
-        return masks[index.indexAtPosition(1) - 1]
+        return MaskSelectorViewController.masks[index.indexAtPosition(1) - 1]
     }
     
     func imageForIndexPath(index: NSIndexPath) -> UIImage {
@@ -36,10 +39,6 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
             return UIImage()
         }
         return image
-    }
-    
-    func resizeImageToFrame(image:UIImage, frame:CGRect) -> UIImage {
-        return ImageMaskingUtils.imagePreservingAspectRatio(image, withSize: CGSizeMake(frame.width, frame.height), andAlpha: 1)
     }
     
     // MARK: Collection View FLOW LAYOUT
@@ -57,7 +56,29 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         return 1
     }
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return masks.count + 1
+        return MaskSelectorViewController.masks.count + 1
+    }
+    
+    static func precacheMasks() {
+        if (MaskSelectorViewController.size.width == 0 &&
+            MaskSelectorViewController.size.height == 0) {
+            return
+        }
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            for i in 0 ..< MaskSelectorViewController.masks.count {
+                if (MaskSelectorViewController.maskCache[i] != nil) { continue }
+                let maskName = MaskSelectorViewController.masks[i]
+                let mask = UIImage(named: maskName)
+                let resizedMask = ImageMaskingUtils.imagePreservingAspectRatio(mask!, withSize: MaskSelectorViewController.size, andAlpha: 1)
+                MaskSelectorViewController.maskCache[i] = resizedMask
+            }
+        }
+    }
+    
+    static func applyMaskToImage(image: UIImage, mask: UIImage) -> UIImage {
+        let masked: UIImage? = ImageMaskingUtils.maskImage(image, maskImage: mask)
+        let background: UIImage? = ImageMaskingUtils.image(image, withAlpha: 0.5)
+        return ImageMaskingUtils.mergeImages(masked!, second: background!)
     }
     
     static var maskCache = [Int: UIImage]()
@@ -74,6 +95,8 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
         cell.imageView.contentMode = .ScaleAspectFit
         
+        MaskSelectorViewController.size = cell.frame.size
+        
         guard let _ = self.image else { return cell }
         
         // just to show _something_ while everything else is going on backstage
@@ -87,32 +110,26 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
             let imageSize = self.image?.size
             if imageSize?.width > cell.frame.size.width ||
                 imageSize?.height > cell.frame.size.height {
-                self.image = self.resizeImageToFrame(self.image!, frame: cell.frame)
+                self.image = ImageMaskingUtils.imagePreservingAspectRatio(self.image!, withSize: cell.frame.size, andAlpha: 1)
             }
             
             var mask: UIImage?
             // Is the mask image already cached?
             if MaskSelectorViewController.maskCache[ordinalIndex] == nil {
                 // resize the mask to fit the cell's frame
-                mask = self.resizeImageToFrame(self.imageForIndexPath(indexPath), frame: cell.frame)
+                mask = ImageMaskingUtils.imagePreservingAspectRatio(self.imageForIndexPath(indexPath), withSize: cell.frame.size, andAlpha: 1)
                 // cache resized mask
                 MaskSelectorViewController.maskCache[ordinalIndex] = mask
             } else {
                 mask = MaskSelectorViewController.maskCache[ordinalIndex]
             }
             
-            var masked: UIImage? = ImageMaskingUtils.maskImage(self.image, maskImage: mask)
-            var background: UIImage? = ImageMaskingUtils.image(self.image!, withAlpha: 0.5)
-            var merged: UIImage? = ImageMaskingUtils.mergeImages(masked!, second: background!)
-            masked = nil
-            background = nil
-            
+            var merged: UIImage? = MaskSelectorViewController.applyMaskToImage(self.image!, mask: mask!)
             dispatch_async(dispatch_get_main_queue(), {
                 cell.imageView.image = merged
                 merged = nil
             })
         }
-        
         return cell
     }
     
