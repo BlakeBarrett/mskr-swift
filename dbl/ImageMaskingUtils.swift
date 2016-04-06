@@ -12,6 +12,9 @@ import MobileCoreServices
 
 class ImageMaskingUtils {
     
+    // TODO: Implement "Green Screen" a.k.a. Chroma Key/Color Replacement.
+    // https://developer.apple.com/library/mac/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_filer_recipes/ci_filter_recipes.html#//apple_ref/doc/uid/TP30001185-CH4-SW2
+    
     /**
      * Changes the saturation of the image to the provided value
      */
