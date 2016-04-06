@@ -162,6 +162,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return ImageMaskingUtils.mergeImages(original!, second: merged!)
     }
     
+    // TODO: Implement finger-paint a mask:
+    // https://www.raywenderlich.com/87899/make-simple-drawing-app-uikit-swift
+    
     // MARK: Helper functions
     func openImagePicker() {
         presentViewController(imagePicker, animated: true) { () -> Void in

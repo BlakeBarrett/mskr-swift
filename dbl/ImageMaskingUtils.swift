@@ -14,6 +14,20 @@ class ImageMaskingUtils {
     
     // TODO: Implement "Green Screen" a.k.a. Chroma Key/Color Replacement.
     // https://developer.apple.com/library/mac/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_filer_recipes/ci_filter_recipes.html#//apple_ref/doc/uid/TP30001185-CH4-SW2
+    // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_tasks/ci_tasks.html#//apple_ref/doc/uid/TP30001185-CH3-BAJDAHAD
+    
+    // Apple's docs on CIFilters: 
+    // https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html
+    
+    // Video modification tutorials:
+    // https://www.objc.io/issues/23-video/core-image-video/
+    // http://krakendev.io/blog/be-cool-with-cifilter-animations
+    // https://github.com/objcio/core-image-video/blob/master/CoreImageVideo/FunctionalCoreImage.swift
+    // Merge and Export videos:
+    // https://www.raywenderlich.com/94404/play-record-merge-videos-ios-swift
+    // https://developer.apple.com/library/mac/documentation/AVFoundation/Reference/AVMutableComposition_Class/
+    // Overlay videos:
+    // https://abdulazeem.wordpress.com/2012/04/02/video-manipulation-in-ios-resizingmerging-and-overlapping-videos-in-ios/
     
     /**
      * Changes the saturation of the image to the provided value
