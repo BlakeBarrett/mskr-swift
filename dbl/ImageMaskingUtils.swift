@@ -188,6 +188,45 @@ class ImageMaskingUtils {
         return image
     }
     
+    class func fit(image:UIImage, inSize: CGSize) -> UIImage {
+        let size = inSize
+        let originalAspectRatio = image.size.width / image.size.height
+        
+        let rect: CGRect
+        let width, height, x, y: CGFloat
+        //      width > height
+        if (originalAspectRatio > 1) {
+            // this appears to work
+            width = size.width
+            height = size.width / originalAspectRatio
+            x = 0
+            y = (size.height - height) / 2
+            rect = CGRect(
+                x: x, y: y,
+                width: width,
+                height: height
+            )
+        } else {
+            // while this does not
+            width = size.height * originalAspectRatio
+            height = size.height
+            x = (size.width - width) / 2
+            y = 0
+            rect = CGRect(
+                x: x, y: y,
+                width: width,
+                height: height
+            )
+        }
+        
+        UIGraphicsBeginImageContext(size)
+        image.drawInRect(rect)
+        
+        let rasterized = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return rasterized
+    }
+    /*
     class func imagePreservingAspectRatio(fromImage: UIImage, withSize size: CGSize, andAlpha alpha: CGFloat) -> UIImage {
         let originalSize = fromImage.size
         let naturalAspectRatio = originalSize.width / originalSize.height
@@ -207,7 +246,7 @@ class ImageMaskingUtils {
         }
         return ImageMaskingUtils.image(fromImage, withSize: newSize, andAlpha: alpha)
     }
-    
+    */
     /**
      * Returns a UIImage with the alpha modified
      */

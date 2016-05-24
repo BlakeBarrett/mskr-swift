@@ -69,7 +69,7 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
                 if (MaskSelectorViewController.maskCache[i] != nil) { continue }
                 let maskName = MaskSelectorViewController.masks[i]
                 let mask = UIImage(named: maskName)
-                let resizedMask = ImageMaskingUtils.imagePreservingAspectRatio(mask!, withSize: MaskSelectorViewController.size, andAlpha: 1)
+                let resizedMask = ImageMaskingUtils.fit(mask!, inSize: MaskSelectorViewController.size)
                 MaskSelectorViewController.maskCache[i] = resizedMask
             }
         }
@@ -107,17 +107,18 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
             let ordinalIndex = indexPath.indexAtPosition(1) - 1
             
             // Resize the image, but only once.
-            let imageSize = self.image?.size
+            var imageSize = self.image?.size
             if imageSize?.width > cell.frame.size.width ||
                 imageSize?.height > cell.frame.size.height {
-                self.image = ImageMaskingUtils.imagePreservingAspectRatio(self.image!, withSize: cell.frame.size, andAlpha: 1)
+                self.image = ImageMaskingUtils.fit(self.image!, inSize: cell.frame.size)
+                imageSize = self.image?.size
             }
             
             var mask: UIImage?
             // Is the mask image already cached?
             if MaskSelectorViewController.maskCache[ordinalIndex] == nil {
                 // resize the mask to fit the cell's frame
-                mask = ImageMaskingUtils.imagePreservingAspectRatio(self.imageForIndexPath(indexPath), withSize: cell.frame.size, andAlpha: 1)
+                mask = ImageMaskingUtils.fit(self.imageForIndexPath(indexPath), inSize: imageSize!)
                 // cache resized mask
                 MaskSelectorViewController.maskCache[ordinalIndex] = mask
             } else {

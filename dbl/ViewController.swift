@@ -106,20 +106,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        // ignore movies
-        if ((info[UIImagePickerControllerMediaType] as! String) == kUTTypeMovie as String) {
-            return
-        }
         picker.dismissViewControllerAnimated(true) { () -> Void in
             // background thread
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-                
-                let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
-                // process image
-                if (self.noImagesHaveBeenSelected) {
-                    self.setPreviewImageAsync(image)
-                } else {
-                    self.setPreviewImageAsync(self.overlayImageMethodTwo(self.previewImage.image, fresh: image))
+                let mediaType = info[UIImagePickerControllerMediaType] as! CFString
+                if (mediaType == kUTTypeImage) {
+                    let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
+                    self.onImageSelected(image)
+                } else if (mediaType == kUTTypeMovie) {
+//                    if let referenceUrl = info[UIImagePickerControllerReferenceURL] as? NSURL {
+//                        self.onVideoSelected(referenceUrl)
+//                    }
                 }
             }
         }
@@ -130,6 +127,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
         }
     }
+    
+    func onImageSelected(image: UIImage) {
+        // process image
+        if (self.noImagesHaveBeenSelected) {
+            self.setPreviewImageAsync(image)
+        } else {
+            self.setPreviewImageAsync(self.overlayImageMethodTwo(self.previewImage.image, fresh: image))
+        }
+    }
+    
+//    var moviePath: NSURL? = nil
+//    func onVideoSelected(path: NSURL) {
+//        if moviePath != nil {
+//            return
+//        }
+//        self.moviePath = path
+//        let movieAsset = AVURLAsset(URL: url, options: nil)
+//    }
     
     // MARK: Merge functions
     
@@ -143,7 +158,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func overlayImage(original: UIImage?, fresh: UIImage?) -> UIImage {
         let originalImageSize = original?.size
-        let image: UIImage? = ImageMaskingUtils.imagePreservingAspectRatio(fresh!, withSize: originalImageSize!, andAlpha: 1.0)
+        let image: UIImage? = ImageMaskingUtils.fit(fresh!, inSize: originalImageSize!)
         
         var mask: UIImage? = produceInvertedAlphaMaskedImage(image)
         
