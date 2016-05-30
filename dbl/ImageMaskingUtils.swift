@@ -16,7 +16,7 @@ class ImageMaskingUtils {
     // https://developer.apple.com/library/mac/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_filer_recipes/ci_filter_recipes.html#//apple_ref/doc/uid/TP30001185-CH4-SW2
     // https://developer.apple.com/library/ios/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_tasks/ci_tasks.html#//apple_ref/doc/uid/TP30001185-CH3-BAJDAHAD
     
-    // Apple's docs on CIFilters: 
+    // Apple's docs on CIFilters:
     // https://developer.apple.com/library/mac/documentation/GraphicsImaging/Reference/CoreImageFilterReference/index.html
     
     // Video modification tutorials:
@@ -74,8 +74,8 @@ class ImageMaskingUtils {
     }
     
     /**
-    * Changes the saturation of the image to the provided value
-    */
+     * Changes the saturation of the image to the provided value
+     */
     class func noirImage(image: UIImage) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIPhotoEffectNoir")
@@ -138,13 +138,13 @@ class ImageMaskingUtils {
         }
         
         guard let mask: CGImageRef = CGImageMaskCreate(CGImageGetWidth(maskImage.CGImage),
-            CGImageGetHeight(maskImage.CGImage),
-            CGImageGetBitsPerComponent(maskImage.CGImage),
-            CGImageGetBitsPerPixel(maskImage.CGImage),
-            CGImageGetBytesPerRow(maskImage.CGImage),
-            CGImageGetDataProvider(maskImage.CGImage), nil, true) else {
-                log("CGImageMaskCreate was nil")
-                return source
+                                                       CGImageGetHeight(maskImage.CGImage),
+                                                       CGImageGetBitsPerComponent(maskImage.CGImage),
+                                                       CGImageGetBitsPerPixel(maskImage.CGImage),
+                                                       CGImageGetBytesPerRow(maskImage.CGImage),
+                                                       CGImageGetDataProvider(maskImage.CGImage), nil, true) else {
+                                                        log("CGImageMaskCreate was nil")
+                                                        return source
         }
         
         guard let _ = source.CGImage else {
@@ -167,7 +167,7 @@ class ImageMaskingUtils {
         let newImageSize: CGSize = CGSizeMake(
             max(first.size.width, second.size.width),
             max(first.size.height, second.size.height))
-
+        
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1)
         
         var wid: CGFloat = CGFloat(roundf(CFloat(newImageSize.width - first.size.width) / 2.0))
@@ -186,6 +186,11 @@ class ImageMaskingUtils {
         UIGraphicsEndImageContext()
         
         return image
+    }
+    
+    class func crop(image: UIImage, inRect rect: CGRect) -> UIImage {
+        let imageRef = CGImageCreateWithImageInRect(image.CGImage, rect)
+        return UIImage(CGImage: imageRef!)
     }
     
     class func fit(image:UIImage, inSize: CGSize) -> UIImage {
@@ -253,7 +258,7 @@ class ImageMaskingUtils {
     class func image(fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
         return image(fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
-
+    
     /**
      * Returns a UIImage with size and alpha passed in.
      * size param overrides image's natural size and aspect ratio.
@@ -367,7 +372,7 @@ class ImageMaskingUtils {
         // Create the bitmap context
         UIGraphicsBeginImageContext(image.size);
         var bitmap: CGContextRef = UIGraphicsGetCurrentContext()!
-
+        
         if (image.imageOrientation == UIImageOrientation.Up || image.imageOrientation == UIImageOrientation.Down) {
             bitmap = CGBitmapContextCreate(nil, targetWidth, targetHeight, CGImageGetBitsPerComponent(imageRef), CGImageGetBytesPerRow(imageRef), colorSpaceInfo, bitmapInfo.rawValue)!
         } else {

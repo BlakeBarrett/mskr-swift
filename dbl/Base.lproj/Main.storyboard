@@ -75,7 +75,7 @@
                                 </items>
                             </toolbar>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="Oyw-e3-YsQ" secondAttribute="trailing" constant="-20" id="5xL-vc-iOG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="1Bc-13-Ynb" secondAttribute="trailing" constant="-20" id="AYF-8d-boK"/>
@@ -178,7 +178,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="phw-Th-faz" firstAttribute="leading" secondItem="uy2-V5-nhX" secondAttribute="leadingMargin" id="4tA-Aj-RIQ"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="phw-Th-faz" secondAttribute="bottom" id="Ld9-Vh-M68"/>
