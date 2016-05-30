@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 
 class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MaskReceiver {
 
@@ -20,7 +21,8 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         imagePicker.delegate = self
         imagePicker.sourceType = .PhotoLibrary
         // .PhotoLibrary, .Camera, .SavedPhotosAlbum
-        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
+//        imagePicker.mediaTypes = UIImagePickerController.availableMediaTypesForSourceType(.PhotoLibrary)!
+        imagePicker.mediaTypes = [kUTTypeImage as String]
     }
     
     @IBOutlet weak var previewImage: UIImageView!
@@ -36,7 +38,7 @@ class MskrViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     // MARK: UIImagePickerControllerDelegate
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         // ignore movies
-        if ("public.movie" == info[UIImagePickerControllerMediaType] as! NSString) {
+        if ((info[UIImagePickerControllerMediaType] as! String) == kUTTypeMovie as String) {
             return
         }
         
