@@ -32,28 +32,28 @@ class ImageMaskingUtils {
     /**
      * Changes the saturation of the image to the provided value
      */
-    class func setImageSaturation(image: UIImage!, saturation: NSNumber) -> UIImage {
+    class func setImageSaturation(_ image: UIImage!, saturation: NSNumber) -> UIImage {
         return ImageMaskingUtils.colorControlImage(image, brightness: 1.0, saturation: saturation, contrast: 1.0)
     }
     
     /**
      * Changes the brightness of the image
      */
-    class func setImageBrightness(image: UIImage, brightness: NSNumber) -> UIImage {
+    class func setImageBrightness(_ image: UIImage, brightness: NSNumber) -> UIImage {
         return ImageMaskingUtils.colorControlImage(image, brightness: brightness, saturation: 1.0, contrast: 1.0)
     }
     
     /**
      * Changes the contrast of the image
      */
-    class func setImageContrast(image: UIImage, contrast: NSNumber) -> UIImage {
+    class func setImageContrast(_ image: UIImage, contrast: NSNumber) -> UIImage {
         return ImageMaskingUtils.colorControlImage(image, brightness: 1.0, saturation: 1.0, contrast: contrast)
     }
     
     /**
      * Modifies the image's Saturation/Brightness/Contrast
      */
-    class func colorControlImage(image: UIImage, brightness: NSNumber, saturation: NSNumber, contrast: NSNumber) -> UIImage {
+    class func colorControlImage(_ image: UIImage, brightness: NSNumber, saturation: NSNumber, contrast: NSNumber) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIColorControls")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
@@ -63,12 +63,12 @@ class ImageMaskingUtils {
         filter?.setValue(brightness, forKey: kCIInputBrightnessKey)
         filter?.setValue(saturation, forKey: kCIInputSaturationKey)
         filter?.setValue(contrast, forKey: kCIInputContrastKey)
-        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+        guard let result = filter?.value(forKey: kCIOutputImageKey) as? CIImage else {
             UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(cgImage: context.createCGImage(result, from: result.extent)!)
         UIGraphicsEndImageContext()
         return ret
     }
@@ -76,16 +76,16 @@ class ImageMaskingUtils {
     /**
      * Changes the saturation of the image to the provided value
      */
-    class func noirImage(image: UIImage) -> UIImage {
+    class func noirImage(_ image: UIImage) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIPhotoEffectNoir")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+        guard let result = filter?.value(forKey: kCIOutputImageKey) as? CIImage else {
             UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(cgImage: context.createCGImage(result, from: result.extent)!)
         UIGraphicsEndImageContext()
         return ret
     }
@@ -93,16 +93,16 @@ class ImageMaskingUtils {
     /**
      * Invert colors of image
      */
-    class func invertImageColors(image: UIImage) -> UIImage {
+    class func invertImageColors(_ image: UIImage) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIColorInvert")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+        guard let result = filter?.value(forKey: kCIOutputImageKey) as? CIImage else {
             UIGraphicsEndImageContext()
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        let ret = UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        let ret = UIImage(cgImage: context.createCGImage(result, from: result.extent)!)
         UIGraphicsEndImageContext()
         return ret
     }
@@ -110,90 +110,90 @@ class ImageMaskingUtils {
     /**
      * Takes a greyscale image, darker the color the lower the alpha (0x000000 == 0.0)
      */
-    class func imageToMask(image: UIImage) -> UIImage {
+    class func imageToMask(_ image: UIImage) -> UIImage {
         let ciImage = CIImage(image: image)
         let filter = CIFilter(name: "CIMaskToAlpha")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        guard let result = filter?.valueForKey(kCIOutputImageKey) as? CIImage else {
+        guard let result = filter?.value(forKey: kCIOutputImageKey) as? CIImage else {
             return image
         }
         let context = CIContext(options: [kCIContextUseSoftwareRenderer: false])
-        return UIImage(CGImage: context.createCGImage(result, fromRect: result.extent))
+        return UIImage(cgImage: context.createCGImage(result, from: result.extent)!)
     }
     
     /**
      * Masks the source image with the mask.
      */
-    class func maskImage(source: UIImage!, maskImage: UIImage!) -> UIImage {
+    class func maskImage(_ source: UIImage!, maskImage: UIImage!) -> UIImage {
         
         // try the quick and dirty first
-        if let mskd: CGImageRef = CGImageCreateWithMask(source.CGImage, invertImageColors(maskImage).CGImage) {
-            log("CGImageCreateWithMask returned nil from source: \(source.CGImage) mask: \(maskImage.CGImage)")
-            return UIImage(CGImage: mskd)
+        if let mskd: CGImage = source.cgImage?.masking(invertImageColors(maskImage).cgImage!) {
+            log("CGImageCreateWithMask returned nil from source: \(source.cgImage) mask: \(maskImage.cgImage)")
+            return UIImage(cgImage: mskd)
         } // okay then, do it the longer way
         
-        guard let _ = maskImage.CGImage else {
+        guard let _ = maskImage.cgImage else {
             log("maskRef was nil")
             return source
         }
         
-        guard let mask: CGImageRef = CGImageMaskCreate(CGImageGetWidth(maskImage.CGImage),
-                                                       CGImageGetHeight(maskImage.CGImage),
-                                                       CGImageGetBitsPerComponent(maskImage.CGImage),
-                                                       CGImageGetBitsPerPixel(maskImage.CGImage),
-                                                       CGImageGetBytesPerRow(maskImage.CGImage),
-                                                       CGImageGetDataProvider(maskImage.CGImage), nil, true) else {
+        guard let mask: CGImage = CGImage(maskWidth: (maskImage.cgImage?.width)!,
+                                                       height: (maskImage.cgImage?.height)!,
+                                                       bitsPerComponent: (maskImage.cgImage?.bitsPerComponent)!,
+                                                       bitsPerPixel: (maskImage.cgImage?.bitsPerPixel)!,
+                                                       bytesPerRow: (maskImage.cgImage?.bytesPerRow)!,
+                                                       provider: (maskImage.cgImage?.dataProvider!)!, decode: nil, shouldInterpolate: true) else {
                                                         log("CGImageMaskCreate was nil")
                                                         return source
         }
         
-        guard let _ = source.CGImage else {
+        guard let _ = source.cgImage else {
             log("source.CGImage was nil")
             return source
         }
         
-        guard let masked: CGImageRef = CGImageCreateWithMask(source.CGImage, mask) else {
-            log("CGImageCreateWithMask returned nil from source: \(source.CGImage) mask: \(mask)")
+        guard let masked: CGImage = source.cgImage?.masking(mask) else {
+            log("CGImageCreateWithMask returned nil from source: \(source.cgImage) mask: \(mask)")
             return source
         }
         
-        return UIImage(CGImage: masked)
+        return UIImage(cgImage: masked)
     }
     
     /**
      * Flattens or rasterizes two images into one.
      */
-    class func mergeImages(first: UIImage, second: UIImage) -> UIImage {
-        let newImageSize: CGSize = CGSizeMake(
-            max(first.size.width, second.size.width),
-            max(first.size.height, second.size.height))
+    class func mergeImages(_ first: UIImage, second: UIImage) -> UIImage {
+        let newImageSize: CGSize = CGSize(
+            width: max(first.size.width, second.size.width),
+            height: max(first.size.height, second.size.height))
         
         UIGraphicsBeginImageContextWithOptions(newImageSize, false, 1)
         
         var wid: CGFloat = CGFloat(roundf(CFloat(newImageSize.width - first.size.width) / 2.0))
         var hei: CGFloat = CGFloat(roundf(CFloat(newImageSize.height-first.size.height) / 2.0))
         
-        let firstPoint = CGPointMake(wid, hei)
-        first.drawAtPoint(firstPoint)
+        let firstPoint = CGPoint(x: wid, y: hei)
+        first.draw(at: firstPoint)
         
         wid = CGFloat(roundf(CFloat(newImageSize.width - second.size.width) / 2.0))
         hei = CGFloat(roundf(CFloat(newImageSize.height-second.size.height) / 2.0))
         
-        let secondPoint = CGPointMake(wid, hei);
-        second.drawAtPoint(secondPoint)
+        let secondPoint = CGPoint(x: wid, y: hei);
+        second.draw(at: secondPoint)
         
-        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
         return image
     }
     
-    class func crop(image: UIImage, inRect rect: CGRect) -> UIImage {
-        let imageRef = CGImageCreateWithImageInRect(image.CGImage, rect)
-        return UIImage(CGImage: imageRef!)
+    class func crop(_ image: UIImage, inRect rect: CGRect) -> UIImage {
+        let imageRef = image.cgImage?.cropping(to: rect)
+        return UIImage(cgImage: imageRef!)
     }
     
-    class func fit(image:UIImage, inSize: CGSize) -> UIImage {
+    class func fit(_ image:UIImage, inSize: CGSize) -> UIImage {
         let size = inSize
         let originalAspectRatio = image.size.width / image.size.height
         
@@ -225,11 +225,11 @@ class ImageMaskingUtils {
         }
         
         UIGraphicsBeginImageContext(size)
-        image.drawInRect(rect)
+        image.draw(in: rect)
         
         let rasterized = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return rasterized
+        return rasterized!
     }
     /*
     class func imagePreservingAspectRatio(fromImage: UIImage, withSize size: CGSize, andAlpha alpha: CGFloat) -> UIImage {
@@ -255,7 +255,7 @@ class ImageMaskingUtils {
     /**
      * Returns a UIImage with the alpha modified
      */
-    class func image(fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
+    class func image(_ fromImage: UIImage, withAlpha alpha: CGFloat) -> UIImage {
         return image(fromImage, withSize: fromImage.size, andAlpha: alpha);
     }
     
@@ -263,22 +263,22 @@ class ImageMaskingUtils {
      * Returns a UIImage with size and alpha passed in.
      * size param overrides image's natural size and aspect ratio.
      **/
-    class func image(fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
+    class func image(_ fromImage: UIImage, withSize size:CGSize, andAlpha alpha: CGFloat) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1)
         
-        let ctx: CGContextRef = UIGraphicsGetCurrentContext()!
-        let area: CGRect = CGRectMake(0, 0, size.width, size.height)
+        let ctx: CGContext = UIGraphicsGetCurrentContext()!
+        let area: CGRect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
         
-        CGContextScaleCTM(ctx, 1, -1)
-        CGContextTranslateCTM(ctx, 0, -area.size.height)
+        ctx.scaleBy(x: 1, y: -1)
+        ctx.translateBy(x: 0, y: -area.size.height)
         
-        CGContextSetBlendMode(ctx, CGBlendMode.Multiply)
+        ctx.setBlendMode(CGBlendMode.multiply)
         
-        CGContextSetAlpha(ctx, alpha)
+        ctx.setAlpha(alpha)
         
-        CGContextDrawImage(ctx, area, fromImage.CGImage)
+        ctx.draw(fromImage.cgImage!, in: area)
         
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         
@@ -288,42 +288,42 @@ class ImageMaskingUtils {
     /**
      * Resize image: http://stackoverflow.com/a/12140767 and http://nshipster.com/image-resizing/
      **/
-    class func resize(image: UIImage, size: CGSize) -> UIImage {
-        let cgImage = image.CGImage
-        let colorspace = CGImageGetColorSpace(cgImage)
+    class func resize(_ image: UIImage, size: CGSize) -> UIImage {
+        let cgImage = image.cgImage
+        let colorspace = cgImage?.colorSpace
         
-        let context = CGBitmapContextCreate(nil,
-                                            Int(size.width), Int(size.height),
-                                            CGImageGetBitsPerComponent(cgImage),
-                                            CGImageGetBytesPerRow(cgImage),
-                                            colorspace,
-                                            CGImageGetAlphaInfo(cgImage).rawValue)
+        let context = CGContext(data: nil,
+                                            width: Int(size.width), height: Int(size.height),
+                                            bitsPerComponent: (cgImage?.bitsPerComponent)!,
+                                            bytesPerRow: (cgImage?.bytesPerRow)!,
+                                            space: colorspace!,
+                                            bitmapInfo: (cgImage?.alphaInfo.rawValue)!)
         
-        CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), cgImage)
+        context?.draw(cgImage!, in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         // extract resulting image from context
-        guard let imgRef = CGBitmapContextCreateImage(context) else {
+        guard let imgRef = context?.makeImage() else {
             UIGraphicsEndImageContext()
             return image
         }
         UIGraphicsEndImageContext()
-        let resizedImage = UIImage(CGImage: imgRef)
+        let resizedImage = UIImage(cgImage: imgRef)
         return resizedImage
     }
     
     /**
      * Stretches images that aren't 1:1 to squares based on their longest edge
      */
-    class func makeItSquare(image: UIImage) -> UIImage {
+    class func makeItSquare(_ image: UIImage) -> UIImage {
         let longestSide = max(image.size.width, image.size.height)
         let size: CGSize = CGSize(width: longestSide, height: longestSide)
         
         let x: CGFloat = (size.width - image.size.width) / 2
         let y: CGFloat = (size.height - image.size.height) / 2
         
-        let cropRect: CGRect = CGRectMake(x, y, size.width, size.height)
+        let cropRect: CGRect = CGRect(x: x, y: y, width: size.width, height: size.height)
         
-        let imageRef: CGImageRef = CGImageCreateWithImageInRect(image.CGImage!, cropRect)!
-        let cropped: UIImage = UIImage(CGImage: imageRef)
+        let imageRef: CGImage = image.cgImage!.cropping(to: cropRect)!
+        let cropped: UIImage = UIImage(cgImage: imageRef)
         UIGraphicsEndImageContext()
         return ImageMaskingUtils.image(cropped, withSize: size, andAlpha: 1)
     }
@@ -331,28 +331,28 @@ class ImageMaskingUtils {
     /**
      * Takes an image and rotates it.
      */
-    class func rotate(image: UIImage, radians: CGFloat) -> UIImage {
+    class func rotate(_ image: UIImage, radians: CGFloat) -> UIImage {
         // calculate the size of the rotated view's containing box for our drawing space
-        let rotatedViewBox: UIView = UIView(frame: CGRectMake(0, 0, image.size.width, image.size.height));
-        let transform: CGAffineTransform = CGAffineTransformMakeRotation(radians);
+        let rotatedViewBox: UIView = UIView(frame: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height));
+        let transform: CGAffineTransform = CGAffineTransform(rotationAngle: radians);
         rotatedViewBox.transform = transform;
         let rotatedSize: CGSize = rotatedViewBox.frame.size;
         
         // Create the bitmap context
         UIGraphicsBeginImageContext(rotatedSize);
-        let bitmap: CGContextRef = UIGraphicsGetCurrentContext()!
+        let bitmap: CGContext = UIGraphicsGetCurrentContext()!
         
         // Move the origin to the middle of the image so we will rotate and scale around the center.
-        CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+        bitmap.translateBy(x: rotatedSize.width/2, y: rotatedSize.height/2);
         
         // Rotate the image context
-        CGContextRotateCTM(bitmap, radians);
+        bitmap.rotate(by: radians);
         
         // Now, draw the rotated/scaled image into the context
-        CGContextScaleCTM(bitmap, 1.0, -1.0);
-        CGContextDrawImage(bitmap, CGRectMake(-image.size.width / 2, -image.size.height / 2, image.size.width, image.size.height), image.CGImage);
+        bitmap.scaleBy(x: 1.0, y: -1.0);
+        bitmap.draw(image.cgImage!, in: CGRect(x: -image.size.width / 2, y: -image.size.height / 2, width: image.size.width, height: image.size.height));
         
-        let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext();
+        let rotated: UIImage = UIGraphicsGetImageFromCurrentImageContext()!;
         UIGraphicsEndImageContext();
         return rotated;
     }
@@ -361,51 +361,51 @@ class ImageMaskingUtils {
      * Fix the image orientation issues we've seen.
      * Translated from Objective-C from here: http://stackoverflow.com/a/1262395
      **/
-    class func reconcileImageOrientation(image:UIImage) -> UIImage {
+    class func reconcileImageOrientation(_ image:UIImage) -> UIImage {
         let targetWidth = Int(image.size.width)
         let targetHeight = Int(image.size.height)
         
-        let imageRef = image.CGImage
-        let bitmapInfo = CGImageGetBitmapInfo(imageRef!)
-        let colorSpaceInfo = CGImageGetColorSpace(imageRef!)
+        let imageRef = image.cgImage
+        let bitmapInfo = imageRef!.bitmapInfo
+        let colorSpaceInfo = imageRef!.colorSpace
         
         // Create the bitmap context
         UIGraphicsBeginImageContext(image.size);
-        var bitmap: CGContextRef = UIGraphicsGetCurrentContext()!
+        var bitmap: CGContext = UIGraphicsGetCurrentContext()!
         
-        if (image.imageOrientation == UIImageOrientation.Up || image.imageOrientation == UIImageOrientation.Down) {
-            bitmap = CGBitmapContextCreate(nil, targetWidth, targetHeight, CGImageGetBitsPerComponent(imageRef), CGImageGetBytesPerRow(imageRef), colorSpaceInfo, bitmapInfo.rawValue)!
+        if (image.imageOrientation == UIImageOrientation.up || image.imageOrientation == UIImageOrientation.down) {
+            bitmap = CGContext(data: nil, width: targetWidth, height: targetHeight, bitsPerComponent: (imageRef?.bitsPerComponent)!, bytesPerRow: (imageRef?.bytesPerRow)!, space: colorSpaceInfo!, bitmapInfo: bitmapInfo.rawValue)!
         } else {
-            bitmap = CGBitmapContextCreate(nil, targetHeight, targetWidth, CGImageGetBitsPerComponent(imageRef), CGImageGetBytesPerRow(imageRef), colorSpaceInfo, bitmapInfo.rawValue)!
+            bitmap = CGContext(data: nil, width: targetHeight, height: targetWidth, bitsPerComponent: (imageRef?.bitsPerComponent)!, bytesPerRow: (imageRef?.bytesPerRow)!, space: colorSpaceInfo!, bitmapInfo: bitmapInfo.rawValue)!
         }
         
-        if (image.imageOrientation == UIImageOrientation.Left) {
-            CGContextRotateCTM (bitmap, radians(90))
-            CGContextTranslateCTM (bitmap, 0, CGFloat(-targetHeight))
-        } else if (image.imageOrientation == UIImageOrientation.Right) {
-            CGContextRotateCTM (bitmap, radians(-90))
-            CGContextTranslateCTM (bitmap, CGFloat(-targetWidth), 0)
-        } else if (image.imageOrientation == UIImageOrientation.Up) {
+        if (image.imageOrientation == UIImageOrientation.left) {
+            bitmap.rotate (by: radians(90))
+            bitmap.translateBy (x: 0, y: CGFloat(-targetHeight))
+        } else if (image.imageOrientation == UIImageOrientation.right) {
+            bitmap.rotate (by: radians(-90))
+            bitmap.translateBy (x: CGFloat(-targetWidth), y: 0)
+        } else if (image.imageOrientation == UIImageOrientation.up) {
             // NOTHING
-        } else if (image.imageOrientation == UIImageOrientation.Down) {
-            CGContextTranslateCTM (bitmap, CGFloat(targetWidth), CGFloat(targetHeight))
-            CGContextRotateCTM (bitmap, radians(-180))
+        } else if (image.imageOrientation == UIImageOrientation.down) {
+            bitmap.translateBy (x: CGFloat(targetWidth), y: CGFloat(targetHeight))
+            bitmap.rotate (by: radians(-180))
         }
         
-        CGContextDrawImage(bitmap, CGRectMake(0, 0, CGFloat(targetWidth), CGFloat(targetHeight)), imageRef)
-        let ref = CGBitmapContextCreateImage(bitmap)
-        let newImage = UIImage(CGImage: ref!)
+        bitmap.draw(imageRef!, in: CGRect(x: 0, y: 0, width: CGFloat(targetWidth), height: CGFloat(targetHeight)))
+        let ref = bitmap.makeImage()
+        let newImage = UIImage(cgImage: ref!)
         
         UIGraphicsEndImageContext()
         
         return newImage;
     }
     
-    static func radians (degrees: Int) -> CGFloat {
+    static func radians (_ degrees: Int) -> CGFloat {
         return CGFloat(Double(degrees) * M_PI / 180.0)
     }
     
-    static func log(message:String) {
+    static func log(_ message:String) {
         print(message)
     }
 }

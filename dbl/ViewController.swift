@@ -28,37 +28,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.previewImage.contentMode = .ScaleAspectFit
+        self.previewImage.contentMode = .scaleAspectFit
         
         imagePicker.delegate = self
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .photoLibrary
         imagePicker.mediaTypes = [kUTTypeImage as String]
     }
     
-    override func prefersStatusBarHidden() -> Bool {
+    override var prefersStatusBarHidden : Bool {
         return true
     }
     
     // MARK: Gesture recognizer
-    @IBAction func onImageTap(sender: UITapGestureRecognizer) {
+    @IBAction func onImageTap(_ sender: UITapGestureRecognizer) {
         if (self.noImagesHaveBeenSelected) {
             self.openImagePicker()
         }
     }
     
     // MARK: Button click handlers
-    @IBAction func onAddButtonClick(sender: UIBarButtonItem) {
+    @IBAction func onAddButtonClick(_ sender: UIBarButtonItem) {
         self.openImagePicker()
     }
     
-    @IBAction func onTrashButtonClicked(sender: UIBarButtonItem) {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+    @IBAction func onTrashButtonClicked(_ sender: UIBarButtonItem) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
-        let destroyAction = UIAlertAction(title: "Reset", style: .Destructive) { (action) in
+        let destroyAction = UIAlertAction(title: "Reset", style: .destructive) { (action) in
             self.startOver()
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             // no-op
         }
         
@@ -67,12 +67,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         alertController.popoverPresentationController?.barButtonItem = sender
         
-        self.presentViewController(alertController, animated: true) {
+        self.present(alertController, animated: true) {
             // ...
         }
     }
     
-    @IBAction func onActionButtonClicked(sender: UIBarButtonItem) {
+    @IBAction func onActionButtonClicked(_ sender: UIBarButtonItem) {
         guard let _ = self.previewImage.image else {
             return
         }
@@ -80,35 +80,35 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let image = rasterizeImage(self.previewImage.image!)
         let activity = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         
-        if (UIDevice.currentDevice().userInterfaceIdiom == .Pad) {
+        if (UIDevice.current.userInterfaceIdiom == .pad) {
             let nav = UINavigationController(rootViewController: activity)
-            nav.modalPresentationStyle = .Popover
+            nav.modalPresentationStyle = .popover
             
             let popover = nav.popoverPresentationController as UIPopoverPresentationController!
-            popover.barButtonItem = sender
+            popover?.barButtonItem = sender
             
-            self.presentViewController(nav, animated: true, completion: nil)
+            self.present(nav, animated: true, completion: nil)
         } else {
-            presentViewController(activity, animated: true, completion: nil)
+            present(activity, animated: true, completion: nil)
         }
     }
     
-    @IBAction func onRotateButtonClicked(sender: UIBarButtonItem) {
+    @IBAction func onRotateButtonClicked(_ sender: UIBarButtonItem) {
         guard let image = self.previewImage.image else {
             return
         }
         
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
             let rotationInRatians: CGFloat = CGFloat(M_PI) * (90) / 180.0
             self.setPreviewImageAsync(ImageMaskingUtils.rotate(image, radians: rotationInRatians))
         }
     }
     
     // MARK: UIImagePickerControllerDelegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        picker.dismissViewControllerAnimated(true) { () -> Void in
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        picker.dismiss(animated: true) { () -> Void in
             // background thread
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                 let mediaType = info[UIImagePickerControllerMediaType] as! CFString
                 if (mediaType == kUTTypeImage) {
                     let image = ImageMaskingUtils.reconcileImageOrientation((info[UIImagePickerControllerOriginalImage] as! UIImage))
@@ -122,13 +122,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        picker.dismissViewControllerAnimated(true) { () -> Void in
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true) { () -> Void in
             
         }
     }
     
-    func onImageSelected(image: UIImage) {
+    func onImageSelected(_ image: UIImage) {
         // process image
         if (self.noImagesHaveBeenSelected) {
             self.setPreviewImageAsync(image)
@@ -148,15 +148,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Merge functions
     
-    func produceAlphaMaskedImage(image: UIImage?) -> UIImage {
+    func produceAlphaMaskedImage(_ image: UIImage?) -> UIImage {
         return ImageMaskingUtils.imageToMask(ImageMaskingUtils.noirImage(image!))
     }
     
-    func produceInvertedAlphaMaskedImage(image: UIImage?) -> UIImage {
+    func produceInvertedAlphaMaskedImage(_ image: UIImage?) -> UIImage {
         return produceAlphaMaskedImage(ImageMaskingUtils.invertImageColors(ImageMaskingUtils.colorControlImage(image!, brightness: 1.0, saturation: 1.0, contrast: 2.0)))
     }
     
-    func overlayImage(original: UIImage?, fresh: UIImage?) -> UIImage {
+    func overlayImage(_ original: UIImage?, fresh: UIImage?) -> UIImage {
         let originalImageSize = original?.size
         let image: UIImage? = ImageMaskingUtils.fit(fresh!, inSize: originalImageSize!)
         
@@ -168,7 +168,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return ImageMaskingUtils.mergeImages(original!, second: merged!)
     }
     
-    func overlayImageMethodTwo(original: UIImage?, fresh: UIImage?) -> UIImage {
+    func overlayImageMethodTwo(_ original: UIImage?, fresh: UIImage?) -> UIImage {
         let originalImageSize = original?.size
         let image: UIImage? = ImageMaskingUtils.resize(fresh!, size: originalImageSize!)
         let mask: UIImage? = produceAlphaMaskedImage(image)
@@ -182,22 +182,22 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     // MARK: Helper functions
     func openImagePicker() {
-        presentViewController(imagePicker, animated: true) { () -> Void in
+        present(imagePicker, animated: true) { () -> Void in
             // no-op
         }
     }
     
-    func setPreviewImageAsync(image:UIImage?) {
+    func setPreviewImageAsync(_ image:UIImage?) {
         self.noImagesHaveBeenSelected = false
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.previewImage.image = image
         })
     }
     
-    func rasterizeImage(image:UIImage) -> UIImage {
+    func rasterizeImage(_ image:UIImage) -> UIImage {
         UIGraphicsBeginImageContext(image.size)
-        image.drawInRect(
-            CGRect(
+        image.draw(
+            in: CGRect(
                 x: 0, y: 0,
                 width: image.size.width,
                 height: image.size.height
@@ -206,7 +206,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         let rasterized = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return rasterized
+        return rasterized!
     }
     
     func startOver() {
@@ -214,7 +214,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.noImagesHaveBeenSelected = true
     }
     
-    func setSelectedMask(mask: String) {
+    func setSelectedMask(_ mask: String) {
         var masked: UIImage? = ImageMaskingUtils.maskImage(self.previewImage.image!, maskImage: UIImage(named: mask))
         var background: UIImage? = ImageMaskingUtils.image(self.previewImage.image!, withAlpha: 0.5)
         let merged: UIImage? = ImageMaskingUtils.mergeImages(masked!, second: background!)
@@ -224,8 +224,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     // MARK: Prepare For Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let maskSelector = segue.destinationViewController as? MaskSelectorViewController {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let maskSelector = segue.destination as? MaskSelectorViewController {
             maskSelector.delegate = self
             maskSelector.image = self.previewImage.image
         }
@@ -234,5 +234,5 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
 protocol MaskReceiver {
     func openImagePicker()
-    func setSelectedMask(mask:String)
+    func setSelectedMask(_ mask:String)
 }

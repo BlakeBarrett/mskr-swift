@@ -7,6 +7,30 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -29,11 +53,12 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         MaskSelectorViewController.precacheMasks()
     }
     
-    func imageNameForIndexPath(index:NSIndexPath) -> String {
-        return MaskSelectorViewController.masks[index.indexAtPosition(1) - 1]
+    func imageNameForIndexPath(_ index:IndexPath) -> String {
+        let maskIndex = index.row - 1
+        return MaskSelectorViewController.masks[maskIndex]
     }
     
-    func imageForIndexPath(index: NSIndexPath) -> UIImage {
+    func imageForIndexPath(_ index: IndexPath) -> UIImage {
         let name = imageNameForIndexPath(index)
         guard let image = UIImage(named: name) else {
             return UIImage()
@@ -42,20 +67,20 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     // MARK: Collection View FLOW LAYOUT
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 175, height: 175)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,insetForSectionAt section: Int) -> UIEdgeInsets {
         let edgeInsets = UIEdgeInsetsMake(1, 1, 1, 1)
         return edgeInsets
     }
     
     // MARK: Collection View DATA_SOURCE
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return MaskSelectorViewController.masks.count + 1
     }
     
@@ -64,7 +89,7 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
             MaskSelectorViewController.size.height == 0) {
             return
         }
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
             for i in 0 ..< MaskSelectorViewController.masks.count {
                 if (MaskSelectorViewController.maskCache[i] != nil) { continue }
                 let maskName = MaskSelectorViewController.masks[i]
@@ -75,7 +100,7 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         }
     }
     
-    static func applyMaskToImage(image: UIImage, mask: UIImage) -> UIImage {
+    static func applyMaskToImage(_ image: UIImage, mask: UIImage) -> UIImage {
         let masked: UIImage? = ImageMaskingUtils.maskImage(image, maskImage: mask)
         let background: UIImage? = ImageMaskingUtils.image(image, withAlpha: 0.5)
         return ImageMaskingUtils.mergeImages(masked!, second: background!)
@@ -84,16 +109,16 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     static var maskCache = [Int: UIImage]()
     
     let reuseIdentifier = "maskCellIdentifier"
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if indexPath.row == 0 && indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier("importCellIdentifier", forIndexPath: indexPath) as! PresentImagePickerCollectionViewCell
-            cell.backgroundColor = UIColor.whiteColor()
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "importCellIdentifier", for: indexPath) as! PresentImagePickerCollectionViewCell
+            cell.backgroundColor = UIColor.white
             return cell
         }
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! MaskCollectionViewCell
-        cell.imageView.contentMode = .ScaleAspectFit
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! MaskCollectionViewCell
+        cell.imageView.contentMode = .scaleAspectFit
         
         MaskSelectorViewController.size = cell.frame.size
         
@@ -103,8 +128,8 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
         cell.imageView.image = self.image
         
         // Background thread!
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-            let ordinalIndex = indexPath.indexAtPosition(1) - 1
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+            let ordinalIndex = indexPath.row - 1
             
             // Resize the image, but only once.
             var imageSize = self.image?.size
@@ -126,7 +151,7 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
             }
             
             var merged: UIImage? = MaskSelectorViewController.applyMaskToImage(self.image!, mask: mask!)
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 cell.imageView.image = merged
                 merged = nil
             })
@@ -135,15 +160,15 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     // MARK: Collection View DELEGATE
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.selectedMask = self.imageNameForIndexPath(indexPath)
         delegate?.setSelectedMask(self.selectedMask!)
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: Button Click Handlers
-    @IBAction func onButtonItemClick(sender: UIBarButtonItem) {
-        self.dismissViewControllerAnimated(true) { () -> Void in
+    @IBAction func onButtonItemClick(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true) { () -> Void in
             switch (sender.tag) {
             case 1: // done
                 self.delegate?.setSelectedMask(self.selectedMask!)
@@ -157,14 +182,14 @@ class MaskSelectorViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     // MARK: Prepare For Segue
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let mask = self.selectedMask {
             delegate?.setSelectedMask(mask)
         }
     }
     
-    @IBAction func onBrowseItemClick(sender: UITapGestureRecognizer) {
-        self.dismissViewControllerAnimated(true) { 
+    @IBAction func onBrowseItemClick(_ sender: UITapGestureRecognizer) {
+        self.dismiss(animated: true) { 
             self.delegate?.openImagePicker()
         }
     }
